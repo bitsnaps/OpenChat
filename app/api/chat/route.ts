@@ -37,6 +37,10 @@ import {
   shouldShowInConversation,
 } from "@/lib/error-utils";
 import { buildSystemPrompt, PERSONAS_MAP } from "@/lib/prompt_config";
+import {
+  detectProviderErrorFromObject,
+  detectProviderErrorInText,
+} from "@/lib/provider-error-detector";
 import { sanitizeUserInput } from "@/lib/sanitize";
 import { uploadBlobToR2 } from "@/lib/server-upload-helpers";
 
@@ -823,6 +827,7 @@ export async function POST(req: Request) {
 
     let result: ReturnType<typeof streamText> | null = null;
     let wasUserKeyUsed = false;
+    let errorMessageSaved = false;
 
     const stream = createUIMessageStream({
       originalMessages: messages,
@@ -864,7 +869,39 @@ export async function POST(req: Request) {
               chunking: "word",
             }),
             providerOptions,
-            onError: async (error) => {
+            onError: async ({ error }) => {
+              // Handle errors gracefully - save to conversation but don't throw
+              // The throwing behavior will be handled in the fullStream processing
+
+              // First, try to detect provider-specific error patterns
+              const detectedError = detectProviderErrorFromObject(
+                error,
+                selectedModel.provider
+              );
+
+              if (detectedError) {
+                // If we detected a provider-specific error, save it with enhanced message
+                if (token) {
+                  try {
+                    await saveErrorMessage(
+                      chatId,
+                      userMsgId,
+                      detectedError, // Pass DetectedError directly, don't wrap in Error
+                      token,
+                      selectedModel.id,
+                      selectedModel.name,
+                      enableSearch,
+                      reasoningEffort
+                    );
+                    errorMessageSaved = true; // Mark that error message was saved
+                  } catch (_saveError) {
+                    // swallow
+                  }
+                }
+                return; // Exit early - error saved, no throwing
+              }
+
+              // Fallback to original error handling
               if (shouldShowInConversation(error) && token) {
                 try {
                   await saveErrorMessage(
@@ -877,13 +914,12 @@ export async function POST(req: Request) {
                     enableSearch,
                     reasoningEffort
                   );
+                  errorMessageSaved = true; // Mark that error message was saved
                 } catch (_saveError) {
                   // swallow
                 }
-
-                const streamingError = createStreamingError(error);
-                throw new Error(JSON.stringify(streamingError.errorPayload));
               }
+              // No throwing - let the stream handle the error state gracefully
             },
             onFinish({ usage }) {
               finalUsage = {
@@ -896,6 +932,68 @@ export async function POST(req: Request) {
             },
           });
 
+          // Enhanced stream processing with error detection
+          (async () => {
+            let accumulatedText = "";
+
+            for await (const part of streamResult.fullStream) {
+              switch (part.type) {
+                case "error": {
+                  // Error parts from AI SDK - these are already handled by onError callback
+                  // No need to save again, stream processing continues normally
+                  break;
+                }
+                case "text-delta": {
+                  // Accumulate text and check for error patterns
+                  accumulatedText += part.text;
+
+                  // Check accumulated text for provider error patterns
+                  const detectedError = detectProviderErrorInText(
+                    accumulatedText,
+                    selectedModel.provider
+                  );
+                  if (detectedError) {
+                    // Found an error pattern in the streaming text
+                    // Save the error with the provider-specific message
+                    if (token) {
+                      try {
+                        await saveErrorMessage(
+                          chatId,
+                          userMsgId,
+                          detectedError, // Pass the DetectedError object directly
+                          token,
+                          selectedModel.id,
+                          selectedModel.name,
+                          enableSearch,
+                          reasoningEffort
+                        );
+                        errorMessageSaved = true; // Mark that error message was saved
+                      } catch (_saveError) {
+                        // swallow
+                      }
+                    }
+
+                    // Clear accumulated text to avoid re-detecting the same error
+                    accumulatedText = "";
+
+                    // Stop processing this stream since we found an error
+                    break;
+                  }
+
+                  // Limit accumulated text size to prevent memory issues
+                  if (accumulatedText.length > 2000) {
+                    accumulatedText = accumulatedText.slice(-1000);
+                  }
+                  break;
+                }
+                default:
+                  // For other part types, process normally
+                  break;
+              }
+            }
+          })();
+
+          // Merge the regular UI stream for normal processing
           writer.merge(
             streamResult.toUIMessageStream({
               sendReasoning: true,
@@ -980,8 +1078,8 @@ export async function POST(req: Request) {
         await tryRun();
       },
       async onFinish({ responseMessage }) {
-        if (!result) {
-          return;
+        if (!result || errorMessageSaved) {
+          return; // Don't save if no result or error message was already saved
         }
 
         const finalMetadata: Infer<typeof Message>["metadata"] = {
@@ -1031,6 +1129,18 @@ export async function POST(req: Request) {
         }
       },
       onError: (error) => {
+        // First, try to detect provider-specific error patterns
+        const detectedError = detectProviderErrorFromObject(
+          error,
+          selectedModel.provider
+        );
+
+        if (detectedError) {
+          // Return the provider-specific user-friendly message
+          return detectedError.userFriendlyMessage;
+        }
+
+        // Fallback to original error handling
         const { errorPayload } = createStreamingError(error);
         return errorPayload.error.message;
       },
