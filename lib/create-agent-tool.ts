@@ -233,7 +233,7 @@ export const createAgentTool = ({
         tools: filteredTools,
         stopWhen: stepCountIs(maxSteps),
         providerOptions,
-        toolChoice: "required",
+        // toolChoice: "required",
         onFinish({ usage }) {
           agentTokenUsage = {
             inputTokens: usage.inputTokens || 0,

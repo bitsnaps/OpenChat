@@ -244,7 +244,10 @@ import dynamic from "next/dynamic"; // Client component – required when using 
 import Image from "next/image";
 
 import React, { memo, useEffect, useMemo, useRef, useState } from "react"; // Import React to access memo
-import { ConnectorToolCall } from "@/app/components/tool/connector_tool_call";
+import {
+  buildConnectorDisplayLabel,
+  ConnectorToolCall,
+} from "@/app/components/tool/connector_tool_call";
 import { UnifiedSearch } from "@/app/components/tool/web_search";
 import {
   MorphingDialog,
@@ -849,9 +852,12 @@ const renderPartInChainOfThought = (
         const toolPart = part as ToolUIPart;
         const toolType = toolPart.type.replace("tool-", "");
         const toolLabel = isConnectorTool(toolType)
-          ? getConnectorConfig(
-              getConnectorTypeFromToolName(toolType) as ConnectorType
-            )?.displayName || buildGenericToolLabel(toolType)
+          ? buildConnectorDisplayLabel(
+              getConnectorTypeFromToolName(toolType) as ConnectorType,
+              getConnectorConfig(
+                getConnectorTypeFromToolName(toolType) as ConnectorType
+              ).displayName
+            )
           : buildGenericToolLabel(toolType);
 
         return (

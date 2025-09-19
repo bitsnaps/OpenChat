@@ -10,7 +10,7 @@ import type { ConnectorType } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 // Connector action labels for better UX
-const CONNECTOR_ACTION_LABELS: Partial<Record<ConnectorType, string>> = {
+export const CONNECTOR_ACTION_LABELS: Partial<Record<ConnectorType, string>> = {
   googlecalendar: "Consulting",
   googledocs: "Drafting in",
   googledrive: "Syncing with",
@@ -23,7 +23,7 @@ const CONNECTOR_ACTION_LABELS: Partial<Record<ConnectorType, string>> = {
   notion: "Working with",
 };
 
-const buildConnectorDisplayLabel = (
+export const buildConnectorDisplayLabel = (
   connectorType: ConnectorType,
   displayName: string
 ): string => {
@@ -178,15 +178,13 @@ export const ConnectorToolCall = memo<ConnectorToolCallProps>(
     );
 
     const displayText = useMemo(() => {
-      const actionLabel = buildConnectorDisplayLabel(
-        data.connectorType,
-        connectorConfig.displayName
-      );
+      // Show the raw tool action name instead of descriptive label
+      const toolActionName = data.request?.action || data.toolName;
       if (isLoading) {
-        return `${actionLabel}...`;
+        return `${toolActionName}...`;
       }
-      return actionLabel;
-    }, [isLoading, data.connectorType, connectorConfig.displayName]);
+      return toolActionName;
+    }, [isLoading, data.request?.action, data.toolName]);
 
     const statusText = useMemo(() => {
       if (isLoading) {
