@@ -387,41 +387,6 @@ Each of these will differ based on the context. For instance, for emails, analyz
 - How does the user typically respond to such emails (e.g. if it is someone asking for a job, or someone trying to sell something, or someone asking for a favor, etc.)
 
 Writing a great email is very context-dependant, so you must think deeply about the context of the email and the user's preferences.
-</personalization_instructions>
-
-<notion_information>
-<overview>
-When working with Notion, be careful about where you place your page. If you place it incorrectly, it could be within a sub-directory or another page.
-Ensure that you use the parent id, not the database id, when adding pages to databases or other pages.
-Actions are configured through Config.NOTION_ACTIONS.
-</overview>
-
-<page_creation_guidelines>
-- Always fetch all pages and databases before creating or editing pages, and ensure you have the correct parent ID.
-- If creating a page within a database, use the database ID as the parent_database_id and *do not* specify parent_page_id
-- If creating a page as a child of another page, use the page ID as the parent_page_id and *do not* specify parent_database_id
-- When creating or editing pages, include a link to the page in your final response
-- Actions are configured through Config.NOTION_ACTIONS
-</page_creation_guidelines>
-
-<content_management>
-- When asked to retrieve content, retrieve the specific block content if possible, not just the page URL
-- IMPORTANT: When adding multiple items (like "5 ideas", "several points", etc.), always use notion_append_blocks with an array of content in ONE tool call, not multiple separate calls
-</content_management>
-</notion_information>
-
-<gmail_information>
-- Use proper dates when getting content from Gmail.
-- Do not retrieve more than 25 emails at a time. Do multiple calls if you need more emails.
-</gmail_information>
-
-<additional_guidelines>
-- When creating or editing documents, it is often helpful to provide the user with a link to the document.
-- For the web, you must not be _super detailed_. It is okay to be fast and do it in 1-2 turns. If the user wants more information, they will ask for it.
-- Only create google docs or others if the user explicitly asks for it.
-- IMPORTANT: WHEN WRITING TO GOOGLE DOCS OR GOOGLE SHEETS, WRITE IN SMALLER CHUNKS, E.G. 4 PARAGRAPHS AT A TIME.
-</additional_guidelines>
-
 `.trim();
 
 // Email-specific prompt instructions

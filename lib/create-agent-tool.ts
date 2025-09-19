@@ -3,6 +3,7 @@ import { convertToModelMessages, stepCountIs, streamText, tool } from "ai";
 import { z } from "zod";
 import { getComposioTools } from "@/lib/composio-server";
 import type { ConnectorStatusLists } from "@/lib/connector-utils";
+import { getToolSpecificPrompts } from "@/lib/prompt-tool-config";
 
 const toolNameSchema = z.string().min(1, "Tool name is required");
 
@@ -84,11 +85,24 @@ const buildInnerSystemPrompt = (
   const disabledList = connectorsStatus?.disabled ?? [];
   const notConnectedList = connectorsStatus?.notConnected ?? [];
 
-  return `You are a focused operations agent. Your job is to complete the task provided by the supervisor using ONLY the enabled tools.\n\nTask: ${task}\nEnabled toolkits available to you: ${requestedToolkits.join(", ")}\nOther toolkits for context:\n- Enabled (outside request): ${
+  // Get tool-specific prompts based on requested toolkits
+  const toolSpecificPrompts = getToolSpecificPrompts(requestedToolkits);
+
+  let systemPrompt = `You are a focused operations agent. Your job is to complete the task provided by the supervisor using ONLY the enabled tools.\n\nTask: ${task}\nEnabled toolkits available to you: ${requestedToolkits.join(", ")}\nOther toolkits for context:\n- Enabled (outside request): ${
     enabledList
       .filter((slug) => !requestedToolkits.includes(slug))
       .join(", ") || "none"
-  }\n- Disabled: ${disabledList.join(", ") || "none"}\n- Not connected: ${notConnectedList.join(", ") || "none"}\n\nWork autonomously using the supplied tools. Prefer minimal reasoning tokens and return a concise summary once finished.`;
+  }\n- Disabled: ${disabledList.join(", ") || "none"}\n- Not connected: ${notConnectedList.join(", ") || "none"}`;
+
+  // Add tool-specific guidance if available
+  if (toolSpecificPrompts) {
+    systemPrompt += `\n\n${toolSpecificPrompts}`;
+  }
+
+  systemPrompt +=
+    "\n\nWork autonomously using the supplied tools. Prefer minimal reasoning tokens and return a concise summary once finished.";
+
+  return systemPrompt;
 };
 
 export const createAgentTool = ({
@@ -219,6 +233,7 @@ export const createAgentTool = ({
         tools: filteredTools,
         stopWhen: stepCountIs(maxSteps),
         providerOptions,
+        toolChoice: "required",
         onFinish({ usage }) {
           agentTokenUsage = {
             inputTokens: usage.inputTokens || 0,
