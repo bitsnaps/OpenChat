@@ -671,7 +671,12 @@ function ToolRenderer({
   return <ConnectorToolCallMemo data={data} isLoading={isLoading} />;
 }
 
-const renderToolPart = (part: ToolUIPart, index: number, _id: string) => {
+const renderToolPart = (
+  part: ToolUIPart,
+  index: number,
+  _id: string,
+  sourceCache?: Map<string, SourceUrlUIPart>
+) => {
   const extendedPart = part as ExtendedToolUIPart;
   const toolType = part.type.replace("tool-", "");
 
@@ -697,7 +702,23 @@ const renderToolPart = (part: ToolUIPart, index: number, _id: string) => {
 
     // For completed search tools, render the unified search component with results
     if ("state" in part && part.state === "output-available") {
-      const sources = extractSourcesFromParts([part]);
+      const rawSources = extractSourcesFromParts([part]);
+
+      // Apply source cache if provided
+      let sources = rawSources;
+      if (sourceCache) {
+        const stableSources: SourceUrlUIPart[] = [];
+        for (const s of rawSources) {
+          const prev = sourceCache.get(s.sourceId);
+          if (prev && prev.url === s.url && prev.title === s.title) {
+            stableSources.push(prev);
+          } else {
+            sourceCache.set(s.sourceId, s);
+            stableSources.push(s);
+          }
+        }
+        sources = stableSources;
+      }
 
       if (searchQuery) {
         return (
@@ -813,7 +834,8 @@ const renderPartDirectly = (
   partKey: string,
   reasoningStates: Record<string, boolean>,
   reasoningStreamingStates: Record<string, boolean>,
-  toggleReasoning: (partIndex: number) => void
+  toggleReasoning: (partIndex: number) => void,
+  sourceCache?: Map<string, SourceUrlUIPart>
 ) => {
   switch (part.type) {
     case "text":
@@ -838,7 +860,7 @@ const renderPartDirectly = (
 
     default:
       if (part.type.startsWith("tool-")) {
-        return renderToolPart(part as ToolUIPart, index, id);
+        return renderToolPart(part as ToolUIPart, index, id, sourceCache);
       }
       if (isErrorPart(part)) {
         return renderErrorPart(part, index);
@@ -859,7 +881,8 @@ const renderPartInChainOfThought = (
   partKey: string,
   reasoningStates: Record<string, boolean>,
   reasoningStreamingStates: Record<string, boolean>,
-  toggleReasoning: (partIndex: number) => void
+  toggleReasoning: (partIndex: number) => void,
+  sourceCache?: Map<string, SourceUrlUIPart>
 ) => {
   switch (part.type) {
     case "text":
@@ -915,7 +938,7 @@ const renderPartInChainOfThought = (
 
         return (
           <ChainOfThoughtStep key={partKey} label={toolLabel} status="complete">
-            {renderToolPart(toolPart, index, id)}
+            {renderToolPart(toolPart, index, id, sourceCache)}
           </ChainOfThoughtStep>
         );
       }
@@ -1053,6 +1076,9 @@ function MessageAssistantInner({
 }: MessageAssistantProps) {
   // Prefer `parts` prop, but fall back to `attachments` if `parts` is undefined.
   const combinedParts = parts || [];
+
+  // Cache for source objects to maintain stable identity
+  const sourcesCacheRef = useRef<Map<string, SourceUrlUIPart>>(new Map());
 
   const segments = useMemo(
     () => segmentPartsByAgentBoundaries(combinedParts),
@@ -1294,7 +1320,8 @@ function MessageAssistantInner({
                     stableKey,
                     reasoningStates,
                     reasoningStreamingStates,
-                    toggleReasoning
+                    toggleReasoning,
+                    sourcesCacheRef.current
                   )}
                 </React.Fragment>
               );
@@ -1333,7 +1360,8 @@ function MessageAssistantInner({
                     stepKey,
                     reasoningStates,
                     reasoningStreamingStates,
-                    toggleReasoning
+                    toggleReasoning,
+                    sourcesCacheRef.current
                   );
                 })}
               </ChainOfThoughtContent>
@@ -1343,9 +1371,31 @@ function MessageAssistantInner({
 
         {/* Render sources list for non-search sources only */}
         {(() => {
-          // Get all sources
-          const allSources = extractSourcesFromParts(combinedParts);
+          // Get all sources with stable object identity
+          const rawSources = extractSourcesFromParts(combinedParts);
           const searchQuery = extractSearchQueryFromParts(combinedParts);
+
+          // Maintain stable object identity for sources
+          const cache = sourcesCacheRef.current;
+          const allSources: SourceUrlUIPart[] = [];
+          for (const s of rawSources) {
+            const prev = cache.get(s.sourceId);
+            if (prev && prev.url === s.url && prev.title === s.title) {
+              allSources.push(prev);
+            } else {
+              cache.set(s.sourceId, s);
+              allSources.push(s);
+            }
+          }
+          // Prune removed sources from cache
+          if (cache.size > allSources.length) {
+            const keep = new Set(allSources.map((s) => s.sourceId));
+            for (const k of cache.keys()) {
+              if (!keep.has(k)) {
+                cache.delete(k);
+              }
+            }
+          }
 
           // If we have search sources, they are already rendered inline, so skip them
           if (searchQuery && allSources.length > 0) {
