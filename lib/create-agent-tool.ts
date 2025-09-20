@@ -30,32 +30,7 @@ const createAgentInputSchema = z.object({
     ),
 });
 
-// Structured output schema for agent results (for future use)
-const _agentResultSchema = z.object({
-  success: z.boolean().describe("Whether the task was completed successfully"),
-  summary: z
-    .string()
-    .max(200)
-    .describe("Concise summary of what was accomplished"),
-  toolsUsed: z
-    .array(z.string())
-    .describe("List of connector tools that were used"),
-  result: z.string().max(300).describe("Key outcome or result of the task"),
-  error: z.string().optional().describe("Error message if task failed"),
-  tokenUsage: z
-    .object({
-      inputTokens: z.number(),
-      outputTokens: z.number(),
-      totalTokens: z.number(),
-    })
-    .optional()
-    .describe("Token usage by the sub-agent"),
-});
-
-export type CreateAgentInput = z.infer<typeof createAgentInputSchema> & {
-  tool: string | string[];
-  context?: string;
-};
+export type CreateAgentInput = z.input<typeof createAgentInputSchema>;
 
 type JSONValue =
   | string
