@@ -16,6 +16,7 @@ import { UserMenu } from "@/app/components/layout/user-menu";
 import { useBreakpoint } from "@/app/hooks/use-breakpoint";
 import { useUser } from "@/app/providers/user-provider";
 import { useTheme } from "@/components/theme-provider";
+import { UpgradeButton } from "@/components/common/upgrade-button";
 import {
   Tooltip,
   TooltipContent,
@@ -105,6 +106,7 @@ export function Header() {
                 <DialogShare />
               </>
             )}
+            <UpgradeButton />
             <ThemeSwitchIcon />
             {user && <UserMenu user={user} />}
           </div>
