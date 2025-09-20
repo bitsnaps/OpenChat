@@ -15,7 +15,6 @@ import { DialogShare } from "@/app/components/layout/dialog-share";
 import { UserMenu } from "@/app/components/layout/user-menu";
 import { useBreakpoint } from "@/app/hooks/use-breakpoint";
 import { useUser } from "@/app/providers/user-provider";
-import { useTheme } from "@/components/theme-provider";
 import { UpgradeButton } from "@/components/common/upgrade-button";
 import {
   Tooltip,
@@ -23,11 +22,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { GITHUB_REPO_URL } from "@/lib/config";
-import ThemeSwitchIcon from "./theme-switch-icon";
 
 export function Header() {
   const { user } = useUser();
-  const { theme } = useTheme();
   const router = useRouter();
   const pathname = usePathname();
   const isLoggedIn = Boolean(user) && !user?.isAnonymous;
@@ -42,13 +39,19 @@ export function Header() {
           <Link className="flex items-center" href="/" prefetch>
             <Image
               alt="oschat Logo"
+              className="dark:hidden"
               height={28}
               priority
-              src={
-                theme === "dark"
-                  ? "/oschat_logo_dark.svg"
-                  : "/oschat_logo_light.svg"
-              }
+              src="/oschat_logo_light.svg"
+              unoptimized
+              width={100}
+            />
+            <Image
+              alt="oschat Logo"
+              className="hidden dark:block"
+              height={28}
+              priority
+              src="/oschat_logo_dark.svg"
               unoptimized
               width={100}
             />
@@ -106,8 +109,9 @@ export function Header() {
                 <DialogShare />
               </>
             )}
-            <UpgradeButton />
-            <ThemeSwitchIcon />
+            {(!isMobile || pathname === "/" || pathname === "/tasks") && (
+              <UpgradeButton />
+            )}
             {user && <UserMenu user={user} />}
           </div>
         ) : (
@@ -145,7 +149,6 @@ export function Header() {
                 </button>
               }
             />
-            <ThemeSwitchIcon />
             <Link
               className="font-base text-base text-muted-foreground transition-colors hover:text-foreground"
               href="/auth"
