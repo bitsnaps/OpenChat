@@ -17,9 +17,6 @@ import { Source, SourceContent, SourceTrigger } from './source';
 const REMARK_PLUGINS = [remarkBreaks, remarkGfm, remarkMath];
 const REHYPE_PLUGINS = [rehypeKatex];
 
-// Move allowed prefixes to module level to prevent recreation
-const ALLOWED_PREFIXES = ['*'];
-
 export type MarkdownProps = {
   children: string;
   id?: string;
@@ -171,8 +168,6 @@ const MemoizedMarkdownBlock = memo(
 
     return (
       <Streamdown
-        allowedImagePrefixes={ALLOWED_PREFIXES}
-        allowedLinkPrefixes={ALLOWED_PREFIXES}
         components={componentsToUse}
         parseIncompleteMarkdown={true}
         rehypePlugins={REHYPE_PLUGINS}
