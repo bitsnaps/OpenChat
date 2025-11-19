@@ -132,7 +132,7 @@ export const ANTHROPIC_MODELS = [
     id: "claude-4-5-haiku",
     name: "Claude 4.5 Haiku",
     provider: "anthropic",
-    premium: false,
+    premium: true,
     usesPremiumCredits: false,
     description:
       "Anthropic's fastest model with near-frontier intelligence.\nIdeal for quick tasks and high-throughput applications.",
@@ -150,7 +150,7 @@ export const ANTHROPIC_MODELS = [
     name: "Claude 4.5 Haiku",
     subName: "Reasoning",
     provider: "anthropic",
-    premium: false,
+    premium: true,
     usesPremiumCredits: false,
     description:
       "Claude 4.5 Haiku with thinking capabilities enabled.\nFast reasoning for complex tasks.",

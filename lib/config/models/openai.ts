@@ -12,6 +12,39 @@ import {
 
 export const OPENAI_MODELS = [
   {
+    id: "gpt-5.1",
+    name: "GPT-5.1",
+    provider: "openai",
+    premium: true,
+    usesPremiumCredits: true,
+    description: `OpenAI's latest reasoning model. \nDelivers state-of-the-art performance in logic, coding, and multi-step reasoning.`,
+    apiKeyUsage: { allowUserKey: true, userKeyOnly: false },
+    features: [
+      FILE_UPLOAD_FEATURE,
+      PDF_PROCESSING_FEATURE,
+      REASONING_FEATURE,
+      TOOL_CALLING_FEATURE,
+    ],
+    api_sdk: openai.responses("gpt-5.1"),
+  },
+  {
+    id: "gpt-5.1-instant",
+    name: "GPT-5.1 Instant",
+    provider: "openai",
+    premium: true,
+    usesPremiumCredits: true,
+    description:
+      "Ultra-fast non-reasoning variant of GPT-5.1. \nOptimized for immediate responses and high-throughput applications.",
+    apiKeyUsage: { allowUserKey: true, userKeyOnly: false },
+    features: [
+      FILE_UPLOAD_FEATURE,
+      PDF_PROCESSING_FEATURE,
+      REASONING_FEATURE_DISABLED,
+      TOOL_CALLING_FEATURE,
+    ],
+    api_sdk: openai.responses("gpt-5.1-instant"),
+  },
+  {
     id: "gpt-5",
     name: "GPT-5",
     provider: "openai",
