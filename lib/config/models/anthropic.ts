@@ -9,23 +9,6 @@ import {
 
 export const ANTHROPIC_MODELS = [
   {
-    id: "claude-3-5-sonnet-20241022",
-    name: "Claude 3.5 Sonnet",
-    provider: "anthropic",
-    premium: true,
-    usesPremiumCredits: true,
-    description:
-      "First model which excels at coding and tool calling.\nExcels at agentic coding, tool use, and complex reasoning tasks.",
-    apiKeyUsage: { allowUserKey: true, userKeyOnly: false },
-    features: [
-      FILE_UPLOAD_FEATURE,
-      PDF_PROCESSING_FEATURE,
-      REASONING_FEATURE_DISABLED,
-      TOOL_CALLING_FEATURE,
-    ],
-    api_sdk: anthropic("claude-3-5-sonnet-20241022"),
-  },
-  {
     id: "claude-3-7-sonnet-20250219",
     name: "Claude 3.7 Sonnet",
     provider: "anthropic",
@@ -61,8 +44,8 @@ export const ANTHROPIC_MODELS = [
     api_sdk: anthropic("claude-3-7-sonnet-20250219"),
   },
   {
-    id: "claude-4-opus",
-    name: "Claude 4 Opus",
+    id: "claude-4-1-opus",
+    name: "Claude 4.1 Opus",
     provider: "anthropic",
     premium: false,
     usesPremiumCredits: false,
@@ -74,7 +57,7 @@ export const ANTHROPIC_MODELS = [
       REASONING_FEATURE,
       TOOL_CALLING_FEATURE,
     ],
-    api_sdk: anthropic("claude-opus-4-20250514"),
+    api_sdk: anthropic("claude-opus-4-1-20250805"),
   },
   {
     id: "claude-4-sonnet",
@@ -109,5 +92,75 @@ export const ANTHROPIC_MODELS = [
       TOOL_CALLING_FEATURE,
     ],
     api_sdk: anthropic("claude-sonnet-4-20250514"),
+  },
+  {
+    id: "claude-4-5-sonnet",
+    name: "Claude 4.5 Sonnet",
+    provider: "anthropic",
+    premium: true,
+    usesPremiumCredits: true,
+    description:
+      "Anthropic's smartest model for complex agents and coding.\nOffers best balance of intelligence, speed, and cost.",
+    apiKeyUsage: { allowUserKey: true, userKeyOnly: false },
+    features: [
+      FILE_UPLOAD_FEATURE,
+      PDF_PROCESSING_FEATURE,
+      REASONING_FEATURE_DISABLED,
+      TOOL_CALLING_FEATURE,
+    ],
+    api_sdk: anthropic("claude-sonnet-4-5-20250929"),
+  },
+  {
+    id: "claude-4-5-sonnet-reasoning",
+    name: "Claude 4.5 Sonnet",
+    subName: "Reasoning",
+    provider: "anthropic",
+    premium: true,
+    usesPremiumCredits: true,
+    description:
+      "Claude 4.5 Sonnet with thinking capabilities enabled.\nDelivers enhanced performance for complex reasoning tasks.",
+    apiKeyUsage: { allowUserKey: true, userKeyOnly: false },
+    features: [
+      FILE_UPLOAD_FEATURE,
+      PDF_PROCESSING_FEATURE,
+      REASONING_FEATURE,
+      TOOL_CALLING_FEATURE,
+    ],
+    api_sdk: anthropic("claude-sonnet-4-5-20250929"),
+  },
+  {
+    id: "claude-4-5-haiku",
+    name: "Claude 4.5 Haiku",
+    provider: "anthropic",
+    premium: false,
+    usesPremiumCredits: false,
+    description:
+      "Anthropic's fastest model with near-frontier intelligence.\nIdeal for quick tasks and high-throughput applications.",
+    apiKeyUsage: { allowUserKey: true, userKeyOnly: false },
+    features: [
+      FILE_UPLOAD_FEATURE,
+      PDF_PROCESSING_FEATURE,
+      REASONING_FEATURE_DISABLED,
+      TOOL_CALLING_FEATURE,
+    ],
+    api_sdk: anthropic("claude-haiku-4-5-20251001"),
+  },
+  {
+    id: "claude-4-5-haiku-reasoning",
+    name: "Claude 4.5 Haiku",
+    subName: "Reasoning",
+    provider: "anthropic",
+    premium: false,
+    usesPremiumCredits: false,
+    description:
+      "Claude 4.5 Haiku with thinking capabilities enabled.\nFast reasoning for complex tasks.",
+    apiKeyUsage: { allowUserKey: true, userKeyOnly: false },
+    features: [
+      FILE_UPLOAD_FEATURE,
+      PDF_PROCESSING_FEATURE,
+      REASONING_FEATURE,
+      TOOL_CALLING_FEATURE,
+    ],
+    api_sdk: anthropic("claude-haiku-4-5-20251001"),
   },
 ];
