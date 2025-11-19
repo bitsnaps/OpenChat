@@ -46,7 +46,7 @@ export function detectRedactedInParts(
 
     // Check for redacted files
     if (part.type === "file" && part.url === "redacted") {
-      redactedFiles++;
+      redactedFiles += 1;
       continue;
     }
 
@@ -58,13 +58,13 @@ export function detectRedactedInParts(
         part.output === "REDACTED" ||
         part.error === "REDACTED")
     ) {
-      redactedTools++;
+      redactedTools += 1;
       continue;
     }
 
     // Check for redacted message parts
     if (part.type === "redacted") {
-      redactedParts++;
+      redactedParts += 1;
     }
   }
 

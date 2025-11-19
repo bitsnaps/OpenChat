@@ -49,9 +49,10 @@ export function useFileHandling() {
     [files, uploadFile, saveFileAttachment]
   );
 
-  const createOptimisticFiles = useCallback(() => {
-    return createOptimisticAttachments(files);
-  }, [files]);
+  const createOptimisticFiles = useCallback(
+    () => createOptimisticAttachments(files),
+    [files]
+  );
 
   return {
     files,

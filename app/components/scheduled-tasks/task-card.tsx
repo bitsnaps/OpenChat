@@ -114,13 +114,13 @@ function TaskCardComponent({ task, isMobile = false }: TaskCardProps) {
   };
 
   // Memoized schedule display computation
-  const scheduleDisplay = useMemo(() => {
-    return (
+  const scheduleDisplay = useMemo(
+    () =>
       SCHEDULE_TYPE_DISPLAY_MAP[
         task.scheduleType as keyof typeof SCHEDULE_TYPE_DISPLAY_MAP
-      ] || task.scheduleType
-    );
-  }, [task.scheduleType]);
+      ] || task.scheduleType,
+    [task.scheduleType]
+  );
 
   // Memoized weekly day computation
   const weeklyDay = useMemo(() => {
@@ -162,9 +162,10 @@ function TaskCardComponent({ task, isMobile = false }: TaskCardProps) {
   }, [task.status, task.nextExecution, formatTime]);
 
   // Memoized last execution display
-  const lastExecutionDisplay = useMemo(() => {
-    return formatTime(task.lastExecuted);
-  }, [task.lastExecuted, formatTime]);
+  const lastExecutionDisplay = useMemo(
+    () => formatTime(task.lastExecuted),
+    [task.lastExecuted, formatTime]
+  );
 
   // Memoized tooltip content
   const tooltipContent = useMemo(() => {

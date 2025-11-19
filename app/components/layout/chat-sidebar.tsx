@@ -389,7 +389,6 @@ const ChatSidebar = memo(function SidebarComponent() {
               {Array.from({ length: 5 }, (_, i) => (
                 <div
                   className="h-8 animate-pulse rounded bg-muted/50"
-                  // biome-ignore lint/suspicious/noArrayIndexKey: Static skeleton items don't change
                   key={i}
                 />
               ))}

@@ -248,11 +248,12 @@ export default function ApiKeysPage() {
   const [isDeleting, setIsDeleting] = useState(false);
 
   // Clear all input values on component unmount for security
-  useEffect(() => {
-    return () => {
+  useEffect(
+    () => () => {
       setInputValues({});
-    };
-  }, []);
+    },
+    []
+  );
 
   const handleSave = useCallback(
     async (provider: Provider) => {

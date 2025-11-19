@@ -164,7 +164,7 @@ export const getNextAvailableTime = (): string => {
 
   // If rounded minute is 60 or more, move to next hour
   if (nextMinute >= 60) {
-    nextHour++;
+    nextHour += 1;
     nextMinute = 0;
   }
 
@@ -327,14 +327,12 @@ export const getDayName = (dayNumber: number): string => {
   return days[dayNumber] || "Monday";
 };
 
-export const getDayOptions = (): Array<{ value: number; label: string }> => {
-  return [
-    { value: 0, label: "Sunday" },
-    { value: 1, label: "Monday" },
-    { value: 2, label: "Tuesday" },
-    { value: 3, label: "Wednesday" },
-    { value: 4, label: "Thursday" },
-    { value: 5, label: "Friday" },
-    { value: 6, label: "Saturday" },
-  ];
-};
+export const getDayOptions = (): Array<{ value: number; label: string }> => [
+  { value: 0, label: "Sunday" },
+  { value: 1, label: "Monday" },
+  { value: 2, label: "Tuesday" },
+  { value: 3, label: "Wednesday" },
+  { value: 4, label: "Thursday" },
+  { value: 5, label: "Friday" },
+  { value: 6, label: "Saturday" },
+];

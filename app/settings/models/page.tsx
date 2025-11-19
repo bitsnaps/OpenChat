@@ -104,9 +104,8 @@ export default function ModelsPage() {
   const { bulkSetFavoriteModels } = useModelPreferences();
 
   // Helper function to format display name with subName
-  const getDisplayName = (modelName: string, subName?: string) => {
-    return subName ? `${modelName} (${subName})` : modelName;
-  };
+  const getDisplayName = (modelName: string, subName?: string) =>
+    subName ? `${modelName} (${subName})` : modelName;
   const [disabled, setDisabled] = useState<Set<string>>(disabledModelsSet);
   const [filters, setFilters] = useState<Set<string>>(new Set());
   const [freeOnly, setFreeOnly] = useState(false);
@@ -132,16 +131,18 @@ export default function ModelsPage() {
 
   const isCurrentlyEnabled = (id: string) => !disabled.has(id);
 
-  const filteredModels = useMemo(() => {
-    return MODELS_OPTIONS.filter((m) => {
-      if (freeOnly && m.premium) {
-        return false;
-      }
-      return Array.from(filters).every((f) =>
-        m.features.some((feat) => feat.id === f && feat.enabled)
-      );
-    });
-  }, [filters, freeOnly]);
+  const filteredModels = useMemo(
+    () =>
+      MODELS_OPTIONS.filter((m) => {
+        if (freeOnly && m.premium) {
+          return false;
+        }
+        return Array.from(filters).every((f) =>
+          m.features.some((feat) => feat.id === f && feat.enabled)
+        );
+      }),
+    [filters, freeOnly]
+  );
 
   const handleToggle = async (id: string) => {
     const isCurrentlyDisabled = disabled.has(id);

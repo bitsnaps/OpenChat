@@ -153,31 +153,36 @@ export const UnifiedSearch = memo<UnifiedSearchProps>(
     }, [query, isLoading, stableSources.length]);
 
     // Memoized values to prevent recalculation on every render
-    const displayText = useMemo(() => {
-      return isLoading ? "Searching the web..." : query;
-    }, [isLoading, query]);
+    const displayText = useMemo(
+      () => (isLoading ? "Searching the web..." : query),
+      [isLoading, query]
+    );
 
-    const resultText = useMemo(() => {
-      return `${stableSources.length} result${stableSources.length !== 1 ? "s" : ""}`;
-    }, [stableSources.length]);
+    const resultText = useMemo(
+      () =>
+        `${stableSources.length} result${stableSources.length !== 1 ? "s" : ""}`,
+      [stableSources.length]
+    );
 
-    const buttonClassName = useMemo(() => {
-      return cn(
-        "group/row flex h-[2.625rem] flex-row items-center justify-between gap-4 rounded-xl px-3 py-2 text-muted-foreground transition-colors duration-200",
-        isLoading ? "cursor-default" : "cursor-pointer hover:text-foreground"
-      );
-    }, [isLoading]);
+    const buttonClassName = useMemo(
+      () =>
+        cn(
+          "group/row flex h-[2.625rem] flex-row items-center justify-between gap-4 rounded-xl px-3 py-2 text-muted-foreground transition-colors duration-200",
+          isLoading ? "cursor-default" : "cursor-pointer hover:text-foreground"
+        ),
+      [isLoading]
+    );
 
-    const caretClassName = useMemo(() => {
-      return cn(
-        "flex transform items-center justify-center text-muted-foreground transition-transform duration-300 ease-out",
-        isExpanded ? "rotate-180" : "rotate-0"
-      );
-    }, [isExpanded]);
+    const caretClassName = useMemo(
+      () =>
+        cn(
+          "flex transform items-center justify-center text-muted-foreground transition-transform duration-300 ease-out",
+          isExpanded ? "rotate-180" : "rotate-0"
+        ),
+      [isExpanded]
+    );
 
-    const resultsClassName = useMemo(() => {
-      return "shrink-0 overflow-hidden";
-    }, []);
+    const resultsClassName = useMemo(() => "shrink-0 overflow-hidden", []);
 
     // Memoized event handlers to prevent child rerenders
     const handleToggleExpanded = useCallback(() => {

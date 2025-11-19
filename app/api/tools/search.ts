@@ -31,13 +31,12 @@ export const formatMarkdown = (result: SearchResult): string => {
   return markdown;
 };
 
-export const processResults = (results: SearchResult[]): SearchResult[] => {
-  return results.map((result) => ({
+export const processResults = (results: SearchResult[]): SearchResult[] =>
+  results.map((result) => ({
     ...result,
     content: result.content ? truncateContent(result.content) : undefined,
     markdown: result.markdown || formatMarkdown(result),
   }));
-};
 
 // Main search tool
 export const searchTool = tool({

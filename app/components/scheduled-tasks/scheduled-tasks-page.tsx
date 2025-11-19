@@ -37,18 +37,20 @@ export function ScheduledTasksPage() {
   const { data: tasks = [], isLoading } = useTanStackQuery(queryConfig);
 
   // Memoized task filtering to prevent recalculation on every render
-  const filteredTasks = useMemo(() => {
-    return tasks.filter((task) => {
-      if (activeTab === "active") {
-        return (
-          task.status === "active" ||
-          task.status === "paused" ||
-          task.status === "running"
-        );
-      }
-      return task.status === "archived";
-    });
-  }, [tasks, activeTab]);
+  const filteredTasks = useMemo(
+    () =>
+      tasks.filter((task) => {
+        if (activeTab === "active") {
+          return (
+            task.status === "active" ||
+            task.status === "paused" ||
+            task.status === "running"
+          );
+        }
+        return task.status === "archived";
+      }),
+    [tasks, activeTab]
+  );
 
   // Memoized tab change handler to prevent recreation on every render
   const handleTabChange = useCallback((value: string) => {
@@ -126,7 +128,6 @@ export function ScheduledTasksPage() {
             {SKELETON_ARRAY.map((_, i) => (
               <div
                 className="h-28 animate-pulse rounded-xl bg-muted/50"
-                // biome-ignore lint/suspicious/noArrayIndexKey: Static skeleton items
                 key={i}
               />
             ))}

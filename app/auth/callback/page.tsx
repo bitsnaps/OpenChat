@@ -40,13 +40,14 @@ function AuthenticatedCallback() {
   );
 
   // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
+  useEffect(
+    () => () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
-    };
-  }, []);
+    },
+    []
+  );
 
   const handleCallback = useCallback(async () => {
     try {

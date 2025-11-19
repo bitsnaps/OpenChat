@@ -81,35 +81,29 @@ type CreateAgentBoundary = {
 };
 
 // Type guard for error parts
-const isErrorPart = (part: unknown): part is ErrorUIPart => {
-  return (
-    typeof part === "object" &&
-    part !== null &&
-    "type" in part &&
-    part.type === "error" &&
-    "error" in part &&
-    typeof part.error === "object" &&
-    part.error !== null &&
-    "code" in part.error &&
-    typeof part.error.code === "string" &&
-    "message" in part.error &&
-    typeof part.error.message === "string"
-  );
-};
+const isErrorPart = (part: unknown): part is ErrorUIPart =>
+  typeof part === "object" &&
+  part !== null &&
+  "type" in part &&
+  part.type === "error" &&
+  "error" in part &&
+  typeof part.error === "object" &&
+  part.error !== null &&
+  "code" in part.error &&
+  typeof part.error.code === "string" &&
+  "message" in part.error &&
+  typeof part.error.message === "string";
 
 type ToolInvocationPart = ToolUIPart | DynamicToolUIPart;
 
 const isToolInvocationPart = (
   part: MessageType["parts"][number]
-): part is ToolInvocationPart => {
-  return (
-    typeof part === "object" &&
-    part !== null &&
-    "type" in part &&
-    typeof part.type === "string" &&
-    (part.type.startsWith("tool-") || part.type === "dynamic-tool")
-  );
-};
+): part is ToolInvocationPart =>
+  typeof part === "object" &&
+  part !== null &&
+  "type" in part &&
+  typeof part.type === "string" &&
+  (part.type.startsWith("tool-") || part.type === "dynamic-tool");
 
 const getToolNameFromPart = (part: ToolInvocationPart): string => {
   if (part.type === "dynamic-tool") {
@@ -121,11 +115,8 @@ const getToolNameFromPart = (part: ToolInvocationPart): string => {
 
 const isCreateAgentToolPart = (
   part: MessageType["parts"][number]
-): part is ToolInvocationPart => {
-  return (
-    isToolInvocationPart(part) && getToolNameFromPart(part) === "create_agent"
-  );
-};
+): part is ToolInvocationPart =>
+  isToolInvocationPart(part) && getToolNameFromPart(part) === "create_agent";
 
 const extractCreateAgentMetadata = (
   part: ToolInvocationPart
@@ -176,21 +167,18 @@ type AgentBoundaryDataPart = {
 
 const isAgentBoundaryPart = (
   part: MessageType["parts"][number]
-): part is AgentBoundaryDataPart => {
-  return (
-    typeof part === "object" &&
-    part !== null &&
-    "type" in part &&
-    part.type === "data-agent-boundary" &&
-    "data" in part &&
-    typeof part.data === "object" &&
-    part.data !== null &&
-    "type" in part.data &&
-    (part.data.type === "start" || part.data.type === "end") &&
-    "agentId" in part.data &&
-    "boundaryId" in part.data
-  );
-};
+): part is AgentBoundaryDataPart =>
+  typeof part === "object" &&
+  part !== null &&
+  "type" in part &&
+  part.type === "data-agent-boundary" &&
+  "data" in part &&
+  typeof part.data === "object" &&
+  part.data !== null &&
+  "type" in part.data &&
+  (part.data.type === "start" || part.data.type === "end") &&
+  "agentId" in part.data &&
+  "boundaryId" in part.data;
 
 // Helper function to find create_agent tool boundaries using custom markers
 const findCreateAgentBoundaries = (
@@ -574,27 +562,25 @@ const renderReasoningPart = (
   showReasoning: boolean,
   toggleReasoning: () => void,
   isPartStreaming: boolean
-) => {
-  return (
-    <div className="mb-2 w-full" key={`reasoning-${index}`}>
-      <Reasoning
-        expanded={showReasoning}
-        isLoading={isPartStreaming}
-        onToggle={toggleReasoning}
-      >
-        <ReasoningTrigger />
-        <ReasoningContent>
-          <Markdown
-            className="prose prose-sm dark:prose-invert w-full max-w-none break-words leading-relaxed"
-            id={`${id}-reasoning-${index}`}
-          >
-            {part.text}
-          </Markdown>
-        </ReasoningContent>
-      </Reasoning>
-    </div>
-  );
-};
+) => (
+  <div className="mb-2 w-full" key={`reasoning-${index}`}>
+    <Reasoning
+      expanded={showReasoning}
+      isLoading={isPartStreaming}
+      onToggle={toggleReasoning}
+    >
+      <ReasoningTrigger />
+      <ReasoningContent>
+        <Markdown
+          className="prose prose-sm dark:prose-invert w-full max-w-none break-words leading-relaxed"
+          id={`${id}-reasoning-${index}`}
+        >
+          {part.text}
+        </Markdown>
+      </ReasoningContent>
+    </Reasoning>
+  </div>
+);
 
 type ExtendedToolUIPart = ToolUIPart & { toolName?: string };
 
@@ -957,17 +943,15 @@ const renderPartInChainOfThought = (
   }
 };
 
-const renderErrorPart = (part: ErrorUIPart, index: number) => {
-  return (
-    <div
-      className="mt-4 flex items-start gap-3 rounded-lg bg-red-500/15 px-4 py-3 text-red-900 text-sm dark:text-red-400"
-      key={`error-${index}`}
-      role="alert"
-    >
-      <div className="leading-relaxed">{part.error.message}</div>
-    </div>
-  );
-};
+const renderErrorPart = (part: ErrorUIPart, index: number) => (
+  <div
+    className="mt-4 flex items-start gap-3 rounded-lg bg-red-500/15 px-4 py-3 text-red-900 text-sm dark:text-red-400"
+    key={`error-${index}`}
+    role="alert"
+  >
+    <div className="leading-relaxed">{part.error.message}</div>
+  </div>
+);
 
 type NormalSegment = {
   type: "normal";
@@ -1054,11 +1038,10 @@ const segmentPartsByAgentBoundaries = (
   return segments;
 };
 
-const agentSegmentHasEnd = (segment: AgentSegment): boolean => {
-  return segment.parts.some(
+const agentSegmentHasEnd = (segment: AgentSegment): boolean =>
+  segment.parts.some(
     (part) => isAgentBoundaryPart(part) && part.data.type === "end"
   );
-};
 
 function MessageAssistantInner({
   isLast,

@@ -714,9 +714,7 @@ export const getUser = internalQuery({
       ...User.fields,
     })
   ),
-  handler: async (ctx, args) => {
-    return await ctx.db.get(args.userId);
-  },
+  handler: async (ctx, args) => await ctx.db.get(args.userId),
 });
 
 // Internal mutation to check rate limits for scheduled tasks

@@ -509,9 +509,7 @@ export const getTask = internalQuery({
       chatId: v.optional(v.id("chats")),
     })
   ),
-  handler: async (ctx, args) => {
-    return await ctx.db.get(args.taskId);
-  },
+  handler: async (ctx, args) => await ctx.db.get(args.taskId),
 });
 
 // Internal mutation to update task after execution

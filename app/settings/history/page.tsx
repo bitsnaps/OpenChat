@@ -378,6 +378,126 @@ export default function HistoryPage() {
     }
   };
 
+  const renderChatsList = () => {
+    if (!chats) {
+      return (
+        <div className="max-h-[21vh] divide-y overflow-y-auto rounded-lg border">
+          {Array.from({ length: 6 }).map((_, i) => {
+            const key = `skeleton-${i}`;
+            return (
+              <div
+                className="flex items-center gap-2 px-4 py-1 text-sm"
+                key={key}
+              >
+                <div className="h-4 w-4 animate-pulse rounded bg-muted" />
+                <div className="h-4 flex-1 animate-pulse rounded bg-muted" />
+                <div className="ml-auto flex w-24 shrink-0 flex-col items-end gap-1 px-1">
+                  <div className="h-3 w-16 animate-pulse rounded bg-muted" />
+                  <div className="h-3 w-8 animate-pulse rounded bg-muted" />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      );
+    }
+
+    if (chats.length === 0) {
+      return <p className="text-muted-foreground">No chats found.</p>;
+    }
+
+    return (
+      <div className="max-h-[21vh] divide-y overflow-y-auto rounded-lg border">
+        {chats.map((chat) => (
+          <div
+            className={`flex items-center gap-4 px-4 py-1 text-sm ${isSelected(chat._id as Id<"chats">) ? "bg-muted/50" : ""}`}
+            key={chat._id}
+          >
+            <Checkbox
+              checked={isSelected(chat._id as Id<"chats">)}
+              onCheckedChange={() => toggleSelect(chat._id as Id<"chats">)}
+            />
+            <span className="flex-1 truncate font-medium">
+              {chat.title || "Untitled Chat"}
+            </span>
+            <div className="ml-auto flex items-center gap-1">
+              {chat.public ? (
+                <div className="flex items-center gap-1">
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          aria-label="Copy share link"
+                          className="rounded-md transition-[border-radius] duration-200 hover:rounded-full"
+                          onClick={async () => {
+                            try {
+                              await navigator.clipboard.writeText(
+                                `${APP_BASE_URL}/share/${chat._id}`
+                              );
+                              toast({
+                                title: "Link copied",
+                                status: "success",
+                              });
+                            } catch {
+                              toast({
+                                title: "Failed to copy link",
+                                status: "error",
+                              });
+                            }
+                          }}
+                          size="icon"
+                          type="button"
+                          variant="ghost"
+                        >
+                          <Copy aria-hidden className="size-4" />
+                          <span className="sr-only">Copy share link</span>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Copy link</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          aria-label="Unshare conversation"
+                          className="rounded-md transition-[border-radius] duration-200 hover:rounded-full"
+                          onClick={() =>
+                            setRevokeChatId(chat._id as Id<"chats">)
+                          }
+                          size="icon"
+                          type="button"
+                          variant="ghost"
+                        >
+                          <XCircle aria-hidden className="size-4" />
+                          <span className="sr-only">Unshare conversation</span>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Unshare</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+              ) : null}
+              {(() => {
+                const { dateTime, ampm } = formatDateLines(
+                  chat.updatedAt ?? chat.createdAt
+                );
+                return (
+                  <div className="flex w-24 shrink-0 flex-col items-end px-1">
+                    <span className="text-xs">{dateTime}</span>
+                    <span className="text-[10px] text-muted-foreground">
+                      {ampm}
+                    </span>
+                  </div>
+                );
+              })()}
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   return (
     <div className="w-full space-y-12">
       <div className="space-y-6">
@@ -473,125 +593,7 @@ export default function HistoryPage() {
             </div>
           </div>
           {/* Chats List */}
-          {chats ? (
-            chats.length === 0 ? (
-              <p className="text-muted-foreground">No chats found.</p>
-            ) : (
-              <div className="max-h-[21vh] divide-y overflow-y-auto rounded-lg border">
-                {chats.map((chat) => (
-                  <div
-                    className={`flex items-center gap-4 px-4 py-1 text-sm ${isSelected(chat._id as Id<"chats">) ? "bg-muted/50" : ""}`}
-                    key={chat._id}
-                  >
-                    <Checkbox
-                      checked={isSelected(chat._id as Id<"chats">)}
-                      onCheckedChange={() =>
-                        toggleSelect(chat._id as Id<"chats">)
-                      }
-                    />
-                    <span className="flex-1 truncate font-medium">
-                      {chat.title || "Untitled Chat"}
-                    </span>
-                    <div className="ml-auto flex items-center gap-1">
-                      {chat.public ? (
-                        <div className="flex items-center gap-1">
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button
-                                  aria-label="Copy share link"
-                                  className="rounded-md transition-[border-radius] duration-200 hover:rounded-full"
-                                  onClick={async () => {
-                                    try {
-                                      await navigator.clipboard.writeText(
-                                        `${APP_BASE_URL}/share/${chat._id}`
-                                      );
-                                      toast({
-                                        title: "Link copied",
-                                        status: "success",
-                                      });
-                                    } catch {
-                                      toast({
-                                        title: "Failed to copy link",
-                                        status: "error",
-                                      });
-                                    }
-                                  }}
-                                  size="icon"
-                                  type="button"
-                                  variant="ghost"
-                                >
-                                  <Copy aria-hidden className="size-4" />
-                                  <span className="sr-only">
-                                    Copy share link
-                                  </span>
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>Copy link</TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button
-                                  aria-label="Unshare conversation"
-                                  className="rounded-md transition-[border-radius] duration-200 hover:rounded-full"
-                                  onClick={() =>
-                                    setRevokeChatId(chat._id as Id<"chats">)
-                                  }
-                                  size="icon"
-                                  type="button"
-                                  variant="ghost"
-                                >
-                                  <XCircle aria-hidden className="size-4" />
-                                  <span className="sr-only">
-                                    Unshare conversation
-                                  </span>
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>Unshare</TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        </div>
-                      ) : null}
-                      {(() => {
-                        const { dateTime, ampm } = formatDateLines(
-                          chat.updatedAt ?? chat.createdAt
-                        );
-                        return (
-                          <div className="flex w-24 shrink-0 flex-col items-end px-1">
-                            <span className="text-xs">{dateTime}</span>
-                            <span className="text-[10px] text-muted-foreground">
-                              {ampm}
-                            </span>
-                          </div>
-                        );
-                      })()}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )
-          ) : (
-            <div className="max-h-[21vh] divide-y overflow-y-auto rounded-lg border">
-              {Array.from({ length: 6 }).map((_, i) => {
-                const key = `skeleton-${i}`;
-                return (
-                  <div
-                    className="flex items-center gap-2 px-4 py-1 text-sm"
-                    key={key}
-                  >
-                    <div className="h-4 w-4 animate-pulse rounded bg-muted" />
-                    <div className="h-4 flex-1 animate-pulse rounded bg-muted" />
-                    <div className="ml-auto flex w-24 shrink-0 flex-col items-end gap-1 px-1">
-                      <div className="h-3 w-16 animate-pulse rounded bg-muted" />
-                      <div className="h-3 w-8 animate-pulse rounded bg-muted" />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
+          {renderChatsList()}
         </div>
       </div>
 

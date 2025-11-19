@@ -9,7 +9,7 @@ import {
 
 export class TavilySearchProvider implements SearchAdapter {
   readonly name = "tavily";
-  private readonly apiKey: string;
+  readonly apiKey: string;
   private readonly baseUrl = "https://api.tavily.com/search";
 
   constructor(apiKey: string) {

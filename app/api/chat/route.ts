@@ -242,13 +242,10 @@ const shouldEnableThinking = (modelId: string): boolean => {
  */
 const supportsToolCalling = (
   selectedModel: (typeof MODELS_MAP)[string]
-): boolean => {
-  return (
-    selectedModel.features?.some(
-      (feature) => feature.id === "tool-calling" && feature.enabled === true
-    ) ?? false
-  );
-};
+): boolean =>
+  selectedModel.features?.some(
+    (feature) => feature.id === "tool-calling" && feature.enabled === true
+  ) ?? false;
 
 const buildGoogleProviderOptions = (
   modelId: string,

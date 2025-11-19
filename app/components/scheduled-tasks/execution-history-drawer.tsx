@@ -88,12 +88,13 @@ function ExecutionHistoryDrawerComponent({
     useTanStackQuery(statsQueryConfig);
 
   // Memoized formatters
-  const formatTime = useMemo(() => {
-    return (timestamp: number) => dayjs(timestamp).format("MMM D, h:mm a");
-  }, []);
+  const formatTime = useMemo(
+    () => (timestamp: number) => dayjs(timestamp).format("MMM D, h:mm a"),
+    []
+  );
 
-  const formatDuration = useMemo(() => {
-    return (startTime: number, endTime?: number) => {
+  const formatDuration = useMemo(
+    () => (startTime: number, endTime?: number) => {
       if (!endTime) {
         return "Running...";
       }
@@ -105,8 +106,9 @@ function ExecutionHistoryDrawerComponent({
       const minutes = Math.floor(seconds / 60);
       const remainingSeconds = seconds % 60;
       return `${minutes}m ${remainingSeconds}s`;
-    };
-  }, []);
+    },
+    []
+  );
 
   return (
     <Drawer onOpenChange={setIsOpen} open={isOpen}>
@@ -176,7 +178,6 @@ function ExecutionHistoryDrawerComponent({
                   {Array.from({ length: 3 }).map((_, i) => (
                     <div
                       className="h-16 animate-pulse rounded-lg bg-muted/50"
-                      // biome-ignore lint/suspicious/noArrayIndexKey: Static skeleton items
                       key={i}
                     />
                   ))}
@@ -259,11 +260,8 @@ function ExecutionHistoryDrawerComponent({
 // Memoize ExecutionHistoryDrawer component
 export const ExecutionHistoryDrawer = memo(
   ExecutionHistoryDrawerComponent,
-  (prevProps, nextProps) => {
-    return (
-      prevProps.taskId === nextProps.taskId &&
-      prevProps.taskTitle === nextProps.taskTitle &&
-      prevProps.trigger === nextProps.trigger
-    );
-  }
+  (prevProps, nextProps) =>
+    prevProps.taskId === nextProps.taskId &&
+    prevProps.taskTitle === nextProps.taskTitle &&
+    prevProps.trigger === nextProps.trigger
 );

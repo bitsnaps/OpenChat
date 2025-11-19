@@ -33,9 +33,10 @@ export function useEnrichedModels() {
   const { favoriteModelsSet } = useModelPreferences();
 
   // Transform API keys array to Map for O(1) lookups
-  const apiKeysMap = useMemo(() => {
-    return new Map(apiKeys.map((key) => [key.provider, true]));
-  }, [apiKeys]);
+  const apiKeysMap = useMemo(
+    () => new Map(apiKeys.map((key) => [key.provider, true])),
+    [apiKeys]
+  );
 
   const enrichedModels = useMemo(() => {
     return MODELS_OPTIONS.map((model): EnrichedModel => {

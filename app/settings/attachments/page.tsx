@@ -114,6 +114,88 @@ export default function AttachmentsPage() {
     }
   };
 
+  const renderAttachmentsList = () => {
+    if (!attachments) {
+      return (
+        <div className="space-y-4">
+          {["skeleton-1", "skeleton-2", "skeleton-3"].map((skeletonId) => (
+            <Card key={skeletonId}>
+              <CardContent className="flex items-center gap-4 p-4">
+                <Skeleton className="h-4 w-4" />
+                <Skeleton className="h-10 w-10" />
+                <div className="flex min-w-0 flex-1 flex-col gap-1">
+                  <Skeleton className="h-4 w-2/3" />
+                  <Skeleton className="h-3 w-1/3" />
+                </div>
+                <Skeleton className="h-8 w-8" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      );
+    }
+
+    if (attachments.length === 0) {
+      return <p className="text-muted-foreground">No attachments found.</p>;
+    }
+
+    return (
+      <div className="space-y-4">
+        {attachments.map((att) => (
+          <Card
+            className={`${isSelected(att._id as Id<"chat_attachments">) ? "bg-muted/50 py-3" : "py-3"}`}
+            key={att._id}
+          >
+            <CardContent className="flex items-center gap-4 px-4">
+              <Checkbox
+                checked={isSelected(att._id as Id<"chat_attachments">)}
+                onCheckedChange={() =>
+                  toggleSelect(att._id as Id<"chat_attachments">)
+                }
+              />
+              {(att.fileType?.startsWith("image/") ?? false) && att.url ? (
+                <div className="h-10 w-10 overflow-hidden rounded border">
+                  <Image
+                    alt={att.fileName ?? "attachment"}
+                    className="h-full w-full object-cover"
+                    height={40}
+                    src={att.url}
+                    width={40}
+                  />
+                </div>
+              ) : (
+                <div className="flex h-10 w-10 items-center justify-center rounded border bg-muted/5">
+                  <FileText className="size-5 text-muted-foreground" />
+                </div>
+              )}
+              <div className="flex min-w-0 flex-1 flex-col gap-1">
+                <a
+                  className="flex items-center gap-1 truncate text-primary hover:underline"
+                  href={att.url ?? undefined}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <span className="truncate">{att.fileName ?? att.key}</span>
+                  <ArrowSquareOut className="size-4 shrink-0" />
+                </a>
+                <span className="text-muted-foreground text-sm">
+                  {att.fileType ?? "file"} • {formatBytes(att.fileSize ?? 0)}
+                </span>
+              </div>
+              <Button
+                onClick={() => handleDelete(att._id as Id<"chat_attachments">)}
+                size="icon"
+                variant="destructive"
+              >
+                <Trash className="size-4" />
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    );
+  };
+
   return (
     <div className="w-full">
       <div className="space-y-6">
@@ -180,85 +262,7 @@ export default function AttachmentsPage() {
             )}
           </div>
           {/* Attachments List */}
-          {attachments ? (
-            attachments.length === 0 ? (
-              <p className="text-muted-foreground">No attachments found.</p>
-            ) : (
-              attachments.map((att) => (
-                <Card
-                  className={`${isSelected(att._id as Id<"chat_attachments">) ? "bg-muted/50 py-3" : "py-3"}`}
-                  key={att._id}
-                >
-                  <CardContent className="flex items-center gap-4 px-4">
-                    <Checkbox
-                      checked={isSelected(att._id as Id<"chat_attachments">)}
-                      onCheckedChange={() =>
-                        toggleSelect(att._id as Id<"chat_attachments">)
-                      }
-                    />
-                    {(att.fileType?.startsWith("image/") ?? false) &&
-                    att.url ? (
-                      <div className="h-10 w-10 overflow-hidden rounded border">
-                        <Image
-                          alt={att.fileName ?? "attachment"}
-                          className="h-full w-full object-cover"
-                          height={40}
-                          src={att.url}
-                          width={40}
-                        />
-                      </div>
-                    ) : (
-                      <div className="flex h-10 w-10 items-center justify-center rounded border bg-muted/5">
-                        <FileText className="size-5 text-muted-foreground" />
-                      </div>
-                    )}
-                    <div className="flex min-w-0 flex-1 flex-col gap-1">
-                      <a
-                        className="flex items-center gap-1 truncate text-primary hover:underline"
-                        href={att.url ?? undefined}
-                        rel="noopener noreferrer"
-                        target="_blank"
-                      >
-                        <span className="truncate">
-                          {att.fileName ?? att.key}
-                        </span>
-                        <ArrowSquareOut className="size-4 shrink-0" />
-                      </a>
-                      <span className="text-muted-foreground text-sm">
-                        {att.fileType ?? "file"} •{" "}
-                        {formatBytes(att.fileSize ?? 0)}
-                      </span>
-                    </div>
-                    <Button
-                      onClick={() =>
-                        handleDelete(att._id as Id<"chat_attachments">)
-                      }
-                      size="icon"
-                      variant="destructive"
-                    >
-                      <Trash className="size-4" />
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))
-            )
-          ) : (
-            <div className="space-y-4">
-              {["skeleton-1", "skeleton-2", "skeleton-3"].map((skeletonId) => (
-                <Card key={skeletonId}>
-                  <CardContent className="flex items-center gap-4 p-4">
-                    <Skeleton className="h-4 w-4" />
-                    <Skeleton className="h-10 w-10" />
-                    <div className="flex min-w-0 flex-1 flex-col gap-1">
-                      <Skeleton className="h-4 w-2/3" />
-                      <Skeleton className="h-3 w-1/3" />
-                    </div>
-                    <Skeleton className="h-8 w-8" />
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          )}
+          {renderAttachmentsList()}
         </div>
       </div>
 

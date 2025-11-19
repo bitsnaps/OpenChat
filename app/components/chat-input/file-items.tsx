@@ -24,11 +24,12 @@ export function FileItem({ file, onRemoveAction }: FileItemProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [objectUrl] = useState(() => URL.createObjectURL(file));
 
-  useEffect(() => {
-    return () => {
+  useEffect(
+    () => () => {
       URL.revokeObjectURL(objectUrl);
-    };
-  }, [objectUrl]);
+    },
+    [objectUrl]
+  );
 
   const handleRemove = () => {
     setIsRemoving(true);

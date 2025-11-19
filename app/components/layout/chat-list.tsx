@@ -57,9 +57,8 @@ export const ChatList = memo(function ChatListComponent({
 
   // Helper function to get parent chat title for reuse across both sections (memoized)
   const getParentChatTitle = useCallback(
-    (originalChatId: Id<"chats"> | undefined): string | undefined => {
-      return originalChatId ? chatLookupMap.get(originalChatId) : undefined;
-    },
+    (originalChatId: Id<"chats"> | undefined): string | undefined =>
+      originalChatId ? chatLookupMap.get(originalChatId) : undefined,
     [chatLookupMap]
   );
 

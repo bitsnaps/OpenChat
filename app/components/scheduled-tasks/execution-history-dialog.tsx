@@ -87,12 +87,13 @@ function ExecutionHistoryDialogComponent({
     useTanStackQuery(statsQueryConfig);
 
   // Memoized formatters
-  const formatTime = useMemo(() => {
-    return (timestamp: number) => dayjs(timestamp).format("MMM D, h:mm a");
-  }, []);
+  const formatTime = useMemo(
+    () => (timestamp: number) => dayjs(timestamp).format("MMM D, h:mm a"),
+    []
+  );
 
-  const formatDuration = useMemo(() => {
-    return (startTime: number, endTime?: number) => {
+  const formatDuration = useMemo(
+    () => (startTime: number, endTime?: number) => {
       if (!endTime) {
         return "Running...";
       }
@@ -104,8 +105,9 @@ function ExecutionHistoryDialogComponent({
       const minutes = Math.floor(seconds / 60);
       const remainingSeconds = seconds % 60;
       return `${minutes}m ${remainingSeconds}s`;
-    };
-  }, []);
+    },
+    []
+  );
 
   return (
     <Dialog onOpenChange={setIsOpen} open={isOpen}>
@@ -170,7 +172,6 @@ function ExecutionHistoryDialogComponent({
                   {Array.from({ length: 3 }).map((_, i) => (
                     <div
                       className="h-16 animate-pulse rounded-lg bg-muted/50"
-                      // biome-ignore lint/suspicious/noArrayIndexKey: Static skeleton items
                       key={i}
                     />
                   ))}
@@ -261,11 +262,8 @@ function ExecutionHistoryDialogComponent({
 // Memoize the component to prevent unnecessary re-renders
 export const ExecutionHistoryDialog = memo(
   ExecutionHistoryDialogComponent,
-  (prevProps, nextProps) => {
-    return (
-      prevProps.taskId === nextProps.taskId &&
-      prevProps.taskTitle === nextProps.taskTitle &&
-      prevProps.trigger === nextProps.trigger
-    );
-  }
+  (prevProps, nextProps) =>
+    prevProps.taskId === nextProps.taskId &&
+    prevProps.taskTitle === nextProps.taskTitle &&
+    prevProps.trigger === nextProps.trigger
 );

@@ -102,9 +102,10 @@ export function useChatValidation() {
     []
   );
 
-  const validateSearchQuery = useCallback((query: string) => {
-    return validateQueryParam(query);
-  }, []);
+  const validateSearchQuery = useCallback(
+    (query: string) => validateQueryParam(query),
+    []
+  );
 
   return {
     checkRateLimits,

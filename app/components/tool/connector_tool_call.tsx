@@ -86,13 +86,14 @@ const CopyButton = memo<{ content: string; size?: number }>(
     }, [content]);
 
     // Cleanup timeout on unmount
-    useEffect(() => {
-      return () => {
+    useEffect(
+      () => () => {
         if (timeoutRef.current !== null) {
           clearTimeout(timeoutRef.current);
         }
-      };
-    }, []);
+      },
+      []
+    );
 
     // Get Tailwind size classes based on size prop
     const getSizeClasses = (sizeValue: number): string => {
@@ -199,21 +200,22 @@ export const ConnectorToolCall = memo<ConnectorToolCallProps>(
       return "Completed";
     }, [isLoading, data.response]);
 
-    const buttonClassName = useMemo(() => {
-      return cn(
-        "group/row flex h-[2.625rem] flex-row items-center justify-between gap-4 rounded-xl px-3 py-2",
-        "text-muted-foreground transition-colors duration-200",
-        isLoading ? "cursor-default" : "cursor-pointer hover:text-foreground"
-      );
-    }, [isLoading]);
+    const buttonClassName = useMemo(
+      () =>
+        cn(
+          "group/row flex h-[2.625rem] flex-row items-center justify-between gap-4 rounded-xl px-3 py-2",
+          "text-muted-foreground transition-colors duration-200",
+          isLoading ? "cursor-default" : "cursor-pointer hover:text-foreground"
+        ),
+      [isLoading]
+    );
 
-    const caretClassName = useMemo(() => {
-      return "flex items-center justify-center text-muted-foreground";
-    }, []);
+    const caretClassName = useMemo(
+      () => "flex items-center justify-center text-muted-foreground",
+      []
+    );
 
-    const resultsClassName = useMemo(() => {
-      return "shrink-0 overflow-hidden";
-    }, []);
+    const resultsClassName = useMemo(() => "shrink-0 overflow-hidden", []);
 
     const handleToggleExpanded = useCallback(() => {
       if (!isLoading) {
@@ -221,13 +223,15 @@ export const ConnectorToolCall = memo<ConnectorToolCallProps>(
       }
     }, [isLoading]);
 
-    const requestContent = useMemo(() => {
-      return formatJsonContent(data.request);
-    }, [data.request]);
+    const requestContent = useMemo(
+      () => formatJsonContent(data.request),
+      [data.request]
+    );
 
-    const responseContent = useMemo(() => {
-      return formatJsonContent(data.response);
-    }, [data.response]);
+    const responseContent = useMemo(
+      () => formatJsonContent(data.response),
+      [data.response]
+    );
 
     return (
       <div className={cn("my-3 w-full", className)}>

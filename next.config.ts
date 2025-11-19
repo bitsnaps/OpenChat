@@ -24,14 +24,9 @@ const nextConfig: NextConfig = {
       "@ridemountainpig/svgl-react",
       "@lobehub/icons",
     ],
-    reactCompiler: true,
   },
-  eslint: {
-    // @todo: remove before going live
-    // ignoreDuringBuilds: true,
-  },
+  reactCompiler: true,
   images: {
-    domains: [],
     remotePatterns: [
       {
         protocol: "https",
@@ -67,7 +62,6 @@ const nextConfig: NextConfig = {
       })(),
     ],
   },
-  // biome-ignore lint/suspicious/useAwait: Next.js API requires async rewrites function
   async rewrites() {
     return [
       {
