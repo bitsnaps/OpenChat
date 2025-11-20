@@ -1,8 +1,17 @@
-import DOMPurify from "isomorphic-dompurify";
+const HTML_ESCAPE_MAP: Record<string, string> = {
+  "&": "&amp;",
+  "<": "&lt;",
+  ">": "&gt;",
+  '"': "&quot;",
+  "'": "&#39;",
+};
+
+const HTML_ESCAPE_REGEX = /[&<>"']/g;
 
 export function sanitizeUserInput(input: string): string {
-  // First, sanitize any HTML tags to avoid potential XSS.
-  const purified = DOMPurify.sanitize(input);
-  // Storage and DB layers support UTF-8, so we keep the content intact (including emojis and non-Latin chars).
-  return purified;
+  const safeInput = input ?? "";
+  return safeInput.replace(
+    HTML_ESCAPE_REGEX,
+    (char) => HTML_ESCAPE_MAP[char] || char
+  );
 }
