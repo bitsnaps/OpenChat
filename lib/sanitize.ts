@@ -1,8 +1,4 @@
-import createDOMPurify from "dompurify";
-import { JSDOM } from "jsdom";
-
-const window = new JSDOM("").window;
-const DOMPurify = createDOMPurify(window);
+import DOMPurify from "isomorphic-dompurify";
 
 export function sanitizeUserInput(input: string): string {
   // First, sanitize any HTML tags to avoid potential XSS.
