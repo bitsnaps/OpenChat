@@ -94,7 +94,7 @@ export const executeTask = internalAction({
         {
           userId: task.userId,
           title: `${task.title} - ${currentDate} ${currentTime}`,
-          model: "moonshotai/kimi-k2-0905",
+          model: "minimax/minimax-m2",
         }
       );
 
@@ -189,7 +189,7 @@ export const executeTask = internalAction({
       );
 
       // Get Kimi K2 0905 model
-      const selectedModel = MODELS_MAP["moonshotai/kimi-k2-0905"];
+      const selectedModel = MODELS_MAP["minimax/minimax-m2"];
       if (!selectedModel) {
         // console.log('Kimi K2 0905 model not found');
         return null;
