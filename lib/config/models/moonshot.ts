@@ -1,4 +1,4 @@
-import { TOOL_CALLING_FEATURE } from "../features";
+import { REASONING_FEATURE, TOOL_CALLING_FEATURE } from "../features";
 import { openrouter } from "../openrouter";
 
 export const MOONSHOT_MODELS = [
@@ -28,5 +28,18 @@ export const MOONSHOT_MODELS = [
     apiKeyUsage: { allowUserKey: false, userKeyOnly: false },
     features: [TOOL_CALLING_FEATURE],
     api_sdk: openrouter("moonshotai/kimi-k2-0905:nitro"),
+  },
+  {
+    id: "moonshotai/kimi-k2-thinking",
+    name: "Kimi K2 Thinking",
+    provider: "openrouter",
+    displayProvider: "moonshotai",
+    premium: true,
+    usesPremiumCredits: true,
+    description:
+      "Moonshot AI's advanced open reasoning model.\nOptimized for persistent step-by-step thought and complex workflows.",
+    apiKeyUsage: { allowUserKey: false, userKeyOnly: false },
+    features: [TOOL_CALLING_FEATURE, REASONING_FEATURE],
+    api_sdk: openrouter("moonshotai/kimi-k2-thinking"),
   },
 ];

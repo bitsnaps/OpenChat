@@ -1,6 +1,7 @@
 import {
   FILE_UPLOAD_FEATURE,
   REASONING_FEATURE,
+  REASONING_FEATURE_DISABLED,
   TOOL_CALLING_FEATURE,
 } from "../features";
 import { openrouter } from "../openrouter";
@@ -38,5 +39,32 @@ export const ZAI_MODELS = [
     description: `ZAI's flagship vision model. \n `,
     api_sdk: openrouter("z-ai/glm-4.5v"),
     features: [TOOL_CALLING_FEATURE, REASONING_FEATURE, FILE_UPLOAD_FEATURE],
+  },
+  {
+    id: "glm-4.6",
+    name: "GLM 4.6",
+    provider: "openrouter",
+    displayProvider: "z-ai",
+    premium: true,
+    usesPremiumCredits: false,
+    description:
+      "ZAI's latest model with 200K context.\nFeatures superior coding, advanced tool use, and refined writing.",
+    apiKeyUsage: { allowUserKey: false, userKeyOnly: false },
+    api_sdk: openrouter("z-ai/glm-4.6"),
+    features: [TOOL_CALLING_FEATURE, REASONING_FEATURE_DISABLED],
+  },
+  {
+    id: "glm-4.6-thinking",
+    name: "GLM 4.6",
+    subName: "Thinking",
+    provider: "openrouter",
+    displayProvider: "z-ai",
+    premium: true,
+    usesPremiumCredits: false,
+    description:
+      "GLM 4.6 with reasoning capabilities enabled.\nOptimized for complex problem solving and deep chain-of-thought.",
+    apiKeyUsage: { allowUserKey: false, userKeyOnly: false },
+    api_sdk: openrouter("z-ai/glm-4.6"),
+    features: [TOOL_CALLING_FEATURE, REASONING_FEATURE],
   },
 ];

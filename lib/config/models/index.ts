@@ -6,6 +6,7 @@ import { DEEPSEEK_MODELS } from "./deepseek";
 import { FAL_MODELS } from "./fal";
 import { GOOGLE_MODELS } from "./google";
 import { META_MODELS } from "./meta";
+import { MINIMAX_MODELS } from "./minimax";
 import { MISTRAL_MODELS } from "./mistral";
 import { MOONSHOT_MODELS } from "./moonshot";
 import { OPENAI_MODELS } from "./openai";
@@ -32,6 +33,7 @@ export const MODELS_DATA = [
   ...FAL_MODELS,
   ...MOONSHOT_MODELS,
   ...ZAI_MODELS,
+  ...MINIMAX_MODELS,
   ...QWEN_MODELS,
   // ...OPENROUTER_MODELS,
 ];

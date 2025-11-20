@@ -2,6 +2,7 @@ import { gateway } from "@ai-sdk/gateway";
 import {
   REASONING_FEATURE,
   REASONING_FEATURE_BASIC,
+  REASONING_FEATURE_DISABLED,
   TOOL_CALLING_FEATURE,
 } from "../features";
 import { openrouter } from "../openrouter";
@@ -69,5 +70,59 @@ export const DEEPSEEK_MODELS = [
     apiKeyUsage: { allowUserKey: false, userKeyOnly: false },
     features: [REASONING_FEATURE_BASIC],
     api_sdk: openrouter("deepseek/deepseek-r1-distill-llama-70b:free"),
+  },
+  {
+    id: "deepseek/deepseek-v3.1-terminus",
+    name: "DeepSeek V3.1 Terminus",
+    provider: "openrouter",
+    displayProvider: "deepseek",
+    premium: true,
+    usesPremiumCredits: false,
+    description:
+      "Update to V3.1 maintaining capabilities while addressing issues.\nHybrid model supporting non-thinking mode.",
+    apiKeyUsage: { allowUserKey: false, userKeyOnly: false },
+    api_sdk: openrouter("deepseek/deepseek-v3.1-terminus"),
+    features: [TOOL_CALLING_FEATURE, REASONING_FEATURE_DISABLED],
+  },
+  {
+    id: "deepseek/deepseek-v3.1-terminus:reasoning",
+    name: "DeepSeek V3.1 Terminus",
+    subName: "Reasoning",
+    provider: "openrouter",
+    displayProvider: "deepseek",
+    premium: true,
+    usesPremiumCredits: false,
+    description:
+      "DeepSeek V3.1 Terminus with thinking mode enabled.\nOptimized for coding and search agents with improved performance.",
+    apiKeyUsage: { allowUserKey: false, userKeyOnly: false },
+    api_sdk: openrouter("deepseek/deepseek-v3.1-terminus"),
+    features: [TOOL_CALLING_FEATURE, REASONING_FEATURE],
+  },
+  {
+    id: "deepseek/deepseek-v3.2-exp",
+    name: "DeepSeek V3.2 Exp",
+    provider: "openrouter",
+    displayProvider: "deepseek",
+    premium: true,
+    usesPremiumCredits: false,
+    description:
+      "Experimental model with sparse attention for improved efficiency.\nResearch-oriented intermediate step between V3.1 and future architectures.",
+    apiKeyUsage: { allowUserKey: false, userKeyOnly: false },
+    api_sdk: openrouter("deepseek/deepseek-v3.2-exp"),
+    features: [TOOL_CALLING_FEATURE, REASONING_FEATURE_DISABLED],
+  },
+  {
+    id: "deepseek/deepseek-v3.2-exp:reasoning",
+    name: "DeepSeek V3.2 Exp",
+    subName: "Reasoning",
+    provider: "openrouter",
+    displayProvider: "deepseek",
+    premium: true,
+    usesPremiumCredits: false,
+    description:
+      "DeepSeek V3.2 Exp with thinking mode enabled.\nResearch model validating architectural optimizations for extended context.",
+    apiKeyUsage: { allowUserKey: false, userKeyOnly: false },
+    api_sdk: openrouter("deepseek/deepseek-v3.2-exp"),
+    features: [TOOL_CALLING_FEATURE, REASONING_FEATURE],
   },
 ];

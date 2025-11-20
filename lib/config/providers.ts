@@ -1,4 +1,4 @@
-import { Flux, Moonshot, ZAI } from "@lobehub/icons";
+import { Flux, Minimax, Moonshot, ZAI } from "@lobehub/icons";
 import {
   AnthropicDark,
   AnthropicLight,
@@ -88,6 +88,11 @@ export const PROVIDERS = [
     id: "z-ai",
     name: "Z.AI",
     icon: ZAI,
+  },
+  {
+    id: "minimax",
+    name: "MiniMax",
+    icon: Minimax,
   },
 ] as Provider[];
 

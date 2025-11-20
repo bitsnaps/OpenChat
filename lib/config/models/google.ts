@@ -151,4 +151,21 @@ export const GOOGLE_MODELS = [
     features: [IMAGE_GENERATION_FEATURE],
     api_sdk: fal.image("fal-ai/imagen4/preview/ultra"),
   },
+  {
+    id: "gemini-3-pro-preview",
+    name: "Gemini 3 Pro Preview",
+    provider: "gemini",
+    premium: true,
+    usesPremiumCredits: true,
+    description:
+      "Early preview of Google's next-generation Gemini 3 model.\nOffers enhanced reasoning and multimodal capabilities.",
+    apiKeyUsage: { allowUserKey: true, userKeyOnly: false },
+    features: [
+      FILE_UPLOAD_FEATURE,
+      PDF_PROCESSING_FEATURE,
+      REASONING_FEATURE,
+      TOOL_CALLING_FEATURE,
+    ],
+    api_sdk: google("gemini-3-pro-preview"),
+  },
 ];

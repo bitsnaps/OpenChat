@@ -18,7 +18,6 @@ export const XAI_MODELS = [
     displayProvider: "xai",
     premium: false,
     usesPremiumCredits: false,
-    skipRateLimit: true,
     description:
       "Fast, cost-efficient version of Grok-4 with near-identical reasoning quality.\nSupports 2M token context, real-time X data, web search, and tool use.\nOptimized for speed and lower token usage while maintaining strong performance.",
     api_sdk: openrouter("x-ai/grok-4-fast:free"),
@@ -36,7 +35,6 @@ export const XAI_MODELS = [
     displayProvider: "xai",
     premium: false,
     usesPremiumCredits: false,
-    skipRateLimit: true,
     description:
       "Fast, cost-efficient version of Grok-4 with reasoning disabled to be extra fast.\nSupports 2M token context, real-time X data, web search, and tool use.\nOptimized for speed and lower token usage while maintaining strong performance.",
     api_sdk: openrouter("x-ai/grok-4-fast:free"),
@@ -76,5 +74,42 @@ export const XAI_MODELS = [
       "Cost-efficient reasoning model from xAI.\nExcels at STEM tasks requiring less world knowledge.",
     api_sdk: gateway("xai/grok-3-mini"),
     features: [REASONING_FEATURE_BASIC, TOOL_CALLING_FEATURE],
+  },
+  {
+    id: "x-ai/grok-4.1-fast-thinking",
+    name: "Grok 4.1 Fast",
+    subName: "Thinking",
+    provider: "openrouter",
+    displayProvider: "xai",
+    premium: false,
+    usesPremiumCredits: false,
+    skipRateLimit: true,
+    description:
+      "Grok 4.1 Fast with reasoning capabilities enabled.\nxAI's best agentic model for deep research and complex tasks.",
+    api_sdk: openrouter("x-ai/grok-4.1-fast"),
+    features: [
+      FILE_UPLOAD_FEATURE,
+      PDF_PROCESSING_FEATURE,
+      REASONING_FEATURE,
+      TOOL_CALLING_FEATURE,
+    ],
+  },
+  {
+    id: "x-ai/grok-4.1-fast",
+    name: "Grok 4.1 Fast",
+    provider: "openrouter",
+    displayProvider: "xai",
+    premium: false,
+    usesPremiumCredits: false,
+    skipRateLimit: true,
+    description:
+      "Grok 4.1 Fast (Non-Thinking). Optimized for speed.\nBest agentic tool calling model for real-world use cases.",
+    api_sdk: openrouter("x-ai/grok-4.1-fast"),
+    features: [
+      FILE_UPLOAD_FEATURE,
+      PDF_PROCESSING_FEATURE,
+      TOOL_CALLING_FEATURE,
+      REASONING_FEATURE_DISABLED,
+    ],
   },
 ];
