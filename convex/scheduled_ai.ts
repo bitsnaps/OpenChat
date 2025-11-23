@@ -1,19 +1,13 @@
 "use node";
 
-import {
-  consumeStream,
-  convertToModelMessages,
-  stepCountIs,
-  streamText,
-  type Tool,
-  type UIMessage,
-  type UIMessageStreamWriter,
-} from "ai";
+import type { AgentGenerateOptions } from "@ai-sdk-tools/agents";
+import type { Tool, UIMessage, UIMessageStreamWriter } from "ai";
 import { ConvexError, v } from "convex/values";
 import dayjs from "dayjs";
 import timezonePlugin from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import { searchTool } from "@/app/api/tools/search";
+import { createScheduledAgent } from "@/lib/ai/agent";
 import { MODELS_MAP } from "@/lib/config";
 import type { ConnectorStatusLists } from "@/lib/connector-utils";
 import { createAgentTool } from "@/lib/create-agent-tool";
@@ -229,14 +223,6 @@ export const executeTask = internalAction({
       }
 
       // console.log('Selected model:', selectedModel);
-      // Create user message
-      const userMessage: UIMessage = {
-        id: Math.random().toString(36).substring(2, 15),
-        role: "user",
-        parts: [{ type: "text", text: task.prompt }],
-      };
-
-      // console.log('User message:', userMessage);
 
       // Save user message
       const { messageId: userMsgId } = await ctx.runMutation(
@@ -250,7 +236,7 @@ export const executeTask = internalAction({
         }
       );
 
-      // Execute AI request using streamText (same pattern as chat route)
+      // Execute AI request using Agent from ai-sdk-tools
       const aiStartTime = Date.now();
 
       // Pre-build base metadata before streaming (same as chat route)
@@ -258,15 +244,6 @@ export const executeTask = internalAction({
         modelId: selectedModel.id,
         modelName: selectedModel.name,
         includeSearch: task.enableSearch,
-      };
-
-      // Initialize usage tracking (same as chat route)
-      let finalUsage = {
-        inputTokens: 0,
-        outputTokens: 0,
-        reasoningTokens: 0,
-        totalTokens: 0,
-        cachedInputTokens: 0,
       };
 
       const toolset: Record<string, Tool> = {};
@@ -294,126 +271,100 @@ export const executeTask = internalAction({
         });
       }
 
-      const result = streamText({
+      // Initialize Agent
+      const agent = createScheduledAgent({
+        chatId,
         model: selectedModel.api_sdk,
-        system: systemPrompt,
-        messages: convertToModelMessages([userMessage]),
-        toolChoice: "auto",
+        systemPrompt,
         tools: toolset,
-        stopWhen: stepCountIs(10),
-        onFinish({ usage }) {
-          // Capture usage data (runs on successful completion) - same as chat route
-          finalUsage = {
-            inputTokens: usage.inputTokens || 0,
-            outputTokens: usage.outputTokens || 0,
-            reasoningTokens: usage.reasoningTokens || 0,
-            totalTokens: usage.totalTokens || 0,
-            cachedInputTokens: usage.cachedInputTokens || 0,
-          };
-        },
       });
 
-      // Consume the stream to ensure it runs to completion (same as chat route)
-      await result.consumeStream();
-
-      // Variable to store email content outside the callback
-      let emailTextContent = "";
-
-      // Get UI-compatible parts using toUIMessageStreamResponse (same as chat route)
-      // Create a promise that resolves when onFinish completes
-      await new Promise<void>((resolve, reject) => {
-        result.toUIMessageStreamResponse({
-          originalMessages: [userMessage],
-          sendReasoning: true,
-          sendSources: true,
-          onFinish: async (Messages) => {
-            try {
-              // Construct final metadata (same as chat route)
-              const finalMetadata = {
-                ...baseMetadata,
-                serverDurationMs: Date.now() - aiStartTime,
-                inputTokens: finalUsage.inputTokens,
-                outputTokens: finalUsage.outputTokens,
-                totalTokens: finalUsage.totalTokens,
-                reasoningTokens: finalUsage.reasoningTokens,
-                cachedInputTokens: finalUsage.cachedInputTokens,
-              };
-
-              // Extract text content for the content field (for search indexing)
-              const textContent = Messages.responseMessage.parts
-                .filter((part) => part.type === "text")
-                .map((part) => part.text)
-                .join("");
-
-              // Extract email content (last text part only)
-              const textParts = Messages.responseMessage.parts.filter(
-                (part) => part.type === "text"
-              );
-              emailTextContent =
-                textParts.length > 0 ? textParts.at(-1)?.text || "" : "";
-
-              // Limit depth of parts to prevent Convex nesting limit errors
-              const depthLimitedParts = limitDepth(
-                Messages.responseMessage.parts,
-                14
-              );
-
-              // Send email notification after message processing is complete
-              if (task.emailNotifications && emailTextContent) {
-                const executionDate = `${currentDate} ${currentTime}`;
-                // Schedule email mutation to run immediately after this action completes
-                await ctx.scheduler.runAfter(
-                  0,
-                  internal.email.sendTaskSummaryEmail,
-                  {
-                    userId: task.userId,
-                    taskId: args.taskId,
-                    taskTitle: task.title,
-                    taskContent: emailTextContent,
-                    executionDate,
-                    chatId,
-                  }
-                );
-              }
-
-              // Save assistant message with UI-compatible parts
-              await ctx.runMutation(
-                internal.messages.saveAssistantMessageInternal,
-                {
-                  chatId,
-                  role: "assistant",
-                  content: textContent,
-                  parentMessageId: userMsgId,
-                  parts: depthLimitedParts,
-                  metadata: finalMetadata,
-                }
-              );
-
-              // --- Usage Tracking (same as chat route) ---
-              // Only increment credits if model doesn't skip rate limiting
-              if (!selectedModel.skipRateLimit) {
-                // Check if the selected model uses premium credits
-                const usesPremiumCredits =
-                  selectedModel.usesPremiumCredits === true;
-
-                await ctx.runMutation(
-                  internal.users.incrementMessageCountInternal,
-                  {
-                    userId: task.userId,
-                    usesPremiumCredits,
-                  }
-                );
-              }
-
-              // Resolve the promise to signal completion
-              resolve();
-            } catch (error) {
-              reject(error);
-            }
+      // Execute Agent
+      // Pass userId for global working memory (User Scope)
+      // Pass taskId as chatId for task-specific history (Chat Scope)
+      const result = await agent.generate({
+        prompt: task.prompt,
+        context: {
+          metadata: {
+            userId: task.userId,
+            chatId: args.taskId,
           },
-          consumeSseStream: consumeStream,
-        });
+        },
+      } as AgentGenerateOptions & { context: Record<string, any> });
+
+      // Extract final text and usage
+      const textContent = result.text;
+      
+      // Agent result usage might be structured differently, mapping it:
+      // ai-sdk-tools agent result has `usage` property with inputTokens, outputTokens
+      const finalUsage = {
+        inputTokens: result.usage?.inputTokens || 0,
+        outputTokens: result.usage?.outputTokens || 0,
+        reasoningTokens: 0, // Agent might not expose this directly yet, defaulting to 0
+        totalTokens: result.usage?.totalTokens || 0,
+        cachedInputTokens: 0,
+      };
+
+      // Construct email content (using the full response text)
+      const emailTextContent = textContent;
+
+      // Construct final metadata
+      const finalMetadata = {
+        ...baseMetadata,
+        serverDurationMs: Date.now() - aiStartTime,
+        inputTokens: finalUsage.inputTokens,
+        outputTokens: finalUsage.outputTokens,
+        totalTokens: finalUsage.totalTokens,
+        reasoningTokens: finalUsage.reasoningTokens,
+        cachedInputTokens: finalUsage.cachedInputTokens,
+      };
+
+      // Construct UI-compatible parts for the final message
+      // Since Agent abstracts steps, we only save the final response to Convex
+      const assistantParts: any[] = [{ type: "text", text: textContent }];
+
+      // Limit depth of parts to prevent Convex nesting limit errors
+      const depthLimitedParts = limitDepth(assistantParts, 14);
+
+      // Send email notification after message processing is complete
+      if (task.emailNotifications && emailTextContent) {
+        const executionDate = `${currentDate} ${currentTime}`;
+        // Schedule email mutation to run immediately after this action completes
+        await ctx.scheduler.runAfter(
+          0,
+          internal.email.sendTaskSummaryEmail,
+          {
+            userId: task.userId,
+            taskId: args.taskId,
+            taskTitle: task.title,
+            taskContent: emailTextContent,
+            executionDate,
+            chatId,
+          }
+        );
+      }
+
+      // Save assistant message with UI-compatible parts
+      await ctx.runMutation(internal.messages.saveAssistantMessageInternal, {
+        chatId,
+        role: "assistant",
+        content: textContent,
+        parentMessageId: userMsgId,
+        parts: depthLimitedParts,
+        metadata: finalMetadata,
       });
+
+      // --- Usage Tracking (same as chat route) ---
+      // Only increment credits if model doesn't skip rate limiting
+      if (!selectedModel.skipRateLimit) {
+        // Check if the selected model uses premium credits
+        const usesPremiumCredits = selectedModel.usesPremiumCredits === true;
+
+        await ctx.runMutation(internal.users.incrementMessageCountInternal, {
+          userId: task.userId,
+          usesPremiumCredits,
+        });
+      }
 
       // Handle rescheduling based on task type
       const now = Date.now();
