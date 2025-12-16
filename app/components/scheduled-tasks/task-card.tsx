@@ -400,23 +400,23 @@ function TaskCardComponent({ task, isMobile = false }: TaskCardProps) {
         </div>
 
         {/* Expandable secondary information */}
-        {isExpanded && (
+        {isExpanded ? (
           <div className="mt-4 space-y-3 border-border/50 border-t pt-4">
             {/* Schedule and settings pills */}
             <div className="flex flex-wrap gap-2">
               <Pill className="text-xs" variant="outline">
                 {scheduleDisplay}
               </Pill>
-              {weeklyDay && (
+              {weeklyDay ? (
                 <Pill className="text-xs" variant="outline">
                   {weeklyDay}
                 </Pill>
-              )}
-              {task.emailNotifications && (
+              ) : null}
+              {task.emailNotifications ? (
                 <Pill className="text-xs" variant="outline">
                   Email
                 </Pill>
-              )}
+              ) : null}
             </div>
 
             {/* Additional info */}
@@ -425,7 +425,7 @@ function TaskCardComponent({ task, isMobile = false }: TaskCardProps) {
             </div>
 
             {/* View results link */}
-            {task.lastExecuted && task.chatId && (
+            {!!task.lastExecuted && !!task.chatId ? (
               <div className="pt-2">
                 <Link
                   className="text-primary text-sm hover:underline"
@@ -435,9 +435,9 @@ function TaskCardComponent({ task, isMobile = false }: TaskCardProps) {
                   View Results
                 </Link>
               </div>
-            )}
+            ) : null}
           </div>
-        )}
+        ) : null}
       </div>
     </div>
   ) : null;
@@ -456,16 +456,16 @@ function TaskCardComponent({ task, isMobile = false }: TaskCardProps) {
             <Pill className="text-xs" variant="outline">
               {scheduleDisplay}
             </Pill>
-            {weeklyDay && (
+            {weeklyDay ? (
               <Pill className="text-xs" variant="outline">
                 {weeklyDay}
               </Pill>
-            )}
-            {task.emailNotifications && (
+            ) : null}
+            {task.emailNotifications ? (
               <Pill className="text-xs" variant="outline">
                 Email
               </Pill>
-            )}
+            ) : null}
             {task.status === "paused" && (
               <Pill className="text-xs" variant="outline">
                 <PillIndicator pulse={false} variant="warning" />
@@ -676,14 +676,14 @@ function TaskCardComponent({ task, isMobile = false }: TaskCardProps) {
           </div>
 
           <div className="mt-10 flex justify-end">
-            {task.lastExecuted && task.chatId && (
+            {!!task.lastExecuted && !!task.chatId ? (
               <Link
                 className="text-primary text-xs hover:underline"
                 href={`/c/${task.chatId}`}
               >
                 View Results
               </Link>
-            )}
+            ) : null}
           </div>
         </div>
       </div>

@@ -189,9 +189,9 @@ export default function ConnectorsPage() {
         <ConnectorGrid
           connectingStates={connectingStates}
           connectors={connectors}
-          onConnect={handleConnect}
-          onDisconnect={handleDisconnect}
-          onToggleEnabled={handleToggleEnabled}
+          onConnectAction={handleConnect}
+          onDisconnectAction={handleDisconnect}
+          onToggleEnabledAction={handleToggleEnabled}
         />
       )}
     </div>

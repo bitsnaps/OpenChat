@@ -49,11 +49,11 @@ export default function LoginPage() {
               Sign in below to increase your message limits.
             </p>
           </div>
-          {error && (
+          {error ? (
             <div className="rounded-md bg-destructive/10 p-3 text-destructive text-sm">
               {error}
             </div>
-          )}
+          ) : null}
           <div className="mt-8">
             <div className="mx-auto w-full max-w-sm">
               <Button

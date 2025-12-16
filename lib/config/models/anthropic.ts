@@ -9,47 +9,12 @@ import {
 
 export const ANTHROPIC_MODELS = [
   {
-    id: "claude-3-7-sonnet-20250219",
-    name: "Claude 3.7 Sonnet",
-    provider: "anthropic",
-    premium: true,
-    usesPremiumCredits: true,
-    description:
-      "First hybrid reasoning model with visible thinking process.\nDelivers enhanced coding and math performance with step-by-step reasoning.",
-    apiKeyUsage: { allowUserKey: true, userKeyOnly: false },
-    features: [
-      FILE_UPLOAD_FEATURE,
-      PDF_PROCESSING_FEATURE,
-      REASONING_FEATURE_DISABLED,
-      TOOL_CALLING_FEATURE,
-    ],
-    api_sdk: anthropic("claude-3-7-sonnet-20250219"),
-  },
-  {
-    id: "claude-3-7-sonnet-reasoning",
-    name: "Claude 3.7 Sonnet",
-    subName: "Reasoning",
-    provider: "anthropic",
-    premium: true,
-    usesPremiumCredits: true,
-    description:
-      "Claude 3.7 with thinking capabilities enabled.\nProvides deeper reasoning for complex analytical and coding tasks.",
-    apiKeyUsage: { allowUserKey: true, userKeyOnly: false },
-    features: [
-      FILE_UPLOAD_FEATURE,
-      PDF_PROCESSING_FEATURE,
-      REASONING_FEATURE,
-      TOOL_CALLING_FEATURE,
-    ],
-    api_sdk: anthropic("claude-3-7-sonnet-20250219"),
-  },
-  {
-    id: "claude-4-1-opus",
-    name: "Claude 4.1 Opus",
+    id: "claude-4-5-opus",
+    name: "Claude 4.5 Opus",
     provider: "anthropic",
     premium: false,
     usesPremiumCredits: false,
-    description: `World's best coding model with 73% on SWE-bench.\nExcels at sustained performance on complex, long-running tasks.`,
+    description: `Anthropic's most intelligent model with 80.9% on SWE-bench.\nExcels at complex coding, agentic workflows, and long-horizon tasks.`,
     apiKeyUsage: { allowUserKey: true, userKeyOnly: true },
     features: [
       FILE_UPLOAD_FEATURE,
@@ -57,41 +22,7 @@ export const ANTHROPIC_MODELS = [
       REASONING_FEATURE,
       TOOL_CALLING_FEATURE,
     ],
-    api_sdk: anthropic("claude-opus-4-1-20250805"),
-  },
-  {
-    id: "claude-4-sonnet",
-    name: "Claude 4 Sonnet",
-    provider: "anthropic",
-    premium: true,
-    usesPremiumCredits: true,
-    description: `Anthropic's flagship multimodal model which excels at coding.\nDelivers precise instruction following and enhanced problem-solving.`,
-    apiKeyUsage: { allowUserKey: true, userKeyOnly: false },
-    features: [
-      FILE_UPLOAD_FEATURE,
-      PDF_PROCESSING_FEATURE,
-      REASONING_FEATURE_DISABLED,
-      TOOL_CALLING_FEATURE,
-    ],
-    api_sdk: anthropic("claude-sonnet-4-20250514"),
-  },
-  {
-    id: "claude-4-sonnet-reasoning",
-    name: "Claude 4 Sonnet",
-    subName: "Reasoning",
-    provider: "anthropic",
-    premium: true,
-    usesPremiumCredits: true,
-    description:
-      "Claude 4 Sonnet with thinking capabilities.\nOptimal for complex reasoning, coding, and agentic workflows.",
-    apiKeyUsage: { allowUserKey: true, userKeyOnly: false },
-    features: [
-      FILE_UPLOAD_FEATURE,
-      PDF_PROCESSING_FEATURE,
-      REASONING_FEATURE,
-      TOOL_CALLING_FEATURE,
-    ],
-    api_sdk: anthropic("claude-sonnet-4-20250514"),
+    api_sdk: anthropic("claude-opus-4-5-20251101"),
   },
   {
     id: "claude-4-5-sonnet",

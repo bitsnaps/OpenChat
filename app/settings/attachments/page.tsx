@@ -210,10 +210,10 @@ export default function AttachmentsPage() {
           {/* Selection Controls */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Label className="flex items-center gap-3 rounded-lg border px-4 py-1.5 hover:bg-accent/25 has-[[aria-checked=true]]:border-blue-600 has-[[aria-checked=true]]:bg-blue-50 dark:has-[[aria-checked=true]]:border-blue-900 dark:has-[[aria-checked=true]]:bg-blue-950">
+              <Label className="flex items-center gap-3 rounded-lg border px-4 py-1.5 hover:bg-accent/25 has-aria-checked:border-blue-600 has-aria-checked:bg-blue-50 dark:has-aria-checked:border-blue-900 dark:has-aria-checked:bg-blue-950">
                 <Checkbox
                   checked={Boolean(
-                    attachments &&
+                    !!attachments &&
                       attachments.length > 0 &&
                       selectedIds.size === attachments.length
                   )}
@@ -222,7 +222,7 @@ export default function AttachmentsPage() {
                   id="select-all"
                   onCheckedChange={() => {
                     if (
-                      attachments &&
+                      !!attachments &&
                       attachments.length > 0 &&
                       selectedIds.size === attachments.length
                     ) {

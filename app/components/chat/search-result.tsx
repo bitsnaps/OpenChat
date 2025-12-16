@@ -99,6 +99,8 @@ export const SearchResults = memo(
         <div className="space-y-2" style={{ contentVisibility: "auto" }}>
           {deferred.map((result) => {
             const isExpanded = expandedResults.has(result.url);
+            const content = result.content ?? "";
+            const showExpandedContent = isExpanded ? content.length > 0 : false;
             const domain = new URL(result.url).hostname.replace(
               WWW_PREFIX_REGEX,
               ""
@@ -108,7 +110,7 @@ export const SearchResults = memo(
               <div
                 className={cn(
                   "group rounded-lg border bg-card transition-all hover:shadow-sm",
-                  isExpanded && "shadow-sm"
+                  isExpanded ? "shadow-sm" : ""
                 )}
                 key={result.url}
               >
@@ -165,15 +167,15 @@ export const SearchResults = memo(
                   </div>
                 </button>
 
-                {isExpanded && result.content && (
+                {showExpandedContent ? (
                   <div className="-mt-2 px-4 pb-4">
                     <div className="border-t pt-2 pl-8">
                       <div className="prose prose-sm dark:prose-invert max-w-none">
-                        <Markdown>{result.content}</Markdown>
+                        <Markdown>{content}</Markdown>
                       </div>
                     </div>
                   </div>
-                )}
+                ) : null}
               </div>
             );
           })}

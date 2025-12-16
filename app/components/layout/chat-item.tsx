@@ -11,7 +11,8 @@ import {
 } from "@phosphor-icons/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import type { ReactElement } from "react";
+import { memo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -47,7 +48,7 @@ const ChatItemComponent = function ChatItemComponent({
   handleTogglePin,
   isPinned,
   isActive,
-}: ChatItemProps): React.ReactElement {
+}: ChatItemProps): ReactElement {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(title || "");
@@ -149,7 +150,7 @@ const ChatItemComponent = function ChatItemComponent({
           "group/link relative flex h-9 w-full items-center overflow-hidden rounded-lg px-2 py-1 text-sm outline-none",
           "hover:bg-accent hover:text-accent-foreground focus-visible:text-accent-foreground",
           "focus-visible:ring-2 focus-visible:ring-primary",
-          isActive && "bg-accent text-accent-foreground"
+          isActive ? "bg-accent text-accent-foreground" : ""
         )}
         href={`/c/${id}`}
         key={id}
@@ -165,7 +166,7 @@ const ChatItemComponent = function ChatItemComponent({
         scroll={false}
       >
         <div className="relative flex w-full items-center">
-          {originalChatId && (
+          {originalChatId ? (
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
@@ -183,14 +184,14 @@ const ChatItemComponent = function ChatItemComponent({
                 Branched From: {parentChatTitle ?? "Parent Chat"}
               </TooltipContent>
             </Tooltip>
-          )}
+          ) : null}
           <div className="relative w-full">
             <span className="hover:truncate-none pointer-events-none block h-full w-full cursor-pointer overflow-hidden truncate rounded bg-transparent px-1 py-1 text-sm outline-none">
               {title}
             </span>
           </div>
         </div>
-        {(showActions || isActive) && (
+        {showActions || isActive ? (
           <div className="-right-0.25 pointer-events-auto absolute top-0 bottom-0 z-10 flex translate-x-full items-center justify-end text-muted-foreground transition-transform duration-200 group-hover/link:translate-x-0 group-hover/link:bg-accent dark:group-hover/link:bg-muted">
             <div className="pointer-events-none absolute top-0 right-[100%] bottom-0 h-12 w-8 bg-gradient-to-l from-accent to-transparent opacity-0 transition-opacity duration-200 group-hover/link:opacity-100 dark:from-muted" />
             <Tooltip>
@@ -258,32 +259,25 @@ const ChatItemComponent = function ChatItemComponent({
               </TooltipContent>
             </Tooltip>
           </div>
-        )}
+        ) : null}
       </Link>
     );
   };
 
-  return (
-    <li className="group/menu-item relative" key={id}>
-      {renderContent()}
-    </li>
-  );
+  return renderContent();
 };
 
 // Export with custom memo comparison to prevent unnecessary re-renders
-export const ChatItem = React.memo(
-  ChatItemComponent,
-  (prevProps, nextProps) => {
-    // Only re-render if props that affect the UI have actually changed
-    return (
-      prevProps.id === nextProps.id &&
-      prevProps.title === nextProps.title &&
-      prevProps.originalChatId === nextProps.originalChatId &&
-      prevProps.parentChatTitle === nextProps.parentChatTitle &&
-      prevProps.isPinned === nextProps.isPinned &&
-      prevProps.isActive === nextProps.isActive
-      // Note: We intentionally don't compare handler functions as they're
-      // memoized in the parent and should be stable across renders
-    );
-  }
-);
+export const ChatItem = memo(ChatItemComponent, (prevProps, nextProps) => {
+  // Only re-render if props that affect the UI have actually changed
+  return (
+    prevProps.id === nextProps.id &&
+    prevProps.title === nextProps.title &&
+    prevProps.originalChatId === nextProps.originalChatId &&
+    prevProps.parentChatTitle === nextProps.parentChatTitle &&
+    prevProps.isPinned === nextProps.isPinned &&
+    prevProps.isActive === nextProps.isActive
+    // Note: We intentionally don't compare handler functions as they're
+    // memoized in the parent and should be stable across renders
+  );
+});

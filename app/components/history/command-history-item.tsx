@@ -66,7 +66,7 @@ export const CommandHistoryItem = React.memo(
     return (
       <div className="px-0 py-0.5" key={chat._id}>
         {/* Render different UI states without nested ternaries */}
-        {isEditing && (
+        {isEditing ? (
           <div className="flex items-center justify-between rounded-lg bg-accent px-2 py-2">
             <form
               className="flex w-full items-center justify-between"
@@ -108,8 +108,8 @@ export const CommandHistoryItem = React.memo(
               </div>
             </form>
           </div>
-        )}
-        {isDeleting && (
+        ) : null}
+        {isDeleting ? (
           <div className="flex items-center justify-between rounded-lg bg-accent px-2 py-2">
             <form
               className="flex w-full items-center justify-between"
@@ -158,7 +158,7 @@ export const CommandHistoryItem = React.memo(
               </div>
             </form>
           </div>
-        )}
+        ) : null}
         {!(isEditing || isDeleting) && (
           <CommandItem
             className={cn(
@@ -180,7 +180,7 @@ export const CommandHistoryItem = React.memo(
           >
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-1">
-                {chat.originalChatId && (
+                {chat.originalChatId ? (
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <button
@@ -205,7 +205,7 @@ export const CommandHistoryItem = React.memo(
                         ?.title ?? "Parent Chat"}
                     </TooltipContent>
                   </Tooltip>
-                )}
+                ) : null}
                 <span className="line-clamp-1 flex-1 font-normal text-sm">
                   {chat?.title || "Untitled Chat"}
                 </span>

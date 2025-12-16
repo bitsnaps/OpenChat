@@ -29,8 +29,9 @@ const ButtonPersona = memo(function ButtonPersonaComponent({
     <Button
       className={cn(
         "rounded-full",
-        isActive &&
-          "bg-primary text-primary-foreground transition-none hover:bg-primary/90 hover:text-primary-foreground"
+        isActive
+          ? "bg-primary text-primary-foreground transition-none hover:bg-primary/90 hover:text-primary-foreground"
+          : ""
       )}
       key={label}
       onClick={() =>

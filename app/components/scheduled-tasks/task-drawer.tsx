@@ -70,8 +70,8 @@ function SharedDrawerContent({
             )}
             initialData={initialData}
             mode={mode}
-            onCancel={onClose}
-            onSuccess={onClose}
+            onCancelAction={onClose}
+            onSuccessAction={onClose}
           />
         </Suspense>
       </div>
@@ -82,7 +82,7 @@ function SharedDrawerContent({
 type TaskDrawerProps = {
   trigger?: React.ReactNode;
   isOpen?: boolean;
-  onClose?: () => void;
+  onCloseAction?: () => void;
   initialData?: Partial<CreateTaskForm> & { taskId?: Id<"scheduled_tasks"> };
   mode?: "create" | "edit";
 };
@@ -90,7 +90,7 @@ type TaskDrawerProps = {
 export function TaskDrawer({
   trigger,
   isOpen,
-  onClose,
+  onCloseAction,
   initialData,
   mode = "create",
 }: TaskDrawerProps) {
@@ -102,7 +102,7 @@ export function TaskDrawer({
   const open = isControlled ? isOpen : internalOpen;
   const handleClose = () => {
     if (isControlled) {
-      onClose?.();
+      onCloseAction?.();
     } else {
       setInternalOpen(false);
     }
@@ -111,7 +111,7 @@ export function TaskDrawer({
   const handleOpenChange = (newOpen: boolean) => {
     if (isControlled) {
       if (!newOpen) {
-        onClose?.();
+        onCloseAction?.();
       }
     } else {
       setInternalOpen(newOpen);
@@ -120,7 +120,7 @@ export function TaskDrawer({
 
   return (
     <Drawer onOpenChange={handleOpenChange} open={open}>
-      {trigger && <DrawerTrigger asChild>{trigger}</DrawerTrigger>}
+      {trigger ? <DrawerTrigger asChild>{trigger}</DrawerTrigger> : null}
       <SharedDrawerContent
         initialData={initialData}
         mode={mode}

@@ -29,14 +29,14 @@ export function SettingsContent({
 
   return (
     <div className={isDrawer ? "p-0 pb-16" : "py-0"}>
-      {isDrawer && (
+      {isDrawer ? (
         <div className="mb-2 flex items-center justify-between border-border border-b px-4 pb-2">
           <h2 className="font-medium text-lg">Settings</h2>
           <Button onClick={onCloseAction} size="icon" variant="ghost">
             <X className="h-4 w-4" />
           </Button>
         </div>
-      )}
+      ) : null}
 
       {/* Sign Out */}
       <div className="border-border border-t">

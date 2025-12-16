@@ -10,7 +10,7 @@ export function isDeepEqual(a: unknown, b: unknown): boolean {
     return true;
   }
 
-  if (a == null || b == null) {
+  if (a === null || a === undefined || b === null || b === undefined) {
     return a === b;
   }
 

@@ -290,11 +290,11 @@ export const executeTask = internalAction({
             chatId: args.taskId,
           },
         },
-      } as AgentGenerateOptions & { context: Record<string, any> });
+      } as AgentGenerateOptions & { context: Record<string, unknown> });
 
       // Extract final text and usage
       const textContent = result.text;
-      
+
       // Agent result usage might be structured differently, mapping it:
       // ai-sdk-tools agent result has `usage` property with inputTokens, outputTokens
       const finalUsage = {
@@ -321,7 +321,9 @@ export const executeTask = internalAction({
 
       // Construct UI-compatible parts for the final message
       // Since Agent abstracts steps, we only save the final response to Convex
-      const assistantParts: any[] = [{ type: "text", text: textContent }];
+      const assistantParts: NonNullable<UIMessage["parts"]> = [
+        { type: "text", text: textContent },
+      ];
 
       // Limit depth of parts to prevent Convex nesting limit errors
       const depthLimitedParts = limitDepth(assistantParts, 14);
@@ -330,18 +332,14 @@ export const executeTask = internalAction({
       if (task.emailNotifications && emailTextContent) {
         const executionDate = `${currentDate} ${currentTime}`;
         // Schedule email mutation to run immediately after this action completes
-        await ctx.scheduler.runAfter(
-          0,
-          internal.email.sendTaskSummaryEmail,
-          {
-            userId: task.userId,
-            taskId: args.taskId,
-            taskTitle: task.title,
-            taskContent: emailTextContent,
-            executionDate,
-            chatId,
-          }
-        );
+        await ctx.scheduler.runAfter(0, internal.email.sendTaskSummaryEmail, {
+          userId: task.userId,
+          taskId: args.taskId,
+          taskTitle: task.title,
+          taskContent: emailTextContent,
+          executionDate,
+          chatId,
+        });
       }
 
       // Save assistant message with UI-compatible parts

@@ -70,7 +70,7 @@ const SearchResultItem = memo<{
   return (
     <div>
       <a
-        className="flex h-[2rem] w-full min-w-0 shrink-0 cursor-pointer flex-row items-center justify-between gap-4 rounded-md px-1 tracking-tight transition-colors hover:bg-accent/50"
+        className="flex h-8 w-full min-w-0 shrink-0 cursor-pointer flex-row items-center justify-between gap-4 rounded-md px-1 tracking-tight transition-colors hover:bg-accent/50"
         href={utmUrl}
         rel="noopener noreferrer"
         target="_blank"
@@ -197,7 +197,7 @@ export const UnifiedSearch = memo<UnifiedSearchProps>(
 
     return (
       <div className={cn("my-3 w-full", className)}>
-        <div className="flex min-h-[2.625rem] flex-col rounded-xl border bg-card leading-normal tracking-tight shadow-sm transition-all duration-300 ease-out">
+        <div className="flex min-h-10.5 flex-col rounded-xl border bg-card leading-normal tracking-tight shadow-sm transition-all duration-300 ease-out">
           {/* Toggle Button Header */}
           <button
             className={buttonClassName}
@@ -209,7 +209,7 @@ export const UnifiedSearch = memo<UnifiedSearchProps>(
               <div className="flex h-5 w-5 items-center justify-center text-muted-foreground">
                 <Globe size={16} />
               </div>
-              <div className="flex-grow overflow-hidden overflow-ellipsis whitespace-nowrap text-left text-muted-foreground leading-tight">
+              <div className="grow overflow-hidden overflow-ellipsis whitespace-nowrap text-left text-muted-foreground leading-tight">
                 {displayText}
               </div>
             </div>
@@ -235,7 +235,7 @@ export const UnifiedSearch = memo<UnifiedSearchProps>(
           </button>
 
           {/* Collapsible Results - Only show when not loading and has sources */}
-          {!isLoading && stableSources.length > 0 && (
+          {!isLoading && stableSources.length > 0 ? (
             <motion.div
               animate={{
                 height: isExpanded ? "auto" : 0,
@@ -247,9 +247,9 @@ export const UnifiedSearch = memo<UnifiedSearchProps>(
                 opacity: isExpanded ? 1 : 0,
               }}
               tabIndex={-1}
-              transition={isLoading ? { duration: 0 } : TRANSITION_LAYOUT}
+              transition={TRANSITION_LAYOUT}
             >
-              <div className="bg-gradient-to-b from-transparent via-transparent to-transparent">
+              <div className="bg-linear-to-b from-transparent via-transparent to-transparent">
                 <div
                   className="scrollbar-hide h-full max-h-[238px] overflow-y-auto overflow-x-hidden"
                   style={{
@@ -269,7 +269,7 @@ export const UnifiedSearch = memo<UnifiedSearchProps>(
                 </div>
               </div>
             </motion.div>
-          )}
+          ) : null}
         </div>
       </div>
     );

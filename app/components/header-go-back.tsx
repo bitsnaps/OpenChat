@@ -44,7 +44,7 @@ export function HeaderGoBack({
           Back to Chat
         </span>
       </Link>
-      {showControls && (
+      {showControls ? (
         <div className="flex items-center gap-2">
           <button
             aria-label="Switch theme"
@@ -76,7 +76,7 @@ export function HeaderGoBack({
             <span className="text-sm">Log out</span>
           </Button>
         </div>
-      )}
+      ) : null}
     </header>
   );
 }

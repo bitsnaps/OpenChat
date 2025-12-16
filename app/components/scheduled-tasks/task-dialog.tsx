@@ -28,7 +28,7 @@ const FormLoadingSpinner = () => (
 type TaskDialogProps = {
   trigger?: React.ReactNode;
   isOpen?: boolean;
-  onClose?: () => void;
+  onCloseAction?: () => void;
   initialData?: Partial<CreateTaskForm> & { taskId?: Id<"scheduled_tasks"> };
   mode?: "create" | "edit";
 };
@@ -36,7 +36,7 @@ type TaskDialogProps = {
 export function TaskDialog({
   trigger,
   isOpen,
-  onClose,
+  onCloseAction,
   initialData,
   mode = "create",
 }: TaskDialogProps) {
@@ -73,10 +73,10 @@ export function TaskDialog({
                 )}
                 initialData={initialData}
                 mode={mode}
-                onCancel={() => {
+                onCancelAction={() => {
                   /* handled by DialogClose wrapper */
                 }}
-                onSuccess={() => {
+                onSuccessAction={() => {
                   // Programmatically trigger the close button
                   closeRef.current?.click();
                 }}
@@ -98,7 +98,7 @@ export function TaskDialog({
 
   // Controlled mode (existing behavior)
   return (
-    <Dialog onOpenChange={(open) => !open && onClose?.()} open={isOpen}>
+    <Dialog onOpenChange={(open) => !open && onCloseAction?.()} open={isOpen}>
       <DialogContent
         className="max-h-[90vh] max-w-2xl bg-background"
         hasCloseButton={false}
@@ -125,14 +125,14 @@ export function TaskDialog({
               )}
               initialData={initialData}
               mode={mode}
-              onCancel={
-                onClose ||
+              onCancelAction={
+                onCloseAction ||
                 (() => {
                   // No-op fallback
                 })
               }
-              onSuccess={() => {
-                onClose?.();
+              onSuccessAction={() => {
+                onCloseAction?.();
               }}
             />
           </Suspense>

@@ -223,6 +223,7 @@ function MessageUserInner({
   const [isTouch, setIsTouch] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
   const displayContent = textContent.replace(/\n{2,}/g, "\n\n");
+  const showCancelEditIcon = isEditing && !readOnly;
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -238,7 +239,7 @@ function MessageUserInner({
     <MessageContainer
       className={cn(
         "group flex w-full max-w-3xl flex-col items-end gap-2 px-6 pb-2",
-        hasScrollAnchor && "min-h-scroll-anchor"
+        hasScrollAnchor ? "min-h-scroll-anchor" : ""
       )}
       id={id}
     >
@@ -334,7 +335,7 @@ function MessageUserInner({
               }}
               type="button"
             >
-              {isEditing && !readOnly ? (
+              {showCancelEditIcon ? (
                 <PencilSimpleSlashIcon className="size-4" />
               ) : (
                 <PencilSimpleIcon className="size-4" />

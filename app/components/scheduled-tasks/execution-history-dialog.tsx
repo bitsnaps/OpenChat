@@ -167,7 +167,7 @@ function ExecutionHistoryDialogComponent({
           <div className="space-y-2">
             <h3 className="font-medium text-lg">Recent Executions</h3>
             <ScrollArea className="h-[400px] w-full">
-              {isHistoryLoading && (
+              {isHistoryLoading ? (
                 <div className="space-y-2">
                   {Array.from({ length: 3 }).map((_, i) => (
                     <div
@@ -176,7 +176,7 @@ function ExecutionHistoryDialogComponent({
                     />
                   ))}
                 </div>
-              )}
+              ) : null}
 
               {!isHistoryLoading && history.length === 0 && (
                 <div className="flex h-32 items-center justify-center text-muted-foreground">
@@ -204,11 +204,11 @@ function ExecutionHistoryDialogComponent({
                               <PillIndicator variant={statusConfig.indicator} />
                               {statusConfig.label}
                             </Pill>
-                            {execution.isManualTrigger && (
+                            {execution.isManualTrigger ? (
                               <Pill className="text-xs" variant="outline">
                                 Manual
                               </Pill>
-                            )}
+                            ) : null}
                           </div>
 
                           <div className="min-w-0 flex-1">
@@ -224,16 +224,16 @@ function ExecutionHistoryDialogComponent({
                                 {execution.metadata.totalTokens.toLocaleString()}
                               </div>
                             )}
-                            {execution.errorMessage && (
-                              <div className="mt-1 break-words text-red-600 text-xs">
+                            {execution.errorMessage ? (
+                              <div className="wrap-break-word mt-1 text-red-600 text-xs">
                                 Error: {execution.errorMessage}
                               </div>
-                            )}
+                            ) : null}
                           </div>
                         </div>
 
                         <div className="flex items-center gap-2">
-                          {execution.chatId && (
+                          {execution.chatId ? (
                             <Button
                               onClick={() => {
                                 router.push(`/c/${execution.chatId}`);
@@ -244,7 +244,7 @@ function ExecutionHistoryDialogComponent({
                             >
                               View Results
                             </Button>
-                          )}
+                          ) : null}
                         </div>
                       </div>
                     );

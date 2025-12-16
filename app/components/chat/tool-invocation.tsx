@@ -219,9 +219,9 @@ function renderArrayResults(parsedResult: ParsedResult): ReactNode {
             <div className="mt-1 font-mono text-muted-foreground text-xs">
               {item.url}
             </div>
-            {item.snippet && (
+            {item.snippet ? (
               <div className="mt-1 line-clamp-2 text-sm">{item.snippet}</div>
-            )}
+            ) : null}
           </div>
         ))}
       </div>
@@ -246,8 +246,8 @@ function renderObjectResults(parsedResult: ParsedResult): ReactNode {
   const obj = parsedResult as ObjectResult;
   return (
     <div>
-      {obj.title && <div className="mb-2 font-medium">{obj.title}</div>}
-      {obj.html_url && (
+      {obj.title ? <div className="mb-2 font-medium">{obj.title}</div> : null}
+      {obj.html_url ? (
         <div className="mb-2">
           <a
             className="flex items-center gap-1 text-primary hover:underline"
@@ -259,7 +259,7 @@ function renderObjectResults(parsedResult: ParsedResult): ReactNode {
             <Link className="h-3 w-3 opacity-70" />
           </a>
         </div>
-      )}
+      ) : null}
       <pre className="whitespace-pre-wrap font-mono text-xs">
         {JSON.stringify(obj, null, 2)}
       </pre>
@@ -354,7 +354,7 @@ export function ToolInvocation({
         </button>
 
         <AnimatePresence initial={false}>
-          {isExpanded && (
+          {isExpanded ? (
             <motion.div
               animate={{ height: "auto", opacity: 1 }}
               className="overflow-hidden"
@@ -386,19 +386,16 @@ export function ToolInvocation({
                       return null;
                     }
 
-                    return (
-                      <div
-                        className="border-gray-100 border-b pb-4 last:border-0 last:pb-0"
-                        key={toolId}
-                      >
-                        <SingleToolView data={[toolToShow]} />
-                      </div>
+                    const toolGroup = toolInvocations.filter(
+                      (item) => item.toolInvocation.toolCallId === toolId
                     );
+
+                    return <SingleToolView data={toolGroup} key={toolId} />;
                   })}
                 </div>
               </div>
             </motion.div>
-          )}
+          ) : null}
         </AnimatePresence>
       </div>
     </div>
@@ -468,6 +465,7 @@ function SingleToolView({
   // Extract search queries for display
   const searchQueries = extractSearchQueries(data);
   const isSearchTool = ["search", "duckDuckGo", "exaSearch"].includes(toolName);
+  const showSearchQueries = isSearchTool && searchQueries.length > 0;
 
   return (
     <div
@@ -477,11 +475,11 @@ function SingleToolView({
       )}
     >
       {/* Search queries display - shown above the tool when it's a search tool */}
-      {isSearchTool && searchQueries.length > 0 && (
+      {showSearchQueries ? (
         <div className="px-3 pt-3 pb-0">
           <SearchQueryDisplay queries={searchQueries} />
         </div>
-      )}
+      ) : null}
       <button
         className="flex w-full flex-row items-center rounded-t-md px-3 py-2 transition-colors hover:bg-accent"
         onClick={() => setIsExpanded(!isExpanded)}
@@ -516,7 +514,7 @@ function SingleToolView({
       </button>
 
       <AnimatePresence initial={false}>
-        {isExpanded && (
+        {isExpanded ? (
           <motion.div
             animate={{ height: "auto", opacity: 1 }}
             className="overflow-hidden"
@@ -526,7 +524,7 @@ function SingleToolView({
           >
             <div className="space-y-3 px-3 pt-3 pb-3">
               {/* Arguments section */}
-              {args && Object.keys(args).length > 0 && (
+              {!!args && Object.keys(args).length > 0 ? (
                 <div>
                   <div className="mb-1 font-medium text-muted-foreground text-xs">
                     Arguments
@@ -535,10 +533,10 @@ function SingleToolView({
                     {formattedArgs}
                   </div>
                 </div>
-              )}
+              ) : null}
 
               {/* Result section */}
-              {isCompleted && (
+              {isCompleted ? (
                 <div>
                   <div className="mb-1 font-medium text-muted-foreground text-xs">
                     Result
@@ -551,7 +549,7 @@ function SingleToolView({
                     )}
                   </div>
                 </div>
-              )}
+              ) : null}
 
               {/* Tool call ID */}
               <div className="flex items-center justify-between text-muted-foreground text-xs">
@@ -563,7 +561,7 @@ function SingleToolView({
               </div>
             </div>
           </motion.div>
-        )}
+        ) : null}
       </AnimatePresence>
     </div>
   );

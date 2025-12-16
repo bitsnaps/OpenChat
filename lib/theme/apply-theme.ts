@@ -90,7 +90,7 @@ const applyStyleToElement = (
   key: string,
   value: string | null | undefined
 ) => {
-  if (value == null || value === "") {
+  if (value === null || value === undefined || value === "") {
     element.style.removeProperty(`--${key}`);
   } else {
     element.style.setProperty(`--${key}`, value);

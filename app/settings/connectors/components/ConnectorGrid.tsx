@@ -16,17 +16,20 @@ type ConnectorData = {
 
 type ConnectorGridProps = {
   connectors: ConnectorData[];
-  onConnect: (type: ConnectorType) => void;
-  onDisconnect: (type: ConnectorType) => Promise<void>;
-  onToggleEnabled: (type: ConnectorType, enabled: boolean) => Promise<void>;
+  onConnectAction: (type: ConnectorType) => void;
+  onDisconnectAction: (type: ConnectorType) => Promise<void>;
+  onToggleEnabledAction: (
+    type: ConnectorType,
+    enabled: boolean
+  ) => Promise<void>;
   connectingStates: Record<ConnectorType, boolean>;
 };
 
 export function ConnectorGrid({
   connectors,
-  onConnect,
-  onDisconnect,
-  onToggleEnabled,
+  onConnectAction,
+  onDisconnectAction,
+  onToggleEnabledAction,
   connectingStates,
 }: ConnectorGridProps) {
   // Create a map of existing connectors for quick lookup
@@ -58,9 +61,9 @@ export function ConnectorGrid({
             connector={connector}
             isConnecting={connectingStates[connector.type]}
             key={connector.type}
-            onConnect={onConnect}
-            onDisconnect={onDisconnect}
-            onToggleEnabled={onToggleEnabled}
+            onConnectAction={onConnectAction}
+            onDisconnectAction={onDisconnectAction}
+            onToggleEnabledAction={onToggleEnabledAction}
           />
         ))}
       </div>

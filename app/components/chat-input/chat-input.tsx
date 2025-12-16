@@ -1,5 +1,6 @@
 "use client";
 
+import { useChatActions, useChatStatus } from "@ai-sdk-tools/store";
 import { ArrowUp, Globe, Stop, X } from "@phosphor-icons/react";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
@@ -27,8 +28,6 @@ type ReasoningEffort = "low" | "medium" | "high";
 
 type ChatInputProps = {
   onSendAction: (message: string, options: { enableSearch: boolean }) => void;
-  isSubmitting?: boolean;
-  hasMessages?: boolean;
   files: File[];
   onFileUploadAction: (files: File[]) => void;
   onFileRemoveAction: (file: File) => void;
@@ -39,8 +38,6 @@ type ChatInputProps = {
   isUserAuthenticated: boolean;
   onSelectSystemPromptAction: (personaId: string) => void;
   selectedPersonaId?: string;
-  stopAction: () => void;
-  status?: "submitted" | "streaming" | "ready" | "error";
   isReasoningModel: boolean;
   reasoningEffort: ReasoningEffort;
   onSelectReasoningEffortAction: (reasoningEffort: ReasoningEffort) => void;
@@ -49,7 +46,6 @@ type ChatInputProps = {
 
 export function ChatInput({
   onSendAction,
-  isSubmitting,
   files,
   onFileUploadAction,
   onFileRemoveAction,
@@ -60,13 +56,15 @@ export function ChatInput({
   isUserAuthenticated,
   onSelectSystemPromptAction,
   selectedPersonaId,
-  stopAction,
-  status,
   isReasoningModel,
   reasoningEffort,
   onSelectReasoningEffortAction,
   initialValue = "",
 }: ChatInputProps) {
+  const { stop } = useChatActions();
+  const status = useChatStatus();
+  const isStreaming = status === "streaming";
+
   // Local state for input value to prevent parent re-renders
   const [value, setValue] = useState(initialValue);
   const [searchEnabled, setSearchEnabled] = React.useState(false);
@@ -93,7 +91,7 @@ export function ChatInput({
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
-      if (isSubmitting) {
+      if (isStreaming) {
         return;
       }
 
@@ -103,16 +101,16 @@ export function ChatInput({
         setValue(""); // Clear input after sending
       }
     },
-    [onSendAction, isSubmitting, searchEnabled, value]
+    [onSendAction, isStreaming, searchEnabled, value]
   );
 
   const handleMainClick = () => {
     if (status === "streaming") {
-      stopAction();
+      stop();
       return;
     }
 
-    if (isSubmitting || !value.trim()) {
+    if (isStreaming || !value.trim()) {
       // Prevent double submission or empty submission
       return;
     }
@@ -216,7 +214,7 @@ export function ChatInput({
   useEffect(() => {
     const handleGlobalKeyDown = (e: KeyboardEvent) => {
       // Don't interfere if input is already focused or disabled
-      if (isSubmitting || !textareaRef.current) {
+      if (isStreaming || !textareaRef.current) {
         return;
       }
 
@@ -247,19 +245,19 @@ export function ChatInput({
 
     document.addEventListener("keydown", handleGlobalKeyDown);
     return () => document.removeEventListener("keydown", handleGlobalKeyDown);
-  }, [isSubmitting]);
+  }, [isStreaming]);
 
   // Compute tooltip text without nested ternary expressions
   let tooltipText = "Send";
   if (status === "streaming") {
     tooltipText = "Stop";
-  } else if (isSubmitting && files.length > 0) {
+  } else if (isStreaming && files.length > 0) {
     tooltipText = "Uploading...";
   }
 
   return (
     <div className="relative flex w-full flex-col gap-4">
-      {hasSuggestions && (
+      {hasSuggestions ? (
         <PromptSystem
           isEmpty={isEmpty}
           onSelectSystemPrompt={onSelectSystemPromptAction}
@@ -267,7 +265,7 @@ export function ChatInput({
           onValueChange={setValue}
           selectedPersonaId={selectedPersonaId}
         />
-      )}
+      ) : null}
       <div className="relative order-2 px-2 pb-3 sm:pb-4 md:order-1">
         <PromptInput
           className="relative z-10 p-0 pb-2 backdrop-blur-xl"
@@ -278,7 +276,7 @@ export function ChatInput({
           <FileList files={files} onFileRemoveAction={onFileRemoveAction} />
           <PromptInputTextarea
             className="mt-2 ml-2 text-foreground leading-[1.3]"
-            disabled={isSubmitting}
+            disabled={isStreaming}
             onKeyDown={handleKeyDown}
             placeholder="How can I help you today?"
             ref={textareaRef}
@@ -296,7 +294,7 @@ export function ChatInput({
                 searchEnabled={searchEnabled}
                 selectedModel={selectedModel}
               />
-              {searchEnabled && (
+              {searchEnabled ? (
                 <Button
                   aria-label="Disable search"
                   className="group hidden size-9 rounded-full border border-blue-200 bg-blue-50 p-0 sm:flex dark:border-blue-800 dark:bg-blue-950/30"
@@ -308,19 +306,19 @@ export function ChatInput({
                   <Globe className="size-4 text-blue-700 transition-opacity group-hover:opacity-0 dark:text-blue-400" />
                   <X className="absolute size-4 text-blue-700 opacity-0 transition-opacity group-hover:opacity-100 dark:text-blue-400" />
                 </Button>
-              )}
+              ) : null}
               <SelectModel
                 isUserAuthenticated={isUserAuthenticated}
                 onSelectModel={onSelectModelAction}
                 selectedModel={selectedModel}
               />
-              {isReasoningModel && (
+              {isReasoningModel ? (
                 <SelectReasoningEffort
                   isUserAuthenticated={isUserAuthenticated}
                   onSelectReasoningEffortAction={onSelectReasoningEffortAction}
                   reasoningEffort={reasoningEffort}
                 />
-              )}
+              ) : null}
             </div>
             <PromptInputAction tooltip={tooltipText}>
               <Button

@@ -104,7 +104,7 @@ export default async function Image({
         </div>
 
         {/* Date */}
-        {createdDate && (
+        {createdDate ? (
           <div
             style={{
               display: "flex",
@@ -123,7 +123,7 @@ export default async function Image({
               {createdDate}
             </div>
           </div>
-        )}
+        ) : null}
       </div>,
       {
         ...size,

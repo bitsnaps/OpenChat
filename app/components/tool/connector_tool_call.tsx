@@ -235,7 +235,7 @@ export const ConnectorToolCall = memo<ConnectorToolCallProps>(
 
     return (
       <div className={cn("my-3 w-full", className)}>
-        <div className="flex min-h-[2.625rem] flex-col rounded-xl border bg-card font-ui leading-normal tracking-tight shadow-sm transition-all duration-400 ease-out">
+        <div className="flex min-h-10.5 flex-col rounded-xl border bg-card font-ui leading-normal tracking-tight shadow-sm transition-all duration-400 ease-out">
           {/* Toggle Button Header */}
           <button
             className={buttonClassName}
@@ -250,7 +250,7 @@ export const ConnectorToolCall = memo<ConnectorToolCallProps>(
                   connector={connectorConfig}
                 />
               </div>
-              <div className="relative bottom-[0.5px] flex-grow overflow-hidden overflow-ellipsis whitespace-nowrap text-left text-muted-foreground leading-tight">
+              <div className="relative bottom-[0.5px] grow overflow-hidden overflow-ellipsis whitespace-nowrap text-left text-muted-foreground leading-tight">
                 {displayText}
               </div>
             </div>
@@ -304,7 +304,7 @@ export const ConnectorToolCall = memo<ConnectorToolCallProps>(
                 >
                   <div className="flex flex-col gap-3 p-3 pt-1">
                     {/* Request Section */}
-                    {data.request && (
+                    {data.request ? (
                       <div className="flex flex-col gap-3 rounded-md bg-muted p-3">
                         <div className="flex h-3 items-center justify-between">
                           <p className="font-medium font-ui text-[0.6875rem] text-muted-foreground tracking-tight">
@@ -318,10 +318,10 @@ export const ConnectorToolCall = memo<ConnectorToolCallProps>(
                           </pre>
                         </div>
                       </div>
-                    )}
+                    ) : null}
 
                     {/* Response Section */}
-                    {data.response && (
+                    {data.response ? (
                       <div className="flex flex-col gap-3 rounded-md bg-muted p-3">
                         <div className="flex h-3 items-center justify-between">
                           <div className="flex items-center gap-2">
@@ -353,31 +353,32 @@ export const ConnectorToolCall = memo<ConnectorToolCallProps>(
                           </pre>
                         </div>
                       </div>
-                    )}
+                    ) : null}
 
                     {/* Metadata Section */}
-                    {data.metadata && (
+                    {data.metadata ? (
                       <div className="flex flex-col gap-2 rounded-md bg-muted p-3">
                         <p className="font-medium font-ui text-[0.6875rem] text-muted-foreground tracking-tight">
                           Metadata
                         </p>
                         <div className="space-y-1 text-muted-foreground text-xs">
-                          {data.metadata.executionTime && (
+                          {data.metadata.executionTime !== null &&
+                          data.metadata.executionTime !== undefined ? (
                             <div className="flex justify-between">
                               <span>Execution Time:</span>
                               <span className="font-mono">
                                 {data.metadata.executionTime}ms
                               </span>
                             </div>
-                          )}
-                          {data.metadata.timestamp && (
+                          ) : null}
+                          {data.metadata.timestamp ? (
                             <div className="flex justify-between">
                               <span>Timestamp:</span>
                               <span className="font-mono">
                                 {data.metadata.timestamp}
                               </span>
                             </div>
-                          )}
+                          ) : null}
                           <div className="flex justify-between">
                             <span>Connector:</span>
                             <span className="font-mono">
@@ -390,7 +391,7 @@ export const ConnectorToolCall = memo<ConnectorToolCallProps>(
                           </div>
                         </div>
                       </div>
-                    )}
+                    ) : null}
                   </div>
                 </div>
               </div>

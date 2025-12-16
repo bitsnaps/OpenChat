@@ -154,7 +154,11 @@ export const Suggestions = memo(function SuggestionsComponent({
 
   return (
     <AnimatePresence mode="popLayout">
-      {showCategorySuggestions ? suggestionsList : suggestionsGrid}
+      {showCategorySuggestions ? (
+        <div>{suggestionsList}</div>
+      ) : (
+        <div>{suggestionsGrid}</div>
+      )}
     </AnimatePresence>
   );
 });

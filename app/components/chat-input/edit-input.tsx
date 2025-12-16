@@ -244,13 +244,13 @@ export function EditInput({
               onSelectModel={setEditModel}
               selectedModel={editModel}
             />
-            {isReasoningModel && (
+            {isReasoningModel ? (
               <SelectReasoningEffort
                 isUserAuthenticated={isUserAuthenticated}
                 onSelectReasoningEffortAction={setEditReasoningEffort}
                 reasoningEffort={editReasoningEffort}
               />
-            )}
+            ) : null}
           </div>
           <PromptInputAction tooltip="Save edit">
             <Button

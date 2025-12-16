@@ -83,6 +83,8 @@ function LegalHeaderComponent() {
   const isMobile = useBreakpoint(768);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  const showMobileNav = isMobile && isMobileMenuOpen;
+
   // Determine the active tab by finding exact pathname match
   const activeTab = LEGAL_NAV_ITEMS.find(
     (item) => pathname === item.href
@@ -108,16 +110,16 @@ function LegalHeaderComponent() {
           )}
 
           {/* Mobile hamburger menu */}
-          {isMobile && (
+          {isMobile ? (
             <MobileHamburgerMenu
               isOpen={isMobileMenuOpen}
               onToggle={toggleMobileMenu}
             />
-          )}
+          ) : null}
         </div>
 
         {/* Mobile navigation menu - shows below header when open */}
-        {isMobile && isMobileMenuOpen && (
+        {showMobileNav ? (
           <div className="mt-6 border-border border-t pt-6">
             <nav className="flex flex-col space-y-2">
               {LEGAL_NAV_ITEMS.map((item) => {
@@ -140,7 +142,7 @@ function LegalHeaderComponent() {
               })}
             </nav>
           </div>
-        )}
+        ) : null}
       </div>
     </div>
   );

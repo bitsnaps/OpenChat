@@ -147,7 +147,7 @@ export function ExistingFileItem({
             </div>
           </div>
         </HoverCardTrigger>
-        {isImage && (
+        {isImage ? (
           <HoverCardContent side="top">
             <Image
               alt={attachment.filename || "attachment"}
@@ -157,7 +157,7 @@ export function ExistingFileItem({
               width={200}
             />
           </HoverCardContent>
-        )}
+        ) : null}
       </HoverCard>
       <Tooltip>
         <TooltipTrigger asChild>

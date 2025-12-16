@@ -307,7 +307,7 @@ export default function ModelsPage() {
                         <span>{info.label}</span>
                       </div>
                       <span className="flex h-3.5 w-3.5 items-center justify-center">
-                        {checked && <CheckIcon className="h-4 w-4" />}
+                        {checked ? <CheckIcon className="h-4 w-4" /> : null}
                       </span>
                     </DropdownMenuItem>
                   );
@@ -325,7 +325,7 @@ export default function ModelsPage() {
                 >
                   <span>Only show free plan models</span>
                   <span className="flex h-3.5 w-3.5 items-center justify-center">
-                    {freeOnly && <CheckIcon className="h-4 w-4" />}
+                    {freeOnly ? <CheckIcon className="h-4 w-4" /> : null}
                   </span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -426,12 +426,12 @@ export default function ModelsPage() {
               <Card className="relative p-3 sm:p-4" key={model.id}>
                 <div className="flex w-full items-start gap-4">
                   <div className="relative h-8 w-8 flex-shrink-0 sm:h-10 sm:w-10">
-                    {provider && (
+                    {provider ? (
                       <ProviderIcon
                         className="h-full w-full text-muted-foreground grayscale"
                         provider={provider}
                       />
-                    )}
+                    ) : null}
                   </div>
                   <div className="flex flex-1 flex-col gap-2">
                     <div className="flex items-center justify-between">
@@ -439,7 +439,7 @@ export default function ModelsPage() {
                         <h3 className="font-medium">
                           {getDisplayName(model.name, model.subName)}
                         </h3>
-                        {model.usesPremiumCredits && (
+                        {model.usesPremiumCredits ? (
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <div className="flex items-center">
@@ -453,8 +453,8 @@ export default function ModelsPage() {
                               <p>Premium Model</p>
                             </TooltipContent>
                           </Tooltip>
-                        )}
-                        {model.apiKeyUsage.userKeyOnly && (
+                        ) : null}
+                        {model.apiKeyUsage.userKeyOnly ? (
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <div className="flex items-center">
@@ -465,7 +465,7 @@ export default function ModelsPage() {
                               <p>Requires API Key</p>
                             </TooltipContent>
                           </Tooltip>
-                        )}
+                        ) : null}
                       </div>
                       <Switch
                         checked={isCurrentlyEnabled(model.id)}
@@ -484,21 +484,21 @@ export default function ModelsPage() {
                           return model.description.split("\n")[0];
                         })()}
                       </p>
-                      {model.description &&
-                        model.description.split("\n").length > 1 && (
-                          <button
-                            className="mt-1 cursor-pointer text-xs"
-                            onClick={() =>
-                              setExpanded((prev) => ({
-                                ...prev,
-                                [model.id]: !prev[model.id],
-                              }))
-                            }
-                            type="button"
-                          >
-                            {expanded[model.id] ? "Show less" : "Show more"}
-                          </button>
-                        )}
+                      {!!model.description &&
+                      model.description.split("\n").length > 1 ? (
+                        <button
+                          className="mt-1 cursor-pointer text-xs"
+                          onClick={() =>
+                            setExpanded((prev) => ({
+                              ...prev,
+                              [model.id]: !prev[model.id],
+                            }))
+                          }
+                          type="button"
+                        >
+                          {expanded[model.id] ? "Show less" : "Show more"}
+                        </button>
+                      ) : null}
                     </div>
                     <div className="mt-1 flex items-center justify-between gap-1 sm:mt-2 sm:gap-2">
                       <div className="flex flex-wrap gap-1 sm:gap-2">

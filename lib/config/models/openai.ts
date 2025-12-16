@@ -12,6 +12,55 @@ import {
 
 export const OPENAI_MODELS = [
   {
+    id: "gpt-5.2",
+    name: "GPT-5.2",
+    provider: "openai",
+    premium: true,
+    usesPremiumCredits: true,
+    description: `OpenAI's latest reasoning model. \nDelivers state-of-the-art performance in logic, coding, and multi-step reasoning.`,
+    apiKeyUsage: { allowUserKey: true, userKeyOnly: false },
+    features: [
+      FILE_UPLOAD_FEATURE,
+      PDF_PROCESSING_FEATURE,
+      REASONING_FEATURE,
+      TOOL_CALLING_FEATURE,
+    ],
+    api_sdk: openai.responses("gpt-5.2"),
+  },
+  {
+    id: "gpt-5.2-pro",
+    name: "GPT-5.2 Pro",
+    provider: "openai",
+    premium: false,
+    usesPremiumCredits: false,
+    description: `OpenAI's most advanced model with 400K context window.\nExcels at complex reasoning, expert-level analysis, and long-context tasks.`,
+    apiKeyUsage: { allowUserKey: true, userKeyOnly: true },
+    features: [
+      FILE_UPLOAD_FEATURE,
+      PDF_PROCESSING_FEATURE,
+      REASONING_FEATURE,
+      TOOL_CALLING_FEATURE,
+    ],
+    api_sdk: openai.responses("gpt-5.2-pro"),
+  },
+  {
+    id: "gpt-5.2-instant",
+    name: "GPT-5.2 Instant",
+    provider: "openai",
+    premium: true,
+    usesPremiumCredits: true,
+    description:
+      "Ultra-fast variant of GPT-5.2 optimized for low-latency.\nIdeal for real-time conversations, quick answers, and high-throughput tasks.",
+    apiKeyUsage: { allowUserKey: true, userKeyOnly: false },
+    features: [
+      FILE_UPLOAD_FEATURE,
+      PDF_PROCESSING_FEATURE,
+      REASONING_FEATURE_DISABLED,
+      TOOL_CALLING_FEATURE,
+    ],
+    api_sdk: openai.responses("gpt-5.2-chat-latest"),
+  },
+  {
     id: "gpt-5.1",
     name: "GPT-5.1",
     provider: "openai",
@@ -42,7 +91,7 @@ export const OPENAI_MODELS = [
       REASONING_FEATURE_DISABLED,
       TOOL_CALLING_FEATURE,
     ],
-    api_sdk: openai.responses("gpt-5.1-instant"),
+    api_sdk: openai.responses("gpt-5.1-chat-latest"),
   },
   {
     id: "gpt-5",

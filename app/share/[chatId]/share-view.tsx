@@ -147,14 +147,14 @@ export default function ShareView({
           variant="outline"
         >
           <span className="flex items-center gap-2">
-            {!canFork && <Lock className="h-5 w-5" />}
+            {canFork ? null : <Lock className="h-5 w-5" />}
             {getButtonText(canFork, isAuthenticated)}
           </span>
-          {canFork && (
+          {canFork ? (
             <span className="rounded-full bg-black/20 p-2 backdrop-blur-sm transition-colors group-hover:bg-black/30">
               <ArrowUpRight className="h-4 w-4 text-white" />
             </span>
-          )}
+          ) : null}
         </Button>
       </div>
 

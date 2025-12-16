@@ -76,16 +76,16 @@ const getInitialFormState = (
 };
 
 type CreateTaskFormProps = {
-  onSuccess: () => void;
-  onCancel: () => void;
+  onSuccessAction: () => void;
+  onCancelAction: () => void;
   CloseWrapper?: React.ComponentType<{ children: React.ReactNode }>;
   initialData?: Partial<CreateTaskForm> & { taskId?: Id<"scheduled_tasks"> };
   mode?: "create" | "edit";
 };
 
 export function TaskFormContent({
-  onSuccess,
-  onCancel,
+  onSuccessAction,
+  onCancelAction,
   CloseWrapper,
   initialData,
   mode = "create",
@@ -155,9 +155,8 @@ export function TaskFormContent({
         });
         toast.success("Scheduled task created successfully");
       }
-      onSuccess();
-    } catch (_error) {
-      // Error logged for debugging purposes
+      onSuccessAction();
+    } catch {
       toast.error(
         `Failed to ${mode === "edit" ? "update" : "create"} task. Please try again.`
       );
@@ -353,7 +352,7 @@ export function TaskFormContent({
         <div className="flex items-center justify-between">
           {/* Background Agent Limits Display with Progress Ring */}
           <div className="flex items-center gap-3">
-            {taskLimits && (
+            {taskLimits ? (
               <>
                 {form.scheduleType === "daily" ? (
                   <ProgressRing
@@ -380,18 +379,22 @@ export function TaskFormContent({
                     : `${taskLimits.total.remaining} task remaining`}
                 </div>
               </>
-            )}
+            ) : null}
           </div>
 
           <div className="flex gap-3">
             {CloseWrapper ? (
               <CloseWrapper>
-                <Button onClick={onCancel} type="button" variant="outline">
+                <Button
+                  onClick={onCancelAction}
+                  type="button"
+                  variant="outline"
+                >
                   Cancel
                 </Button>
               </CloseWrapper>
             ) : (
-              <Button onClick={onCancel} type="button" variant="outline">
+              <Button onClick={onCancelAction} type="button" variant="outline">
                 Cancel
               </Button>
             )}

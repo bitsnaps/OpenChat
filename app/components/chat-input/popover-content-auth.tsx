@@ -40,11 +40,11 @@ export function PopoverContentAuth() {
         src="/banner_forest.jpg"
         width={300}
       />
-      {error && (
+      {error ? (
         <div className="rounded-md bg-destructive/10 p-3 text-destructive text-sm">
           {error}
         </div>
-      )}
+      ) : null}
       <div className="p-3">
         <p className="mb-1 font-medium text-base text-primary">
           Login to try more features for free

@@ -1,6 +1,14 @@
 "use client";
 
-import { type UIMessage, useChat } from "@ai-sdk/react";
+import type { UIMessage } from "@ai-sdk/react";
+import {
+  createChatStore,
+  Provider,
+  useChat,
+  useChatActions,
+  useChatMessages,
+  useChatStatus,
+} from "@ai-sdk-tools/store";
 import { convexQuery } from "@convex-dev/react-query";
 import { useQuery as useTanStackQuery } from "@tanstack/react-query";
 import { DefaultChatTransport, type FileUIPart } from "ai";
@@ -15,6 +23,7 @@ import {
   type MessageWithExtras,
 } from "@/app/components/chat/conversation";
 import { ChatInput } from "@/app/components/chat-input/chat-input";
+
 import { useChatOperations } from "@/app/hooks/use-chat-operations";
 import { useChatValidation } from "@/app/hooks/use-chat-validation";
 import { useDocumentTitle } from "@/app/hooks/use-document-title";
@@ -49,6 +58,35 @@ import {
 } from "@/lib/user-utils";
 import { cn } from "@/lib/utils";
 
+const DRAFT_STORE_KEY = "draft-chat";
+const storeRegistry = new Map<
+  string,
+  ReturnType<typeof createChatStore<MessageWithExtras>>
+>();
+
+function getChatStoreForKey(key: string) {
+  const existingStore = storeRegistry.get(key);
+  if (existingStore) {
+    return existingStore;
+  }
+  const newStore = createChatStore<MessageWithExtras>();
+  storeRegistry.set(key, newStore);
+  return newStore;
+}
+
+function promoteDraftStoreToChat(chatId: string) {
+  if (!chatId || storeRegistry.has(chatId)) {
+    return;
+  }
+  const draftStore = storeRegistry.get(DRAFT_STORE_KEY);
+  if (!draftStore) {
+    return;
+  }
+  draftStore.getState().setId(chatId);
+  storeRegistry.set(chatId, draftStore);
+  storeRegistry.set(DRAFT_STORE_KEY, createChatStore<MessageWithExtras>());
+}
+
 // Schema for chat body
 const ChatBodySchema = z.object({
   chatId: z.string(),
@@ -71,7 +109,7 @@ const DialogAuth = dynamic(
   { ssr: false }
 );
 
-export default function Chat() {
+function ChatContent() {
   const { chatId, isDeleting, setIsDeleting } = useChatSession();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -160,22 +198,34 @@ export default function Chat() {
   const isAuthenticated = isUserAuthenticated(user);
 
   // Enhanced useChat hook with AI SDK best practices
-  const { messages, status, regenerate, stop, setMessages, sendMessage } =
-    useChat({
-      transport: new DefaultChatTransport({
-        api: API_ROUTE_CHAT,
-        // Global configuration
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }),
-      // AI SDK error handling
-      onError: createChatErrorHandler(),
-    });
+  const { regenerate, setMessages, sendMessage } = useChat({
+    transport: new DefaultChatTransport({
+      api: API_ROUTE_CHAT,
+      // Global configuration
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }),
+    // AI SDK error handling
+    onError: createChatErrorHandler(),
+  });
+
+  const messages = useChatMessages<MessageWithExtras>();
+  const status = useChatStatus();
+  const chatActions = useChatActions<MessageWithExtras>();
+
+  useEffect(() => {
+    if (!chatId) {
+      chatActions.reset();
+      setTempPersonaId(undefined);
+      setTempSelectedModel(undefined);
+    }
+  }, [chatActions, chatId]);
 
   // Message synchronization effect - optimized to prevent infinite re-renders
   useEffect(() => {
     if (
+      !chatId ||
       (status !== "ready" && status !== "error") ||
       !messagesFromDB ||
       isDeleting
@@ -252,16 +302,7 @@ export default function Chat() {
 
       return currentMessages;
     });
-  }, [messagesFromDB, status, setMessages, isDeleting]);
-
-  // Reset state for new chats
-  useEffect(() => {
-    if ((status === "ready" || status === "error") && !chatId) {
-      setMessages([]);
-      setTempPersonaId(undefined);
-      setTempSelectedModel(undefined);
-    }
-  }, [status, chatId, setMessages]);
+  }, [chatId, messagesFromDB, status, setMessages, isDeleting]);
 
   // Core message sending function
   const sendMessageHelper = useCallback(
@@ -375,6 +416,7 @@ export default function Chat() {
             personaId
           );
           if (newChatId) {
+            promoteDraftStoreToChat(newChatId);
             window.history.pushState(null, "", `/c/${newChatId}`);
             await sendMessageHelper(trimmedQuery, newChatId, {
               enableSearch: false,
@@ -429,6 +471,7 @@ export default function Chat() {
           return;
         }
 
+        promoteDraftStoreToChat(currentChatId);
         window.history.pushState(null, "", `/c/${currentChatId}`);
         setTempSelectedModel(undefined);
         setTempPersonaId(undefined);
@@ -804,7 +847,7 @@ export default function Chat() {
         "@container/main relative flex h-full flex-col items-center justify-end md:justify-center"
       )}
     >
-      <DialogAuth open={hasDialogAuth} setOpen={setHasDialogAuth} />
+      <DialogAuth open={hasDialogAuth} setOpenAction={setHasDialogAuth} />
 
       <AnimatePresence initial={false} mode="popLayout">
         {!chatId && messages.length === 0 ? (
@@ -833,16 +876,17 @@ export default function Chat() {
             isReasoningModel={supportsReasoningEffort(selectedModel)}
             isUserAuthenticated={isAuthenticated}
             key="conversation"
-            messages={messages as MessageWithExtras[]}
-            onBranch={(messageId) =>
-              chatId && handleBranch(chatId, messageId, user)
-            }
+            onBranch={(messageId) => {
+              if (!chatId) {
+                return;
+              }
+              handleBranch(chatId, messageId, user);
+            }}
             onDelete={handleDelete}
             onEdit={handleEdit}
             onReload={handleReload}
             reasoningEffort={reasoningEffort}
             selectedModel={selectedModel}
-            status={status}
           />
         )}
       </AnimatePresence>
@@ -864,7 +908,6 @@ export default function Chat() {
           files={files}
           hasSuggestions={!chatId && messages.length === 0}
           isReasoningModel={supportsReasoningEffort(selectedModel)}
-          isSubmitting={status === "streaming"}
           isUserAuthenticated={isAuthenticated}
           onFileRemoveAction={removeFile}
           onFileUploadAction={addFiles}
@@ -881,10 +924,20 @@ export default function Chat() {
           reasoningEffort={reasoningEffort}
           selectedModel={selectedModel}
           selectedPersonaId={personaId}
-          status={status}
-          stopAction={stop}
         />
       </motion.div>
     </div>
+  );
+}
+
+export default function Chat() {
+  const { chatId } = useChatSession();
+  const storeKey = chatId ?? DRAFT_STORE_KEY;
+  const chatStore = useMemo(() => getChatStoreForKey(storeKey), [storeKey]);
+
+  return (
+    <Provider store={chatStore}>
+      <ChatContent />
+    </Provider>
   );
 }

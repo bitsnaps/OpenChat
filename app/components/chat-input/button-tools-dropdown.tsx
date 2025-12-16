@@ -182,7 +182,7 @@ function BaseButtonToolsDropdown({
 
   return (
     <DropdownMenu onOpenChange={setMenuOpen} open={menuOpen}>
-      <Tooltip open={menuOpen ? false : undefined}>
+      <Tooltip {...(menuOpen ? { open: false } : {})}>
         <TooltipTrigger asChild>
           <DropdownMenuTrigger asChild>
             <Button

@@ -15,10 +15,10 @@ import {
 
 type DialogAuthProps = {
   open: boolean;
-  setOpen: (open: boolean) => void;
+  setOpenAction: (open: boolean) => void;
 };
 
-export function DialogAuth({ open, setOpen }: DialogAuthProps) {
+export function DialogAuth({ open, setOpenAction }: DialogAuthProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -29,7 +29,7 @@ export function DialogAuth({ open, setOpen }: DialogAuthProps) {
       setIsLoading(true);
       setError(null);
       await signIn("google");
-      setOpen(false);
+      setOpenAction(false);
     } catch (err: unknown) {
       if (err instanceof Error) {
         // console.error('Error signing in with Google:', err);
@@ -46,7 +46,7 @@ export function DialogAuth({ open, setOpen }: DialogAuthProps) {
   };
 
   return (
-    <Dialog onOpenChange={setOpen} open={open}>
+    <Dialog onOpenChange={setOpenAction} open={open}>
       <DialogContent className="sm:max-w-md">
         <DialogDescription className="sr-only">
           Authenticate with your account to access the chat application.
@@ -59,11 +59,11 @@ export function DialogAuth({ open, setOpen }: DialogAuthProps) {
             Sign in below to increase your message limits.
           </DialogDescription>
         </DialogHeader>
-        {error && (
+        {error ? (
           <div className="rounded-md bg-destructive/10 p-3 text-destructive text-sm">
             {error}
           </div>
-        )}
+        ) : null}
         <DialogFooter className="mt-6 sm:justify-center">
           <Button
             className="w-full text-base"

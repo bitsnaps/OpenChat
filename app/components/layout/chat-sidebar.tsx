@@ -384,7 +384,7 @@ const ChatSidebar = memo(function SidebarComponent() {
             delay: isOpen ? 0.15 : 0,
           }}
         >
-          {chatsLoading && chats.length === 0 ? (
+          {Boolean(chatsLoading) && chats.length === 0 ? (
             <div className="space-y-2">
               {Array.from({ length: 5 }, (_, i) => (
                 <div

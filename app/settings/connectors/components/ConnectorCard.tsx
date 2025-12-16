@@ -30,17 +30,20 @@ type ConnectorData = {
 
 type ConnectorCardProps = {
   connector: ConnectorData;
-  onConnect: (type: ConnectorType) => void;
-  onDisconnect: (type: ConnectorType) => Promise<void>;
-  onToggleEnabled: (type: ConnectorType, enabled: boolean) => Promise<void>;
+  onConnectAction: (type: ConnectorType) => void;
+  onDisconnectAction: (type: ConnectorType) => Promise<void>;
+  onToggleEnabledAction: (
+    type: ConnectorType,
+    enabled: boolean
+  ) => Promise<void>;
   isConnecting: boolean;
 };
 
 export function ConnectorCard({
   connector,
-  onConnect,
-  onDisconnect,
-  onToggleEnabled,
+  onConnectAction,
+  onDisconnectAction,
+  onToggleEnabledAction,
   isConnecting,
 }: ConnectorCardProps) {
   const [isDisconnecting, setIsDisconnecting] = useState(false);
@@ -48,7 +51,7 @@ export function ConnectorCard({
   const [isToggling, setIsToggling] = useState(false);
 
   const handleConnect = () => {
-    onConnect(connector.type);
+    onConnectAction(connector.type);
   };
 
   const handleDisconnect = () => {
@@ -58,7 +61,7 @@ export function ConnectorCard({
   const confirmDisconnect = async () => {
     setIsDisconnecting(true);
     try {
-      await onDisconnect(connector.type);
+      await onDisconnectAction(connector.type);
     } catch {
       const config = getConnectorConfig(connector.type);
       toast.error(`Failed to disconnect ${config.displayName}`);
@@ -78,7 +81,7 @@ export function ConnectorCard({
 
     setIsToggling(true);
     try {
-      await onToggleEnabled(connector.type, checked);
+      await onToggleEnabledAction(connector.type, checked);
       toast.success(
         `${config.displayName} ${checked ? "enabled" : "disabled"} successfully`
       );
@@ -95,7 +98,7 @@ export function ConnectorCard({
   };
 
   return (
-    <div className="flex h-full min-h-[140px] flex-col rounded-lg border p-4">
+    <div className="flex h-full min-h-scroll-anchor-offset flex-col rounded-lg border p-4">
       <div className="flex flex-1 flex-col space-y-2">
         <div className="flex items-center justify-between">
           <h3 className="flex items-center gap-2 font-semibold">
@@ -103,7 +106,7 @@ export function ConnectorCard({
             {config.displayName}
           </h3>
           {/* Enable/disable switch visible only when connected */}
-          {connector.isConnected && (
+          {connector.isConnected ? (
             <div className="flex items-center">
               <Switch
                 aria-busy={isToggling || isDisconnecting}
@@ -113,14 +116,14 @@ export function ConnectorCard({
                 onCheckedChange={handleToggle}
               />
             </div>
-          )}
+          ) : null}
         </div>
         <p className="text-muted-foreground text-sm">{config.description}</p>
-        {connector.displayName && (
+        {connector.displayName ? (
           <p className="text-muted-foreground text-sm">
             Connected as: <strong>{connector.displayName}</strong>
           </p>
-        )}
+        ) : null}
       </div>
 
       <div className="flex justify-end pt-4">

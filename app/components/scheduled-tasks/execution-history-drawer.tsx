@@ -173,7 +173,7 @@ function ExecutionHistoryDrawerComponent({
           <div className="space-y-2">
             <h3 className="font-medium text-base">Recent Executions</h3>
             <ScrollArea className="h-[300px] w-full">
-              {isHistoryLoading && (
+              {isHistoryLoading ? (
                 <div className="space-y-2">
                   {Array.from({ length: 3 }).map((_, i) => (
                     <div
@@ -182,7 +182,7 @@ function ExecutionHistoryDrawerComponent({
                     />
                   ))}
                 </div>
-              )}
+              ) : null}
 
               {!isHistoryLoading && history.length === 0 && (
                 <div className="flex h-32 items-center justify-center text-muted-foreground">
@@ -223,14 +223,14 @@ function ExecutionHistoryDrawerComponent({
                               {execution.metadata.totalTokens.toLocaleString()}
                             </div>
                           )}
-                          {execution.errorMessage && (
+                          {execution.errorMessage ? (
                             <p className="text-destructive text-xs">
                               Error: {execution.errorMessage}
                             </p>
-                          )}
+                          ) : null}
                         </div>
                         <div className="ml-2 flex flex-col items-end gap-1">
-                          {execution.chatId && (
+                          {execution.chatId ? (
                             <Button
                               className="h-7 text-xs"
                               onClick={() => {
@@ -242,7 +242,7 @@ function ExecutionHistoryDrawerComponent({
                             >
                               View Results
                             </Button>
-                          )}
+                          ) : null}
                         </div>
                       </div>
                     );

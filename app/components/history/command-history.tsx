@@ -1,7 +1,7 @@
 "use client";
 
 import { convexQuery } from "@convex-dev/react-query";
-import { ListMagnifyingGlass, PushPinSimple } from "@phosphor-icons/react";
+import { ListMagnifyingGlass } from "@phosphor-icons/react";
 import { useQuery as useTanStackQuery } from "@tanstack/react-query";
 import { useMutation } from "convex/react";
 import { useRouter } from "next/navigation";
@@ -190,7 +190,7 @@ export function CommandHistory() {
               <CommandEmpty>No chat history found.</CommandEmpty>
             )}
 
-            {searchQuery && messageResults.length > 0 && (
+            {!!searchQuery && messageResults.length > 0 ? (
               <div className="px-2 pb-2">
                 <div className="flex h-8 shrink-0 items-center rounded-md px-1.5 font-semibold text-muted-foreground text-sm uppercase tracking-wide">
                   Messages
@@ -221,33 +221,39 @@ export function CommandHistory() {
                   </CommandItem>
                 ))}
               </div>
-            )}
-            {/* Pinned Chats Section */}
-            {pinnedChats.length > 0 && (
-              <div className="px-2 pb-2">
+            ) : null}
+
+            {filteredChat.length > 0 && (
+              <div className="px-2 pt-1">
                 <div className="flex h-8 shrink-0 items-center rounded-md px-1.5 font-semibold text-muted-foreground text-sm uppercase tracking-wide">
-                  <PushPinSimple className="mr-1.5 h-4 w-4" />
-                  Pinned
+                  Chats
                 </div>
-                {pinnedChats.map((chat) => (
-                  <CommandHistoryItem
-                    chat={chat}
-                    chatHistory={chatHistory}
-                    deletingId={deletingId}
-                    editingId={editingId}
-                    editTitle={editTitle}
-                    handleCancelDelete={handleCancelDelete}
-                    handleCancelEdit={handleCancelEdit}
-                    handleConfirmDelete={handleConfirmDelete}
-                    handleDelete={handleDelete}
-                    handleEdit={handleEdit}
-                    handleSaveEdit={handleSaveEdit}
-                    handleTogglePin={handleTogglePin}
-                    key={chat._id}
-                    setEditTitle={setEditTitle}
-                    setIsOpen={setIsOpen}
-                  />
-                ))}
+                {pinnedChats.length > 0 && (
+                  <div className="px-2 pb-2">
+                    <div className="flex h-8 shrink-0 items-center rounded-md px-1.5 font-semibold text-muted-foreground text-sm uppercase tracking-wide">
+                      Pinned
+                    </div>
+                    {pinnedChats.map((chat) => (
+                      <CommandHistoryItem
+                        chat={chat}
+                        chatHistory={chatHistory}
+                        deletingId={deletingId}
+                        editingId={editingId}
+                        editTitle={editTitle}
+                        handleCancelDelete={handleCancelDelete}
+                        handleCancelEdit={handleCancelEdit}
+                        handleConfirmDelete={handleConfirmDelete}
+                        handleDelete={handleDelete}
+                        handleEdit={handleEdit}
+                        handleSaveEdit={handleSaveEdit}
+                        handleTogglePin={handleTogglePin}
+                        key={chat._id}
+                        setEditTitle={setEditTitle}
+                        setIsOpen={setIsOpen}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
             )}
             {/* Time-based Groups */}

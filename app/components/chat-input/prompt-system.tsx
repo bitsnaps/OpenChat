@@ -90,7 +90,7 @@ export const PromptSystem = memo(function PromptSystemComponent({
               type="button"
             >
               <AnimatePresence initial={false}>
-                {tab.isActive && (
+                {tab.isActive ? (
                   <motion.div
                     animate={{
                       opacity: 1,
@@ -110,7 +110,7 @@ export const PromptSystem = memo(function PromptSystemComponent({
                       bounce: 0,
                     }}
                   />
-                )}
+                ) : null}
               </AnimatePresence>
               <span className="relative z-10">{tab.label}</span>
             </button>

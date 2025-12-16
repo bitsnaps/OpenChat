@@ -117,12 +117,12 @@ function ApiKeyInputForm({
             value={value}
           />
         </div>
-        {validationError && (
+        {validationError ? (
           <p className="flex items-center gap-1 text-red-500 text-xs">
             <ErrorIcon />
             {validationError}
           </p>
-        )}
+        ) : null}
         <p className="prose prose-pink text-muted-foreground text-xs">
           Get your API key from{" "}
           <a
@@ -180,7 +180,7 @@ function ProviderCard({
             <KeyIcon size={18} />
             {providerConfig.title}
           </h3>
-          {hasKey && (
+          {hasKey ? (
             <div className="flex items-center gap-4">
               <ToggleSwitch
                 checked={getMode()}
@@ -195,7 +195,7 @@ function ProviderCard({
                 <DeleteIcon />
               </Button>
             </div>
-          )}
+          ) : null}
         </div>
         <p className="text-muted-foreground text-sm">
           Used for the following models:
@@ -399,8 +399,9 @@ export default function ApiKeysPage() {
             <DialogDescription>
               This action cannot be undone. This will permanently delete the
               saved API key for{" "}
-              {providerToDelete &&
-                PROVIDERS.find((p) => p.id === providerToDelete)?.title}
+              {providerToDelete
+                ? PROVIDERS.find((p) => p.id === providerToDelete)?.title
+                : null}
               .
             </DialogDescription>
           </DialogHeader>

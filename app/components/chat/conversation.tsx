@@ -1,4 +1,5 @@
 import type { UIMessage } from "@ai-sdk/react";
+import { useChatMessages, useChatStatus } from "@ai-sdk-tools/store";
 import type { Infer } from "convex/values";
 import React, { useRef } from "react";
 import { ScrollButton } from "@/components/motion-primitives/scroll-button";
@@ -15,8 +16,6 @@ export type MessageWithExtras = UIMessage & {
 };
 
 type ConversationProps = {
-  messages: MessageWithExtras[];
-  status?: "streaming" | "ready" | "submitted" | "error";
   onDelete: (id: string) => void;
   onEdit: (
     id: string,
@@ -40,8 +39,6 @@ type ConversationProps = {
 
 const Conversation = React.memo(
   ({
-    messages,
-    status = "ready",
     onDelete,
     onEdit,
     onReload,
@@ -52,6 +49,8 @@ const Conversation = React.memo(
     isReasoningModel = false,
     reasoningEffort = "medium",
   }: ConversationProps) => {
+    const messages = useChatMessages<MessageWithExtras>();
+    const status = useChatStatus();
     const initialMessageCount = useRef(messages.length);
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -81,8 +80,9 @@ const Conversation = React.memo(
           {messages?.map((message, index) => {
             const isLast =
               index === messages.length - 1 && status !== "submitted";
-            const hasScrollAnchor =
-              isLast && messages.length > initialMessageCount.current;
+            const hasScrollAnchor = isLast
+              ? messages.length > initialMessageCount.current
+              : false;
             const messageStatus = isLast ? status : "ready";
 
             return (
@@ -107,25 +107,29 @@ const Conversation = React.memo(
               />
             );
           })}
-          {((status === "submitted" &&
-            messages.length > 0 &&
-            messages.at(-1)?.role === "user") ||
-            (status === "streaming" &&
-              isImageGenerationModel &&
-              messages.length > 0 &&
-              (messages.at(-1)?.role === "user" ||
-                (messages.at(-1)?.role === "assistant" &&
-                  !messages
-                    .at(-1)
-                    ?.parts?.some((part) => part.type === "file"))))) && (
-            <div className="group flex min-h-scroll-anchor w-full max-w-3xl flex-col items-start gap-2 px-6 pb-2">
-              {isImageGenerationModel ? (
-                <ImageSkeleton height={300} width={300} />
-              ) : (
-                <Loader size="md" variant="dots" />
-              )}
-            </div>
-          )}
+          {(() => {
+            const last = messages.at(-1);
+            const showSkeleton =
+              (status === "submitted" &&
+                messages.length > 0 &&
+                last?.role === "user") ||
+              (status === "streaming" &&
+                isImageGenerationModel &&
+                messages.length > 0 &&
+                (last?.role === "user" ||
+                  (last?.role === "assistant" &&
+                    !last?.parts?.some((part) => part.type === "file"))));
+
+            return showSkeleton ? (
+              <div className="group flex min-h-scroll-anchor w-full max-w-3xl flex-col items-start gap-2 px-6 pb-2">
+                {isImageGenerationModel ? (
+                  <ImageSkeleton height={300} width={300} />
+                ) : (
+                  <Loader size="md" variant="dots" />
+                )}
+              </div>
+            ) : null;
+          })()}
         </ChatContainer>
         <div className="absolute bottom-0 w-full max-w-3xl">
           <ScrollButton

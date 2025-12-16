@@ -128,7 +128,7 @@ export const SourcesList = memo<SourcesListProps>(
           </button>
 
           <AnimatePresence initial={false}>
-            {isExpanded && (
+            {isExpanded ? (
               <motion.div
                 animate={{ height: "auto", opacity: 1 }}
                 className="overflow-hidden"
@@ -224,7 +224,7 @@ export const SourcesList = memo<SourcesListProps>(
                   )}
                 </div>
               </motion.div>
-            )}
+            ) : null}
           </AnimatePresence>
         </div>
       </div>

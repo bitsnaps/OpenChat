@@ -25,6 +25,16 @@ export function ScheduledTasksPage() {
   const [activeTab, setActiveTab] = useState<TaskStatus>("active");
   const isMobile = useBreakpoint(896); // Consistent breakpoint with TaskTrigger
 
+  const taskListClassName = useMemo(
+    () => (isMobile ? "space-y-3 pb-2" : "space-y-3 pr-4"),
+    [isMobile]
+  );
+
+  const scrollStyle = useMemo(
+    () => (isMobile ? undefined : SCROLL_CONTAINER_STYLES),
+    [isMobile]
+  );
+
   // Memoized query configuration to prevent recreation on every render
   const queryConfig = useMemo(
     () => ({
@@ -123,7 +133,7 @@ export function ScheduledTasksPage() {
         )}
 
         {/* Content */}
-        {isLoading && (
+        {isLoading ? (
           <div className="space-y-3">
             {SKELETON_ARRAY.map((_, i) => (
               <div
@@ -132,7 +142,7 @@ export function ScheduledTasksPage() {
               />
             ))}
           </div>
-        )}
+        ) : null}
 
         {!isLoading && filteredTasks.length === 0 && (
           <div
@@ -157,20 +167,17 @@ export function ScheduledTasksPage() {
           </div>
         )}
 
-        {!isLoading && filteredTasks.length > 0 && (
-          <div
-            className={`space-y-3 ${isMobile ? "pb-2" : "pr-4"}`}
-            style={isMobile ? {} : SCROLL_CONTAINER_STYLES}
-          >
+        {!isLoading && filteredTasks.length > 0 ? (
+          <div className={taskListClassName} style={scrollStyle}>
             {filteredTasks.map((task) => (
               <TaskCard isMobile={isMobile} key={task._id} task={task} />
             ))}
           </div>
-        )}
+        ) : null}
       </div>
 
       {/* Mobile FAB for Add New Task */}
-      {isMobile && (
+      {isMobile ? (
         <div className="fixed right-6 bottom-6 z-50">
           <TaskTrigger
             trigger={
@@ -185,7 +192,7 @@ export function ScheduledTasksPage() {
             }
           />
         </div>
-      )}
+      ) : null}
     </div>
   );
 }

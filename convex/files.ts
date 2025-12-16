@@ -74,12 +74,11 @@ export const { generateUploadUrl, syncMetadata, onSyncMetadata } = r2.clientApi(
 // Only these models currently support file inputs. Update as new ones roll out.
 const FILE_UPLOAD_MODELS = [
   // Anthropic models
-  "claude-3-5-sonnet-20241022",
-  "claude-3-7-sonnet-20250219",
-  "claude-3-7-sonnet-reasoning",
-  "claude-4-opus",
-  "claude-4-sonnet",
-  "claude-4-sonnet-reasoning",
+  "claude-4-5-opus",
+  "claude-4-5-sonnet",
+  "claude-4-5-sonnet-reasoning",
+  "claude-4-5-haiku",
+  "claude-4-5-haiku-reasoning",
 
   // OpenAI models
   "gpt-4o",
@@ -94,6 +93,11 @@ const FILE_UPLOAD_MODELS = [
   "gpt-5",
   "gpt-5-mini",
   "gpt-5-nano",
+  "gpt-5.1",
+  "gpt-5.1-instant",
+  "gpt-5.2",
+  "gpt-5.2-pro",
+  "gpt-5.2-instant",
 
   "glm-4.5v",
 
@@ -105,6 +109,7 @@ const FILE_UPLOAD_MODELS = [
   "gemini-2.5-flash-lite",
   "gemini-2.5-flash-lite-thinking",
   "gemini-2.5-pro",
+  "gemini-3-pro-preview",
 
   // Meta models
   "meta-llama/llama-4-maverick:free",
@@ -116,8 +121,8 @@ const FILE_UPLOAD_MODELS = [
   // Grok models
   "grok-3",
   "grok-3-mini",
-  "x-ai/grok-4-fast-thinking",
-  "x-ai/grok-4-fast",
+  "x-ai/grok-4.1-fast-thinking",
+  "x-ai/grok-4.1-fast",
 ] as const;
 
 type AllowedMimeType = (typeof UPLOAD_ALLOWED_MIME)[number];
@@ -166,14 +171,22 @@ export const saveFileAttachment = action({
     let meta = await r2.getMetadata(ctx, args.key);
     while (
       attempts < maxAttempts &&
-      (!meta || meta.size == null || !meta.contentType)
+      (!meta ||
+        meta.size === null ||
+        meta.size === undefined ||
+        !meta.contentType)
     ) {
       await new Promise((resolve) => setTimeout(resolve, 100));
       meta = await r2.getMetadata(ctx, args.key);
       attempts += 1;
     }
     // Require metadata from R2 (do not use row for type/size)
-    if (!meta || meta.size == null || !meta.contentType) {
+    if (
+      !meta ||
+      meta.size === null ||
+      meta.size === undefined ||
+      !meta.contentType
+    ) {
       // Metadata still not available; ask client to retry shortly
       throw new ConvexError(ERROR_CODES.INVALID_INPUT);
     }

@@ -16,13 +16,13 @@ export const RECOMMENDED_MODELS = [
   "gemini-2.5-flash-lite",
   "gemini-2.5-pro",
   "imagen-4",
-  "gpt-5",
+  "gpt-5.2",
   "gpt-5-mini",
   "gpt-5-nano",
-  "x-ai/grok-4-fast",
+  "x-ai/grok-4.1-fast",
   "gpt-image-1",
-  "claude-4-sonnet",
-  "claude-4-sonnet-reasoning",
+  "claude-4-5-sonnet",
+  "claude-4-5-sonnet-reasoning",
   "deepseek-r1-0528",
 ];
 

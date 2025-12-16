@@ -9,6 +9,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { memo } from "react";
 import { HistoryTrigger } from "@/app/components/history/history-trigger";
 import { AppInfoTrigger } from "@/app/components/layout/app-info/app-info-trigger";
 import { DialogShare } from "@/app/components/layout/dialog-share";
@@ -23,12 +24,15 @@ import {
 } from "@/components/ui/tooltip";
 import { GITHUB_REPO_URL } from "@/lib/config";
 
-export function Header() {
-  const { user } = useUser();
+export const Header = memo(function HeaderComponent() {
   const router = useRouter();
   const pathname = usePathname();
+  const { user } = useUser();
   const isLoggedIn = Boolean(user) && !user?.isAnonymous;
   const isMobile = useBreakpoint(768);
+
+  const showNewChatButton = isMobile && pathname !== "/";
+  const showTasksButton = isMobile && pathname === "/";
 
   return (
     <header className="fixed top-0 right-0 left-0 z-50 h-app-header">
@@ -64,7 +68,7 @@ export function Header() {
         {isLoggedIn ? (
           <div className="flex items-center gap-4">
             {/* Mobile button for new chat */}
-            {isMobile && pathname !== "/" && (
+            {showNewChatButton ? (
               <Tooltip>
                 <TooltipTrigger asChild>
                   <button
@@ -78,9 +82,9 @@ export function Header() {
                 </TooltipTrigger>
                 <TooltipContent>New Chat</TooltipContent>
               </Tooltip>
-            )}
+            ) : null}
             {/* Tasks button - mobile only, home page only */}
-            {isMobile && pathname === "/" && (
+            {showTasksButton ? (
               <Tooltip>
                 <TooltipTrigger asChild>
                   <button
@@ -94,14 +98,14 @@ export function Header() {
                 </TooltipTrigger>
                 <TooltipContent>Background Agents</TooltipContent>
               </Tooltip>
-            )}
+            ) : null}
             {/* Mobile: Share first, then History for better UX */}
-            {isMobile && (
+            {isMobile ? (
               <>
                 <DialogShare />
                 <HistoryTrigger />
               </>
-            )}
+            ) : null}
             {/* Desktop: History first (hidden), then Share to avoid gap */}
             {!isMobile && (
               <>
@@ -112,7 +116,7 @@ export function Header() {
             {(!isMobile || pathname === "/" || pathname === "/tasks") && (
               <UpgradeButton />
             )}
-            {user && <UserMenu user={user} />}
+            {user ? <UserMenu user={user} /> : null}
           </div>
         ) : (
           <div className="flex items-center gap-4">
@@ -160,4 +164,4 @@ export function Header() {
       </div>
     </header>
   );
-}
+});

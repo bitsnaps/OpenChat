@@ -203,7 +203,7 @@ function TimePickerComponent({
           <SelectTrigger className="h-9 flex-1">
             <SelectValue placeholder="Time" />
           </SelectTrigger>
-          <SelectContent className="z-[101] max-h-[200px]">
+          <SelectContent className="z-101 max-h-[200px]">
             {filteredHourMinuteOptions.map((option) => (
               <SelectItem key={option.value} value={option.value}>
                 {option.label}
@@ -215,7 +215,7 @@ function TimePickerComponent({
           <SelectTrigger className="h-9 w-[70px]">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent className="z-[101]">
+          <SelectContent className="z-101">
             {availableAmPmOptions.map((option) => (
               <SelectItem key={option} value={option}>
                 {option}
@@ -225,7 +225,7 @@ function TimePickerComponent({
         </Select>
 
         {/* Date Picker */}
-        {showDatePicker && (
+        {showDatePicker ? (
           <div className="flex-1">
             <Popover>
               <PopoverTrigger asChild>
@@ -248,7 +248,7 @@ function TimePickerComponent({
                   />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent align="start" className="z-[101] w-auto p-0">
+              <PopoverContent align="start" className="z-101 w-auto p-0">
                 <Calendar
                   autoFocus
                   className="rounded-md"
@@ -262,10 +262,10 @@ function TimePickerComponent({
               </PopoverContent>
             </Popover>
           </div>
-        )}
+        ) : null}
 
         {/* Day Picker for Weekly Tasks */}
-        {showDayPicker && (
+        {showDayPicker ? (
           <div className="flex-1">
             <Select
               onValueChange={(dayValue) =>
@@ -276,7 +276,7 @@ function TimePickerComponent({
               <SelectTrigger className="h-9 w-full">
                 <SelectValue placeholder="Select day" />
               </SelectTrigger>
-              <SelectContent className="z-[101]">
+              <SelectContent className="z-101">
                 {getDayOptions().map((option) => (
                   <SelectItem
                     key={option.value}
@@ -288,7 +288,7 @@ function TimePickerComponent({
               </SelectContent>
             </Select>
           </div>
-        )}
+        ) : null}
       </div>
     </>
   );

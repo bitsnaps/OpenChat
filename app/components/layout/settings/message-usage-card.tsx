@@ -118,7 +118,7 @@ function MessageUsageCardComponent() {
             {standardRemaining} messages remaining
           </p>
         </div>
-        {hasPremium && (
+        {hasPremium ? (
           <div>
             <div className="mb-1 flex justify-between text-sm">
               <span className="flex items-center gap-1">
@@ -145,7 +145,7 @@ function MessageUsageCardComponent() {
               {premiumRemaining} messages remaining
             </p>
           </div>
-        )}
+        ) : null}
       </CardContent>
     </Card>
   );

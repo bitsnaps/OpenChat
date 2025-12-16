@@ -13,6 +13,7 @@ import {
 } from "@/lib/config";
 import { cn } from "@/lib/utils";
 import { AuthGuard } from "./components/auth/auth-guard";
+import { DevTools } from "./components/devtools/devtools";
 import LayoutApp from "./components/layout/layout-app";
 import { StructuredData } from "./components/structured-data";
 import { LayoutClient } from "./layout-client";
@@ -172,6 +173,7 @@ export default function RootLayout({
                 </SidebarProvider>
                 <Analytics />
                 <SpeedInsights />
+                {isDev ? <DevTools /> : null}
               </AuthGuard>
             </ConvexClientProvider>
           </ConvexAuthNextjsServerProvider>

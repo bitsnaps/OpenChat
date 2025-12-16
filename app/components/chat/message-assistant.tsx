@@ -1275,11 +1275,11 @@ function MessageAssistantInner({
     <Message
       className={cn(
         "group flex w-full max-w-3xl flex-1 items-start gap-4 px-6 pb-2",
-        hasScrollAnchor && "min-h-scroll-anchor"
+        hasScrollAnchor ? "min-h-scroll-anchor" : ""
       )}
       id={id}
     >
-      <div className={cn("flex w-full flex-col gap-2", isLast && "pb-8")}>
+      <div className={cn("flex w-full flex-col gap-2", isLast ? "pb-8" : "")}>
         {/* Show loader when streaming but no content yet */}
         {status === "streaming" && segments.length === 0 && (
           <div className="flex items-center gap-2 text-muted-foreground">
@@ -1363,7 +1363,11 @@ function MessageAssistantInner({
           const allSources: SourceUrlUIPart[] = [];
           for (const s of rawSources) {
             const prev = cache.get(s.sourceId);
-            if (prev && prev.url === s.url && prev.title === s.title) {
+            if (
+              prev !== undefined &&
+              prev.url === s.url &&
+              prev.title === s.title
+            ) {
               allSources.push(prev);
             } else {
               cache.set(s.sourceId, s);
@@ -1381,7 +1385,7 @@ function MessageAssistantInner({
           }
 
           // If we have search sources, they are already rendered inline, so skip them
-          if (searchQuery && allSources.length > 0) {
+          if (Boolean(searchQuery) && allSources.length > 0) {
             return null;
           }
 
@@ -1448,11 +1452,11 @@ function MessageAssistantInner({
               </button>
             </MessageAction>
           )}
-          {displayModel && (
+          {displayModel ? (
             <span className="ml-2 inline-block text-muted-foreground text-xs">
               {formatModelDisplayText(displayModel, reasoningEffort)}
             </span>
-          )}
+          ) : null}
         </MessageActions>
       </div>
     </Message>
