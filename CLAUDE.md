@@ -116,7 +116,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | `bun dev`           | Start development server on port 3000   |
 | `bun build`         | Build for production                    |
 | `bun preview`       | Preview production build                |
-| `bun test`          | Run tests with Vitest                   |
+| `bun run test`      | Run tests with Vitest                   |
 | `bun run lint`      | Run Ultracite linter                    |
 | `bun run format`    | Format code with Ultracite              |
 | `bun run typecheck` | Run TypeScript type checking with tsgo  |
@@ -139,7 +139,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Test approach:
   1. Create a test file in the appropriate location
   2. Test various scenarios including the specific issue that was fixed
-  3. Run with `bun test` to verify behavior
+  3. Run with `bun run test` to verify behavior
 - Always verify that your changes don't break existing functionality
 - Test both the specific fix and related functionality that might be affected
 
