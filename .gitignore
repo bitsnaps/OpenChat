@@ -1,56 +1,14 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
-/ai-chatbot-main
-
-# testing
-/coverage
-
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
+node_modules
 .DS_Store
-*.pem
-
-# debug
-*-debug.log*
-*-error.log*
-
-# env files (can opt-in for committing if needed)
+dist
+dist-ssr
+*.local
+count.txt
 .env
-
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-
-# ai tools
-.aider*
-.cursor*
-docs*
-agent.md
-
-# vscode
-.vscode
-
-# ai rules
-.clinerules
-.open-next
-.roo
-.windsurf
-.claude
-.kiro
-.zed
-.rules
-.github/copilot-instructions.md
-
-.env.local
-.agent.md
+.nitro
+.tanstack
+.wrangler
+.output
+.vinxi
+dev-dist
+todos.json

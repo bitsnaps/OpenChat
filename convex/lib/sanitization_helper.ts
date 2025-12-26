@@ -6,8 +6,8 @@
  */
 
 export type SanitizationOptions = {
-  /** Whether to redact file URLs and replace with 'redacted' placeholder */
-  hideFiles: boolean;
+	/** Whether to redact file URLs and replace with 'redacted' placeholder */
+	hideFiles: boolean;
 };
 
 /**
@@ -23,46 +23,46 @@ export type SanitizationOptions = {
  * @returns Array of sanitized message parts
  */
 export function sanitizeMessageParts(
-  // biome-ignore lint/suspicious/noExplicitAny: parts can be any; we validate properties at runtime
-  parts: any[],
-  options: SanitizationOptions
-  // biome-ignore lint/suspicious/noExplicitAny: parts can be any; we validate properties at runtime
+	// biome-ignore lint/suspicious/noExplicitAny: parts can be any; we validate properties at runtime
+	parts: any[],
+	options: SanitizationOptions
+	// biome-ignore lint/suspicious/noExplicitAny: parts can be any; we validate properties at runtime
 ): any[] {
-  // biome-ignore lint/suspicious/noExplicitAny: parts can be any; we validate properties at runtime
-  return (parts ?? []).map((p: any) => {
-    try {
-      if (!p || typeof p !== "object") {
-        return p;
-      }
+	// biome-ignore lint/suspicious/noExplicitAny: parts can be any; we validate properties at runtime
+	return (parts ?? []).map((p: any) => {
+		try {
+			if (!p || typeof p !== "object") {
+				return p;
+			}
 
-      // Redact sensitive tool use info (except tool-search which is public)
-      if (
-        typeof p.type === "string" &&
-        p.type.startsWith("tool-") &&
-        p.type !== "tool-search"
-      ) {
-        const cloned = { ...p } as Record<string, unknown>;
-        if ("input" in cloned) {
-          cloned.input = "REDACTED";
-        }
-        if ("output" in cloned) {
-          cloned.output = "REDACTED";
-        }
-        if ("error" in cloned) {
-          cloned.error = "REDACTED";
-        }
-        return cloned;
-      }
+			// Redact sensitive tool use info (except tool-search which is public)
+			if (
+				typeof p.type === "string" &&
+				p.type.startsWith("tool-") &&
+				p.type !== "tool-search"
+			) {
+				const cloned = { ...p } as Record<string, unknown>;
+				if ("input" in cloned) {
+					cloned.input = "REDACTED";
+				}
+				if ("output" in cloned) {
+					cloned.output = "REDACTED";
+				}
+				if ("error" in cloned) {
+					cloned.error = "REDACTED";
+				}
+				return cloned;
+			}
 
-      // Hide files/images if requested
-      if (options.hideFiles && p.type === "file") {
-        return { ...p, url: "redacted" };
-      }
+			// Hide files/images if requested
+			if (options.hideFiles && p.type === "file") {
+				return { ...p, url: "redacted" };
+			}
 
-      return p;
-    } catch (_err) {
-      // Fail closed: return safe placeholder instead of potentially sensitive original
-      return { type: "redacted", error: "Content sanitization failed" };
-    }
-  });
+			return p;
+		} catch (_err) {
+			// Fail closed: return safe placeholder instead of potentially sensitive original
+			return { type: "redacted", error: "Content sanitization failed" };
+		}
+	});
 }

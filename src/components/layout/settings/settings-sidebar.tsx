@@ -1,0 +1,161 @@
+import { Eye, EyeSlash, Keyboard, User } from "@phosphor-icons/react";
+import React, { useCallback } from "react";
+import { MessageUsageCard } from "@/components/layout/settings/message-usage-card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Kbd } from "@/components/ui/kbd";
+import { useUser } from "@/providers/user-provider";
+import type { Doc } from "../../../../convex/_generated/dataModel";
+
+const SIZE_PARAM_REGEX = /sz=\d+/;
+const S96_PARAM_REGEX = /s96-c/;
+
+const getHighResolutionAvatarUrl = (imageUrl?: string, size = 192) => {
+	if (!imageUrl) {
+		return;
+	}
+
+	if (imageUrl.includes("googleusercontent.com")) {
+		if (imageUrl.includes("sz=")) {
+			return imageUrl.replace(SIZE_PARAM_REGEX, `sz=${size}`);
+		}
+		if (imageUrl.includes("s96-c")) {
+			return imageUrl.replace(S96_PARAM_REGEX, `s${size}-c`);
+		}
+		const separator = imageUrl.includes("?") ? "&" : "?";
+		return `${imageUrl}${separator}sz=${size}`;
+	}
+
+	return imageUrl;
+};
+
+const getDisplayName = (user: Doc<"users"> | null): string => {
+	if (!user) {
+		return "User";
+	}
+
+	if (user.preferredName) {
+		return user.preferredName;
+	}
+
+	return user.name || "User";
+};
+
+function SettingsSidebarComponent() {
+	const { user, hasPremium } = useUser();
+
+	const [showEmail, setShowEmail] = React.useState<boolean>(() => {
+		if (typeof window === "undefined") {
+			return false;
+		}
+		return localStorage.getItem("showEmail") === "true";
+	});
+
+	const highResAvatarUrl = React.useMemo(
+		() => getHighResolutionAvatarUrl(user?.image, 384),
+		[user?.image]
+	);
+
+	const maskEmail = useCallback((email?: string) => {
+		if (!email) {
+			return "";
+		}
+		const [local, domain] = email.split("@");
+		const tld = domain.substring(domain.lastIndexOf("."));
+		const prefix = local.slice(0, 2);
+		return `${prefix}*****${tld}`;
+	}, []);
+
+	const toggleEmailVisibility = useCallback(() => {
+		setShowEmail((prev) => {
+			localStorage.setItem("showEmail", (!prev).toString());
+			return !prev;
+		});
+	}, []);
+
+	if (!user) {
+		return null;
+	}
+
+	return (
+		<aside className="w-full space-y-6">
+			{/* User Profile */}
+			<div className="flex flex-col items-center text-center">
+				<Avatar className="size-36 border-4 border-background shadow-lg">
+					<AvatarImage
+						alt="Profile"
+						className="object-cover"
+						src={highResAvatarUrl}
+					/>
+					<AvatarFallback className="bg-muted">
+						<User className="size-16 text-muted-foreground" />
+					</AvatarFallback>
+				</Avatar>
+				<h2 className="mt-4 font-semibold text-xl tracking-tight">
+					{getDisplayName(user)}
+				</h2>
+				<button
+					className="mt-1 flex cursor-pointer items-center gap-1.5 text-muted-foreground text-sm hover:text-foreground"
+					onClick={toggleEmailVisibility}
+					type="button"
+				>
+					<span>{showEmail ? user.email : maskEmail(user.email)}</span>
+					{showEmail ? (
+						<EyeSlash className="size-3.5" />
+					) : (
+						<Eye className="size-3.5" />
+					)}
+				</button>
+				<div className="mt-2">
+					<span
+						className={`inline-flex rounded-full px-2.5 py-1 font-medium text-xs ${
+							hasPremium
+								? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+								: "bg-muted text-muted-foreground"
+						}`}
+					>
+						{hasPremium ? "Pro Plan" : "Free Plan"}
+					</span>
+				</div>
+			</div>
+
+			{/* Message Usage */}
+			<MessageUsageCard />
+
+			{/* Keyboard Shortcuts */}
+			<div className="rounded-xl border bg-card p-4">
+				<div className="mb-3 flex items-center gap-2">
+					<div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+						<Keyboard className="size-4 text-primary" />
+					</div>
+					<h3 className="font-medium text-sm">Keyboard Shortcuts</h3>
+				</div>
+				<div className="space-y-2.5">
+					<div className="flex items-center justify-between">
+						<span className="text-muted-foreground text-xs">Search</span>
+						<div className="flex items-center gap-1">
+							<Kbd>⌘</Kbd>
+							<Kbd>K</Kbd>
+						</div>
+					</div>
+					<div className="flex items-center justify-between">
+						<span className="text-muted-foreground text-xs">New Chat</span>
+						<div className="flex items-center gap-1">
+							<Kbd>⌘</Kbd>
+							<Kbd>Shift</Kbd>
+							<Kbd>O</Kbd>
+						</div>
+					</div>
+					<div className="flex items-center justify-between">
+						<span className="text-muted-foreground text-xs">Toggle Sidebar</span>
+						<div className="flex items-center gap-1">
+							<Kbd>⌘</Kbd>
+							<Kbd>B</Kbd>
+						</div>
+					</div>
+				</div>
+			</div>
+		</aside>
+	);
+}
+
+export const SettingsSidebar = React.memo(SettingsSidebarComponent);

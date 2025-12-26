@@ -1,6 +1,6 @@
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { ConvexError } from "convex/values";
-import { ERROR_CODES } from "../../lib/error-codes";
+import { ERROR_CODES } from "../../src/lib/error-codes";
 import type { Doc, Id } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
 
@@ -12,13 +12,13 @@ import type { MutationCtx, QueryCtx } from "../_generated/server";
  * const userId = await ensureAuthenticated(ctx);
  */
 export async function ensureAuthenticated(
-  ctx: QueryCtx | MutationCtx
+	ctx: QueryCtx | MutationCtx
 ): Promise<Id<"users">> {
-  const userId = await getAuthUserId(ctx);
-  if (!userId) {
-    throw new ConvexError(ERROR_CODES.NOT_AUTHENTICATED);
-  }
-  return userId;
+	const userId = await getAuthUserId(ctx);
+	if (!userId) {
+		throw new ConvexError(ERROR_CODES.NOT_AUTHENTICATED);
+	}
+	return userId;
 }
 
 /**
@@ -30,17 +30,17 @@ export async function ensureAuthenticated(
  * const { chat, userId } = await ensureChatAccess(ctx, chatId);
  */
 export async function ensureChatAccess(
-  ctx: QueryCtx | MutationCtx,
-  chatId: Id<"chats">
+	ctx: QueryCtx | MutationCtx,
+	chatId: Id<"chats">
 ): Promise<{ chat: Doc<"chats">; userId: Id<"users"> }> {
-  const userId = await ensureAuthenticated(ctx);
-  const chat = await ctx.db.get(chatId);
+	const userId = await ensureAuthenticated(ctx);
+	const chat = await ctx.db.get(chatId);
 
-  if (!chat || chat.userId !== userId) {
-    throw new ConvexError(ERROR_CODES.UNAUTHORIZED);
-  }
+	if (!chat || chat.userId !== userId) {
+		throw new ConvexError(ERROR_CODES.UNAUTHORIZED);
+	}
 
-  return { chat, userId };
+	return { chat, userId };
 }
 
 /**
@@ -54,14 +54,14 @@ export async function ensureChatAccess(
  * const { chat, userId } = result;
  */
 export async function tryEnsureChatAccess(
-  ctx: QueryCtx | MutationCtx,
-  chatId: Id<"chats">
+	ctx: QueryCtx | MutationCtx,
+	chatId: Id<"chats">
 ): Promise<{ chat: Doc<"chats">; userId: Id<"users"> } | null> {
-  try {
-    return await ensureChatAccess(ctx, chatId);
-  } catch {
-    return null;
-  }
+	try {
+		return await ensureChatAccess(ctx, chatId);
+	} catch {
+		return null;
+	}
 }
 
 /**
@@ -73,26 +73,26 @@ export async function tryEnsureChatAccess(
  * const { message, chat, userId } = await ensureMessageAccess(ctx, messageId);
  */
 export async function ensureMessageAccess(
-  ctx: QueryCtx | MutationCtx,
-  messageId: Id<"messages">
+	ctx: QueryCtx | MutationCtx,
+	messageId: Id<"messages">
 ): Promise<{
-  message: Doc<"messages">;
-  chat: Doc<"chats">;
-  userId: Id<"users">;
+	message: Doc<"messages">;
+	chat: Doc<"chats">;
+	userId: Id<"users">;
 }> {
-  const userId = await ensureAuthenticated(ctx);
-  const message = await ctx.db.get(messageId);
+	const userId = await ensureAuthenticated(ctx);
+	const message = await ctx.db.get(messageId);
 
-  if (!message) {
-    throw new ConvexError(ERROR_CODES.MESSAGE_NOT_FOUND);
-  }
+	if (!message) {
+		throw new ConvexError(ERROR_CODES.MESSAGE_NOT_FOUND);
+	}
 
-  const chat = await ctx.db.get(message.chatId);
-  if (!chat || chat.userId !== userId) {
-    throw new ConvexError(ERROR_CODES.UNAUTHORIZED);
-  }
+	const chat = await ctx.db.get(message.chatId);
+	if (!chat || chat.userId !== userId) {
+		throw new ConvexError(ERROR_CODES.UNAUTHORIZED);
+	}
 
-  return { message, chat, userId };
+	return { message, chat, userId };
 }
 
 /**
@@ -105,13 +105,13 @@ export async function ensureMessageAccess(
  * if (!user) return [];
  */
 export async function getCurrentUserOrNull(
-  ctx: QueryCtx | MutationCtx
+	ctx: QueryCtx | MutationCtx
 ): Promise<Doc<"users"> | null> {
-  const userId = await getAuthUserId(ctx);
-  if (!userId) {
-    return null;
-  }
-  return await ctx.db.get(userId);
+	const userId = await getAuthUserId(ctx);
+	if (!userId) {
+		return null;
+	}
+	return await ctx.db.get(userId);
 }
 
 /**
@@ -122,16 +122,16 @@ export async function getCurrentUserOrNull(
  * const user = await getCurrentUserOrThrow(ctx);
  */
 export async function getCurrentUserOrThrow(
-  ctx: QueryCtx | MutationCtx
+	ctx: QueryCtx | MutationCtx
 ): Promise<Doc<"users">> {
-  const userId = await ensureAuthenticated(ctx);
-  const user = await ctx.db.get(userId);
+	const userId = await ensureAuthenticated(ctx);
+	const user = await ctx.db.get(userId);
 
-  if (!user) {
-    throw new ConvexError(ERROR_CODES.USER_NOT_FOUND);
-  }
+	if (!user) {
+		throw new ConvexError(ERROR_CODES.USER_NOT_FOUND);
+	}
 
-  return user;
+	return user;
 }
 
 /**
@@ -142,22 +142,22 @@ export async function getCurrentUserOrThrow(
  * const validChats = await validateChatOwnership(ctx, chatIds);
  */
 export async function validateChatOwnership(
-  ctx: QueryCtx | MutationCtx,
-  chatIds: Id<"chats">[]
+	ctx: QueryCtx | MutationCtx,
+	chatIds: Id<"chats">[]
 ): Promise<Doc<"chats">[]> {
-  if (chatIds.length === 0) {
-    return [];
-  }
+	if (chatIds.length === 0) {
+		return [];
+	}
 
-  const userId = await ensureAuthenticated(ctx);
+	const userId = await ensureAuthenticated(ctx);
 
-  // Get all chats in parallel
-  const chatResults = await Promise.all(
-    chatIds.map((chatId) => ctx.db.get(chatId))
-  );
+	// Get all chats in parallel
+	const chatResults = await Promise.all(
+		chatIds.map((chatId) => ctx.db.get(chatId))
+	);
 
-  // Filter to only valid chats owned by the user
-  return chatResults.filter(
-    (chat): chat is Doc<"chats"> => chat !== null && chat.userId === userId
-  );
+	// Filter to only valid chats owned by the user
+	return chatResults.filter(
+		(chat): chat is Doc<"chats"> => chat !== null && chat.userId === userId
+	);
 }

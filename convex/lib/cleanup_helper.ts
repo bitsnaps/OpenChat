@@ -11,20 +11,20 @@ import type { MutationCtx } from "../_generated/server";
  * await deleteMessagesForChat(ctx, chatId);
  */
 export async function deleteMessagesForChat(
-  ctx: MutationCtx,
-  chatId: Id<"chats">
+	ctx: MutationCtx,
+	chatId: Id<"chats">
 ): Promise<Id<"messages">[]> {
-  const messages = await ctx.db
-    .query("messages")
-    .withIndex("by_chat_and_created", (q) => q.eq("chatId", chatId))
-    .collect();
+	const messages = await ctx.db
+		.query("messages")
+		.withIndex("by_chat_and_created", (q) => q.eq("chatId", chatId))
+		.collect();
 
-  const messageIds = messages.map((m) => m._id);
+	const messageIds = messages.map((m) => m._id);
 
-  // Delete all messages in parallel
-  await Promise.all(messageIds.map((id) => ctx.db.delete(id)));
+	// Delete all messages in parallel
+	await Promise.all(messageIds.map((id) => ctx.db.delete(id)));
 
-  return messageIds;
+	return messageIds;
 }
 
 /**
@@ -35,29 +35,29 @@ export async function deleteMessagesForChat(
  * await deleteAttachmentsForChat(ctx, chatId);
  */
 export async function deleteAttachmentsForChat(
-  ctx: MutationCtx,
-  chatId: Id<"chats">
+	ctx: MutationCtx,
+	chatId: Id<"chats">
 ): Promise<void> {
-  const r2 = new R2(components.r2);
-  const attachments = await ctx.db
-    .query("chat_attachments")
-    .withIndex("by_chatId", (q) => q.eq("chatId", chatId))
-    .collect();
+	const r2 = new R2(components.r2);
+	const attachments = await ctx.db
+		.query("chat_attachments")
+		.withIndex("by_chatId", (q) => q.eq("chatId", chatId))
+		.collect();
 
-  // Delete files from storage and database records in parallel
-  await Promise.all(
-    attachments.map(async (attachment) => {
-      try {
-        // Delete the actual file from R2 first
-        await r2.deleteObject(ctx, attachment.key);
-      } catch {
-        // Silently handle storage deletion errors
-        // Continue with DB cleanup even if storage deletion fails
-      }
-      // Then delete the database record
-      await ctx.db.delete(attachment._id);
-    })
-  );
+	// Delete files from storage and database records in parallel
+	await Promise.all(
+		attachments.map(async (attachment) => {
+			try {
+				// Delete the actual file from R2 first
+				await r2.deleteObject(ctx, attachment.key);
+			} catch {
+				// Silently handle storage deletion errors
+				// Continue with DB cleanup even if storage deletion fails
+			}
+			// Then delete the database record
+			await ctx.db.delete(attachment._id);
+		})
+	);
 }
 
 /**
@@ -68,28 +68,28 @@ export async function deleteAttachmentsForChat(
  * await removeBranchReferences(ctx, originalChatId, userId);
  */
 export async function removeBranchReferences(
-  ctx: MutationCtx,
-  originalChatId: Id<"chats">,
-  userId: Id<"users">
+	ctx: MutationCtx,
+	originalChatId: Id<"chats">,
+	userId: Id<"users">
 ): Promise<void> {
-  // Find all chats that are branched from this chat
-  // This uses .filter() correctly - first narrows by index (by_user), then filters by originalChatId
-  // See: https://docs.convex.dev/database/indexes/ - "For all other filtering you can use the .filter method"
-  const branchedChats = await ctx.db
-    .query("chats")
-    .withIndex("by_user", (q) => q.eq("userId", userId))
-    .filter((q) => q.eq(q.field("originalChatId"), originalChatId))
-    .collect();
+	// Find all chats that are branched from this chat
+	// This uses .filter() correctly - first narrows by index (by_user), then filters by originalChatId
+	// See: https://docs.convex.dev/database/indexes/ - "For all other filtering you can use the .filter method"
+	const branchedChats = await ctx.db
+		.query("chats")
+		.withIndex("by_user", (q) => q.eq("userId", userId))
+		.filter((q) => q.eq(q.field("originalChatId"), originalChatId))
+		.collect();
 
-  // Remove the branch reference from all branched chats in parallel
-  await Promise.all(
-    branchedChats.map((branchedChat) =>
-      ctx.db.patch(branchedChat._id, {
-        originalChatId: undefined,
-        updatedAt: Date.now(),
-      })
-    )
-  );
+	// Remove the branch reference from all branched chats in parallel
+	await Promise.all(
+		branchedChats.map((branchedChat) =>
+			ctx.db.patch(branchedChat._id, {
+				originalChatId: undefined,
+				updatedAt: Date.now(),
+			})
+		)
+	);
 }
 
 /**
@@ -100,21 +100,21 @@ export async function removeBranchReferences(
  * await deleteChatCompletely(ctx, chatId, userId);
  */
 export async function deleteChatCompletely(
-  ctx: MutationCtx,
-  chatId: Id<"chats">,
-  userId: Id<"users">
+	ctx: MutationCtx,
+	chatId: Id<"chats">,
+	userId: Id<"users">
 ): Promise<void> {
-  // Remove branch references first
-  await removeBranchReferences(ctx, chatId, userId);
+	// Remove branch references first
+	await removeBranchReferences(ctx, chatId, userId);
 
-  // Delete messages and attachments in parallel
-  await Promise.all([
-    deleteMessagesForChat(ctx, chatId),
-    deleteAttachmentsForChat(ctx, chatId),
-  ]);
+	// Delete messages and attachments in parallel
+	await Promise.all([
+		deleteMessagesForChat(ctx, chatId),
+		deleteAttachmentsForChat(ctx, chatId),
+	]);
 
-  // Finally delete the chat itself
-  await ctx.db.delete(chatId);
+	// Finally delete the chat itself
+	await ctx.db.delete(chatId);
 }
 
 /**
@@ -125,26 +125,26 @@ export async function deleteChatCompletely(
  * await deleteMultipleChats(ctx, validChats, userId);
  */
 export async function deleteMultipleChats(
-  ctx: MutationCtx,
-  chats: Doc<"chats">[],
-  userId: Id<"users">
+	ctx: MutationCtx,
+	chats: Doc<"chats">[],
+	userId: Id<"users">
 ): Promise<void> {
-  // Handle branch cleanup for all chats in parallel
-  await Promise.all(
-    chats.map((chat) => removeBranchReferences(ctx, chat._id, userId))
-  );
+	// Handle branch cleanup for all chats in parallel
+	await Promise.all(
+		chats.map((chat) => removeBranchReferences(ctx, chat._id, userId))
+	);
 
-  // Process all chat deletions in parallel
-  await Promise.all(
-    chats.map(async (chat) => {
-      // Delete messages and attachments in parallel for each chat
-      await Promise.all([
-        deleteMessagesForChat(ctx, chat._id),
-        deleteAttachmentsForChat(ctx, chat._id),
-      ]);
+	// Process all chat deletions in parallel
+	await Promise.all(
+		chats.map(async (chat) => {
+			// Delete messages and attachments in parallel for each chat
+			await Promise.all([
+				deleteMessagesForChat(ctx, chat._id),
+				deleteAttachmentsForChat(ctx, chat._id),
+			]);
 
-      // Delete the chat
-      await ctx.db.delete(chat._id);
-    })
-  );
+			// Delete the chat
+			await ctx.db.delete(chat._id);
+		})
+	);
 }

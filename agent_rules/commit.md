@@ -4,7 +4,7 @@ Create well-formatted commits with conventional commit messages (no emojis).
 
 ## Features:
 
-- Runs pre-commit checks by default (lint, build, generate docs)
+- Runs pre-commit checks by default (lint, typecheck, generate docs)
 - Automatically stages files if none are staged
 - Uses conventional commit format (no emojis)
 - Suggests splitting commits for different concerns
