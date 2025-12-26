@@ -4,7 +4,7 @@ This guide will help you set up OS Chat for local development or self-hosting.
 
 ## Prerequisites
 
-- Node.js 18+ or Bun (recommended)
+- Bun (required)
 - Git
 - A Convex account (free tier available)
 - API keys for the AI models you want to use

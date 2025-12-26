@@ -121,7 +121,7 @@ export function ButtonFileUpload({
 					<FileArrowUp className="size-8 text-muted-foreground" />
 					<span className="mt-4 mb-1 font-medium text-lg">Drop files here</span>
 					<span className="text-muted-foreground text-sm">
-						Drop any files here to add it to the conversation
+						Drop any files here to add them to the conversation
 					</span>
 				</div>
 			</FileUploadContent>

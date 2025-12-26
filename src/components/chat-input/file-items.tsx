@@ -62,13 +62,15 @@ export function FileItem({ file, onRemoveAction }: FileItemProps) {
 						</div>
 					</div>
 				</HoverCardTrigger>
-				<HoverCardContent side="top">
-					<img
-						alt={file.name}
-						className="h-[200px] w-[200px] object-cover"
-						src={objectUrl}
-					/>
-				</HoverCardContent>
+				{file.type.includes("image") ? (
+					<HoverCardContent side="top">
+						<img
+							alt={file.name}
+							className="h-[200px] w-[200px] object-cover"
+							src={objectUrl}
+						/>
+					</HoverCardContent>
+				) : null}
 			</HoverCard>
 			{isRemoving ? null : (
 				<Tooltip>
