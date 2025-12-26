@@ -1,0 +1,120 @@
+/**
+ * Authentication middleware and response helpers for TanStack Start server routes.
+ */
+
+import { createMiddleware } from "@tanstack/react-start";
+import { ConvexHttpClient } from "convex/browser";
+import type { Doc } from "@/convex/_generated/dataModel";
+
+// =============================================================================
+// Types
+// =============================================================================
+
+export type AuthContext = {
+	token: string;
+	client: ConvexHttpClient;
+};
+
+export type AuthContextWithUser = AuthContext & {
+	user: Doc<"users">;
+};
+
+// =============================================================================
+// Server Auth Utilities
+// =============================================================================
+
+/**
+ * Get the Convex deployment URL from environment
+ */
+function getConvexUrl(): string {
+	const url = process.env.CONVEX_URL;
+	if (!url) {
+		throw new Error(
+			"Environment variable CONVEX_URL is missing. Please set it in your environment to the URL of your Convex deployment."
+		);
+	}
+	return url;
+}
+
+/**
+ * Extract the auth token from the Authorization header
+ */
+function extractAuthToken(request: Request): string | null {
+	const authHeader = request.headers.get("Authorization");
+	if (!authHeader?.startsWith("Bearer ")) {
+		return null;
+	}
+	return authHeader.slice(7);
+}
+
+/**
+ * Create an authenticated Convex client with the given token
+ */
+function createAuthenticatedClient(token: string): ConvexHttpClient {
+	const client = new ConvexHttpClient(getConvexUrl());
+	client.setAuth(token);
+	return client;
+}
+
+// =============================================================================
+// Response Helpers
+// =============================================================================
+
+/**
+ * Helper to create JSON response
+ */
+export function json<T>(data: T, init?: ResponseInit): Response {
+	return new Response(JSON.stringify(data), {
+		...init,
+		headers: {
+			"Content-Type": "application/json",
+			...init?.headers,
+		},
+	});
+}
+
+/**
+ * Create unauthorized response
+ */
+export function unauthorized(message = "Unauthorized"): Response {
+	return json({ error: message }, { status: 401 });
+}
+
+/**
+ * Create not found response
+ */
+export function notFound(message = "Not found"): Response {
+	return json({ error: message }, { status: 404 });
+}
+
+/**
+ * Create bad request response
+ */
+export function badRequest(message = "Bad request"): Response {
+	return json({ error: message }, { status: 400 });
+}
+
+// =============================================================================
+// Auth Middleware
+// =============================================================================
+
+/**
+ * Auth middleware that extracts token and creates authenticated Convex client.
+ * Provides: { token, client } in context
+ */
+export const authMiddleware = createMiddleware().server(({ next, request }) => {
+	const token = extractAuthToken(request);
+
+	if (!token) {
+		return unauthorized();
+	}
+
+	const client = createAuthenticatedClient(token);
+
+	return next({
+		context: {
+			token,
+			client,
+		},
+	});
+});
