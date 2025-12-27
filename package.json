@@ -11,7 +11,8 @@
     "format": "oxfmt --write",
     "format:check": "oxfmt --check",
     "lint": "oxlint --type-aware --fix",
-    "typecheck": "tsgo -p ."
+    "typecheck": "tsgo -p .",
+    "prepare": "husky"
   },
   "dependencies": {
     "@ai-sdk-tools/agents": "^1.2.0",
@@ -130,7 +131,9 @@
     "@typescript/native-preview": "^7.0.0-dev.20251227.1",
     "@vitejs/plugin-react": "^5.1.2",
     "@vitest/ui": "^4.0.16",
+    "husky": "^9.1.7",
     "jsdom": "^27.4.0",
+    "lint-staged": "^16.2.7",
     "oxfmt": "^0.20.0",
     "oxlint": "^1.35.0",
     "oxlint-tsgolint": "^0.10.0",
