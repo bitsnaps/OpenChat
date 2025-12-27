@@ -3,6 +3,7 @@ import { useEditorStore } from "../editor-store";
 
 describe("useEditorStore", () => {
 	beforeEach(() => {
+		vi.useFakeTimers();
 		// Reset the store to its initial state
 		useEditorStore.setState({
 			themeState: useEditorStore.getState().themeState,
@@ -13,6 +14,7 @@ describe("useEditorStore", () => {
 	});
 
 	afterEach(() => {
+		vi.useRealTimers();
 		vi.restoreAllMocks();
 	});
 
@@ -54,11 +56,11 @@ describe("useEditorStore", () => {
 			expect(useEditorStore.getState().themeState.preset).toBe("new-preset");
 		});
 
-		it("adds to history when updating themeState", async () => {
+		it("adds to history when updating themeState", () => {
 			const { setThemeState, themeState } = useEditorStore.getState();
 
-			// Wait for threshold to pass
-			await new Promise((resolve) => setTimeout(resolve, 600));
+			// Advance time past the history threshold
+			vi.advanceTimersByTime(600);
 
 			const newState = {
 				...themeState,
@@ -99,15 +101,15 @@ describe("useEditorStore", () => {
 			expect(state.themeCheckpoint).toEqual(themeState);
 		});
 
-		it("restoreThemeCheckpoint restores saved state", async () => {
+		it("restoreThemeCheckpoint restores saved state", () => {
 			const store = useEditorStore.getState();
 			const originalState = { ...store.themeState };
 
 			// Save checkpoint
 			store.saveThemeCheckpoint();
 
-			// Wait and modify state
-			await new Promise((resolve) => setTimeout(resolve, 600));
+			// Advance time and modify state
+			vi.advanceTimersByTime(600);
 
 			store.setThemeState({
 				...store.themeState,
@@ -152,12 +154,12 @@ describe("useEditorStore", () => {
 			);
 		});
 
-		it("returns true when state differs from checkpoint", async () => {
+		it("returns true when state differs from checkpoint", () => {
 			const store = useEditorStore.getState();
 			store.saveThemeCheckpoint();
 
-			// Wait and modify
-			await new Promise((resolve) => setTimeout(resolve, 600));
+			// Advance time and modify
+			vi.advanceTimersByTime(600);
 
 			store.setThemeState({
 				...store.themeState,
@@ -181,10 +183,10 @@ describe("useEditorStore", () => {
 			expect(canRedo()).toBe(false);
 		});
 
-		it("canUndo returns true after state change", async () => {
+		it("canUndo returns true after state change", () => {
 			const store = useEditorStore.getState();
 
-			await new Promise((resolve) => setTimeout(resolve, 600));
+			vi.advanceTimersByTime(600);
 
 			store.setThemeState({
 				...store.themeState,
@@ -214,11 +216,11 @@ describe("useEditorStore", () => {
 			expect(useEditorStore.getState().themeState.preset).toBe(originalPreset);
 		});
 
-		it("undo reverts to previous state", async () => {
+		it("undo reverts to previous state", () => {
 			const store = useEditorStore.getState();
 			const originalPreset = store.themeState.preset;
 
-			await new Promise((resolve) => setTimeout(resolve, 600));
+			vi.advanceTimersByTime(600);
 
 			store.setThemeState({
 				...store.themeState,
@@ -232,10 +234,10 @@ describe("useEditorStore", () => {
 			expect(useEditorStore.getState().themeState.preset).toBe(originalPreset);
 		});
 
-		it("redo restores undone state", async () => {
+		it("redo restores undone state", () => {
 			const store = useEditorStore.getState();
 
-			await new Promise((resolve) => setTimeout(resolve, 600));
+			vi.advanceTimersByTime(600);
 
 			store.setThemeState({
 				...store.themeState,
@@ -248,10 +250,10 @@ describe("useEditorStore", () => {
 			expect(useEditorStore.getState().themeState.preset).toBe("changed");
 		});
 
-		it("canRedo returns true after undo", async () => {
+		it("canRedo returns true after undo", () => {
 			const store = useEditorStore.getState();
 
-			await new Promise((resolve) => setTimeout(resolve, 600));
+			vi.advanceTimersByTime(600);
 
 			store.setThemeState({
 				...store.themeState,
@@ -265,10 +267,10 @@ describe("useEditorStore", () => {
 	});
 
 	describe("resetToCurrentPreset", () => {
-		it("resets styles to preset defaults", async () => {
+		it("resets styles to preset defaults", () => {
 			const store = useEditorStore.getState();
 
-			await new Promise((resolve) => setTimeout(resolve, 600));
+			vi.advanceTimersByTime(600);
 
 			// Modify styles
 			store.setThemeState({
@@ -290,10 +292,10 @@ describe("useEditorStore", () => {
 			});
 		});
 
-		it("clears history and future", async () => {
+		it("clears history and future", () => {
 			const store = useEditorStore.getState();
 
-			await new Promise((resolve) => setTimeout(resolve, 600));
+			vi.advanceTimersByTime(600);
 
 			store.setThemeState({
 				...store.themeState,

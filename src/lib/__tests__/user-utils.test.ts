@@ -100,13 +100,10 @@ describe("user-utils", () => {
 			expect(timezone.length).toBeGreaterThan(0);
 		});
 
-		it("returns a valid IANA timezone format", () => {
+		it("returns a valid IANA timezone", () => {
 			const timezone = getUserTimezone();
-			// IANA timezones typically contain "/" (e.g., "America/New_York")
-			// or are short like "UTC"
-			expect(
-				timezone.includes("/") || timezone === "UTC" || timezone.length > 0
-			).toBe(true);
+			const validTimezones = Intl.supportedValuesOf("timeZone");
+			expect(validTimezones).toContain(timezone);
 		});
 	});
 });

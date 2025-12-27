@@ -1,94 +1,20 @@
-import { describe, expect, it } from "vitest";
-import { z } from "zod";
+import { describe, expect, it, vi } from "vitest";
 
-// Test the input schema validation logic directly since the internal functions
-// are not exported. We can test the schema definitions and validation patterns.
+// Mock the composio-server module to avoid environment variable requirements
+vi.mock("@/lib/composio-server", () => ({
+	getComposioTools: vi.fn(),
+}));
 
-const toolNameSchema = z.string().min(1, "Tool name is required");
+// Mock prompt-tool-config to avoid any side effects
+vi.mock("@/lib/prompt-tool-config", () => ({
+	getToolSpecificPrompts: vi.fn().mockReturnValue(""),
+}));
 
-const toolListSchema = z.union([
-	toolNameSchema,
-	z.array(toolNameSchema).min(1, "At least one tool is required"),
-]);
-
-const createAgentInputSchema = z.object({
-	tool: toolListSchema.describe(
-		'One or more connector toolkits to enable (e.g. "GMAIL", "NOTION").'
-	),
-	task: z
-		.string()
-		.min(1, "Task description is required")
-		.max(2000, "Task must be 2000 characters or less")
-		.describe("High-level task for the delegated agent to complete."),
-	context: z
-		.string()
-		.max(5000, "Context must be 5000 characters or less")
-		.optional()
-		.describe(
-			"Optional context from previous operations to provide to the agent."
-		),
-});
-
-// Helper to simulate the analysis function logic
-type SubAgentAnalysis = {
-	success: boolean;
-	toolCallCount: number;
-	toolNames: string[];
-	finishReason: string;
-	issues: string[];
-	summary: string;
-	errorMessage?: string;
-};
-
-const analyzeSubAgentExecution = ({
-	toolCalls,
-	finishReason,
-	finalText,
-	subAgentError,
-}: {
-	toolCalls: { toolName: string; [key: string]: unknown }[];
-	finishReason: string;
-	finalText: string;
-	subAgentError: Error | null;
-}): SubAgentAnalysis => {
-	const toolCallCount = toolCalls.length;
-	const toolNames = toolCalls.map((tc) => tc.toolName);
-
-	const attemptedTools = toolCallCount > 0;
-	const normalFinish = finishReason === "stop" || finishReason === "length";
-	const hasSubstantialOutput = finalText.length > 25;
-	const hasError = subAgentError !== null;
-
-	const success =
-		attemptedTools && normalFinish && hasSubstantialOutput && !hasError;
-
-	const issues: string[] = [];
-	if (hasError) {
-		issues.push(`Error: ${subAgentError?.message || "Unknown error"}`);
-	}
-	if (!attemptedTools) {
-		issues.push("No tools were called");
-	}
-	if (finishReason === "error") {
-		issues.push("Sub-agent encountered an error");
-	}
-	if (finishReason === "tool-calls") {
-		issues.push("Sub-agent stopped mid-execution");
-	}
-	if (!hasSubstantialOutput) {
-		issues.push("Insufficient output produced");
-	}
-
-	return {
-		success,
-		toolCallCount,
-		toolNames,
-		finishReason,
-		issues,
-		summary: finalText.slice(0, 300),
-		errorMessage: subAgentError?.message,
-	};
-};
+import {
+	analyzeSubAgentExecution,
+	createAgentInputSchema,
+	toolListSchema,
+} from "../create-agent-tool";
 
 describe("create-agent-tool", () => {
 	describe("createAgentInputSchema", () => {

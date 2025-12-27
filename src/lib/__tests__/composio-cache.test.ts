@@ -122,10 +122,8 @@ describe("composio-cache", () => {
 		it("silently fails on error", async () => {
 			mockJsonSet.mockRejectedValue(new Error("Redis error"));
 
-			// Should not throw
-			await expect(
-				setCachedConvertedTools("user-123", ["gmail"], {} as never)
-			).resolves.not.toThrow();
+			// Should not throw - simply await to verify it resolves
+			await setCachedConvertedTools("user-123", ["gmail"], {} as never);
 		});
 
 		it("sets TTL of 48 hours", async () => {
@@ -164,8 +162,8 @@ describe("composio-cache", () => {
 		it("silently fails on error", async () => {
 			mockKeys.mockRejectedValue(new Error("Redis error"));
 
-			// Should not throw
-			await expect(invalidateUserToolsCache("user-123")).resolves.not.toThrow();
+			// Should not throw - simply await to verify it resolves
+			await invalidateUserToolsCache("user-123");
 		});
 	});
 

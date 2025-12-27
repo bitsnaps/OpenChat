@@ -91,15 +91,29 @@ describe("useDocumentTitle", () => {
 		expect(document.title).toBe(titleAfterFirstRender);
 	});
 
-	it("handles chatId parameter", () => {
-		renderHook(() => useDocumentTitle("Chat Title", "chat-123"));
+	it("resets title on unmount when chatId is undefined", () => {
+		const { unmount } = renderHook(() =>
+			useDocumentTitle("Chat Title", undefined)
+		);
 
 		expect(document.title).toBe("Chat Title - OpenChat");
+
+		unmount();
+
+		// Without chatId, title should reset to APP_NAME
+		expect(document.title).toBe("OpenChat");
 	});
 
-	it("handles undefined chatId with chatTitle", () => {
-		renderHook(() => useDocumentTitle("Chat Title", undefined));
+	it("does not reset title on unmount when chatId is provided", () => {
+		const { unmount } = renderHook(() =>
+			useDocumentTitle("Chat Title", "chat-123")
+		);
 
+		expect(document.title).toBe("Chat Title - OpenChat");
+
+		unmount();
+
+		// With chatId, title should remain unchanged (prevents flicker between chats)
 		expect(document.title).toBe("Chat Title - OpenChat");
 	});
 });

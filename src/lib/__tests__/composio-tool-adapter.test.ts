@@ -312,6 +312,8 @@ describe("composio-tool-adapter", () => {
 
 			// Only valid tool should be in result
 			expect(converted.validTool).toBeDefined();
+			expect(converted.invalidTool).toBeUndefined();
+			expect(Object.keys(converted)).toHaveLength(1);
 		});
 	});
 });

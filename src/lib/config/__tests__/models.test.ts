@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { z } from "zod";
 import {
 	MODELS,
 	MODELS_DATA,
@@ -6,6 +7,7 @@ import {
 	MODELS_OPTIONS,
 	MODELS_RAW,
 } from "../models/index";
+import { ModelSchema } from "../schemas";
 
 describe("Models Configuration", () => {
 	describe("MODELS_DATA", () => {
@@ -21,9 +23,28 @@ describe("Models Configuration", () => {
 			expect(MODELS_RAW.length).toBeGreaterThan(0);
 		});
 
-		it("is validated through Zod schema", () => {
-			// If MODELS_RAW exists without throwing, schema validation passed
-			expect(MODELS_RAW).toBeDefined();
+		it("validates all models through Zod schema", () => {
+			const schema = z.array(ModelSchema);
+			const result = schema.safeParse(MODELS_DATA);
+			expect(result.success).toBe(true);
+		});
+
+		it("rejects invalid model data", () => {
+			const invalidModel = {
+				id: 123,
+				name: "Test",
+				provider: "test",
+				premium: "not-boolean",
+				description: "Test",
+			};
+			const result = ModelSchema.safeParse(invalidModel);
+			expect(result.success).toBe(false);
+		});
+
+		it("requires mandatory fields", () => {
+			const missingFields = { id: "test" };
+			const result = ModelSchema.safeParse(missingFields);
+			expect(result.success).toBe(false);
 		});
 	});
 

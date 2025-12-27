@@ -1,9 +1,16 @@
 import { describe, expect, it } from "vitest";
 import { ANTHROPIC_MODELS } from "../anthropic";
 import { DEEPSEEK_MODELS } from "../deepseek";
+import { FAL_MODELS } from "../fal";
 import { GOOGLE_MODELS } from "../google";
+import { META_MODELS } from "../meta";
+import { MINIMAX_MODELS } from "../minimax";
+import { MISTRAL_MODELS } from "../mistral";
+import { MOONSHOT_MODELS } from "../moonshot";
 import { OPENAI_MODELS } from "../openai";
+import { QWEN_MODELS } from "../qwen";
 import { XAI_MODELS } from "../xai";
+import { ZAI_MODELS } from "../zai";
 
 // Helper to test model arrays
 const testModelArray = (
@@ -16,7 +23,7 @@ const testModelArray = (
 		api_sdk?: unknown;
 	}>,
 	providerName: string,
-	_expectedProvider: string
+	expectedProviders: string[]
 ) => {
 	describe(`${providerName} Models`, () => {
 		it("is a non-empty array", () => {
@@ -24,7 +31,7 @@ const testModelArray = (
 			expect(models.length).toBeGreaterThan(0);
 		});
 
-		it("each model has required properties", () => {
+		it("each model has required properties and valid provider", () => {
 			for (const model of models) {
 				expect(model.id).toBeDefined();
 				expect(typeof model.id).toBe("string");
@@ -33,7 +40,7 @@ const testModelArray = (
 				expect(model.name).toBeDefined();
 				expect(typeof model.name).toBe("string");
 
-				expect(model.provider).toBeDefined();
+				expect(expectedProviders).toContain(model.provider);
 			}
 		});
 
@@ -60,12 +67,25 @@ const testModelArray = (
 	});
 };
 
+// Universal providers that can route to any model
+const GATEWAY_PROVIDERS = ["openrouter", "ai-gateway", "gateway"];
+
 // Test each provider's models
-testModelArray(OPENAI_MODELS, "OpenAI", "openai");
-testModelArray(ANTHROPIC_MODELS, "Anthropic", "anthropic");
-testModelArray(GOOGLE_MODELS, "Google", "gemini");
-testModelArray(DEEPSEEK_MODELS, "DeepSeek", "deepseek");
-testModelArray(XAI_MODELS, "xAI", "xai");
+testModelArray(OPENAI_MODELS, "OpenAI", ["openai", ...GATEWAY_PROVIDERS]);
+testModelArray(ANTHROPIC_MODELS, "Anthropic", [
+	"anthropic",
+	...GATEWAY_PROVIDERS,
+]);
+testModelArray(GOOGLE_MODELS, "Google", ["gemini", ...GATEWAY_PROVIDERS]);
+testModelArray(DEEPSEEK_MODELS, "DeepSeek", ["deepseek", ...GATEWAY_PROVIDERS]);
+testModelArray(XAI_MODELS, "xAI", ["xai", ...GATEWAY_PROVIDERS]);
+testModelArray(META_MODELS, "Meta", ["meta", ...GATEWAY_PROVIDERS]);
+testModelArray(MISTRAL_MODELS, "Mistral", ["mistral", ...GATEWAY_PROVIDERS]);
+testModelArray(FAL_MODELS, "Fal", ["fal", ...GATEWAY_PROVIDERS]);
+testModelArray(MOONSHOT_MODELS, "Moonshot", ["moonshot", ...GATEWAY_PROVIDERS]);
+testModelArray(ZAI_MODELS, "Zai", ["zai", ...GATEWAY_PROVIDERS]);
+testModelArray(MINIMAX_MODELS, "Minimax", ["minimax", ...GATEWAY_PROVIDERS]);
+testModelArray(QWEN_MODELS, "Qwen", ["qwen", ...GATEWAY_PROVIDERS]);
 
 describe("Model Provider Specific Tests", () => {
 	describe("OpenAI Models", () => {

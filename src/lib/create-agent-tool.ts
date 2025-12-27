@@ -7,12 +7,12 @@ import { getToolSpecificPrompts } from "@/lib/prompt-tool-config";
 
 const toolNameSchema = z.string().min(1, "Tool name is required");
 
-const toolListSchema = z.union([
+export const toolListSchema = z.union([
 	toolNameSchema,
 	z.array(toolNameSchema).min(1, "At least one tool is required"),
 ]);
 
-const createAgentInputSchema = z.object({
+export const createAgentInputSchema = z.object({
 	tool: toolListSchema.describe(
 		'One or more connector toolkits to enable (e.g. "GMAIL", "NOTION").'
 	),
@@ -51,7 +51,7 @@ type CreateAgentToolOptions = {
 	writer: UIMessageStreamWriter;
 };
 
-type SubAgentAnalysis = {
+export type SubAgentAnalysis = {
 	success: boolean;
 	toolCallCount: number;
 	toolNames: string[];
@@ -61,7 +61,7 @@ type SubAgentAnalysis = {
 	errorMessage?: string;
 };
 
-const analyzeSubAgentExecution = ({
+export const analyzeSubAgentExecution = ({
 	toolCalls,
 	finishReason,
 	finalText,

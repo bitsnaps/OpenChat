@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { defaultPresets } from "../theme-presets";
 
+const WARM_COLOR_REGEX = /^#[c-f][0-9a-f]/i;
+
 describe("Theme Presets", () => {
 	describe("defaultPresets object", () => {
 		it("is defined", () => {
@@ -106,9 +108,12 @@ describe("Theme Presets", () => {
 			expect(claude.label).toBe("Claude");
 		});
 
-		it("has warm color scheme", () => {
-			// Claude uses warm orange/terracotta primary color
-			expect(claude.styles.light.primary).toBeDefined();
+		it("has warm terracotta/orange primary color", () => {
+			const primary = claude.styles.light.primary;
+			// Claude uses #c96442 - a warm terracotta/orange
+			// Warm colors have red (R) as dominant channel
+			expect(primary).toMatch(WARM_COLOR_REGEX); // Starts with high red value
+			expect(primary).toBe("#c96442");
 		});
 	});
 

@@ -42,13 +42,20 @@ describe("message-utils", () => {
 			expect(timestamp).toBeLessThanOrEqual(after);
 		});
 
-		it("generates unique ids on subsequent calls", () => {
-			const id1 = createTempMessageId();
-			const id2 = createTempMessageId();
+		it("generates unique ids on subsequent calls", async () => {
+			const ids = new Set<string>();
+			for (let i = 0; i < 10; i++) {
+				ids.add(createTempMessageId());
+				// Small delay to ensure timestamp changes
+				await new Promise((resolve) => setTimeout(resolve, 1));
+			}
+			// All 10 IDs should be unique
+			expect(ids.size).toBe(10);
+		});
 
-			// Due to fast execution, they might be the same, but structure should be correct
-			expect(id1.startsWith("temp-")).toBe(true);
-			expect(id2.startsWith("temp-")).toBe(true);
+		it("has correct format", () => {
+			const id = createTempMessageId();
+			expect(id.startsWith("temp-")).toBe(true);
 		});
 	});
 
