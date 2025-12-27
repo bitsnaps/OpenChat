@@ -39,8 +39,8 @@ describe("ModelFeatureSchema", () => {
   });
 
   it("rejects missing required fields", () => {
-    expect(() => ModelFeatureSchema.parse({ id: "test" })).toThrow();
-    expect(() => ModelFeatureSchema.parse({ enabled: true })).toThrow();
+    expect(() => ModelFeatureSchema.parse({ id: "test" })).toThrow(/required/i);
+    expect(() => ModelFeatureSchema.parse({ enabled: true })).toThrow(/required/i);
   });
 });
 
@@ -58,8 +58,8 @@ describe("ApiKeyUsageSchema", () => {
   });
 
   it("rejects missing required fields", () => {
-    expect(() => ApiKeyUsageSchema.parse({ allowUserKey: true })).toThrow();
-    expect(() => ApiKeyUsageSchema.parse({ userKeyOnly: false })).toThrow();
+    expect(() => ApiKeyUsageSchema.parse({ allowUserKey: true })).toThrow(/required/i);
+    expect(() => ApiKeyUsageSchema.parse({ userKeyOnly: false })).toThrow(/required/i);
   });
 });
 
@@ -208,13 +208,13 @@ describe("ModelSchema", () => {
   });
 
   it("rejects missing required fields", () => {
-    expect(() => ModelSchema.parse({ id: "test" })).toThrow();
+    expect(() => ModelSchema.parse({ id: "test" })).toThrow(/required/i);
     expect(() =>
       ModelSchema.parse({
         id: "test",
         name: "Test",
         provider: "openai",
       }),
-    ).toThrow();
+    ).toThrow(/required/i);
   });
 });

@@ -8,13 +8,13 @@ import { toast } from "@/components/ui/toast";
 import type { Id } from "../../convex/_generated/dataModel";
 import { humaniseUploadError } from "./chat-error-utils";
 
-export type FileAttachment = {
+export interface FileAttachment {
   key: string; // R2 object key
   fileName: string; // display name
   fileType: string;
   fileSize: number;
   url?: string;
-};
+}
 
 // Use FileUIPart from AI SDK instead of custom interface
 

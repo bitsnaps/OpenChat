@@ -5,10 +5,10 @@
  * data protection across all public-facing endpoints and operations.
  */
 
-export type SanitizationOptions = {
+export interface SanitizationOptions {
   /** Whether to redact file URLs and replace with 'redacted' placeholder */
   hideFiles: boolean;
-};
+}
 
 /**
  * Sanitizes message parts for public sharing by redacting sensitive information

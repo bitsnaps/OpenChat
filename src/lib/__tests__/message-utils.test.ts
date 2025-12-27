@@ -40,10 +40,13 @@ describe("message-utils", () => {
 
     it("generates unique ids on subsequent calls", async () => {
       const ids = new Set<string>();
-      for (let i = 0; i < 10; i++) {
-        ids.add(createTempMessageId());
-        // Small delay to ensure timestamp changes
-        await new Promise((resolve) => setTimeout(resolve, 1));
+      const promises = Array.from({ length: 10 }, async (_, i) => {
+        await new Promise((resolve) => setTimeout(resolve, i));
+        return createTempMessageId();
+      });
+      const results = await Promise.all(promises);
+      for (const id of results) {
+        ids.add(id);
       }
       // All 10 IDs should be unique
       expect(ids.size).toBe(10);

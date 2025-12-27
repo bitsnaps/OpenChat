@@ -1,4 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+  checkRedisHealth,
+  getCachedConvertedTools,
+  invalidateUserToolsCache,
+  setCachedConvertedTools,
+} from "../composio-cache";
 
 // Use vi.hoisted to define mock functions that will be available when mock is hoisted
 const { mockJsonGet, mockJsonSet, mockExpire, mockKeys, mockDel, mockPing } = vi.hoisted(() => ({
@@ -23,14 +29,6 @@ vi.mock("@upstash/redis", () => ({
     ping = mockPing;
   },
 }));
-
-// Import after mocking
-import {
-  checkRedisHealth,
-  getCachedConvertedTools,
-  invalidateUserToolsCache,
-  setCachedConvertedTools,
-} from "../composio-cache";
 
 describe("composio-cache", () => {
   beforeEach(() => {
@@ -116,6 +114,7 @@ describe("composio-cache", () => {
 
       // Should not throw - simply await to verify it resolves
       await setCachedConvertedTools("user-123", ["gmail"], {} as never);
+      expect(mockJsonSet).toHaveBeenCalled();
     });
 
     it("sets TTL of 48 hours", async () => {
@@ -156,6 +155,7 @@ describe("composio-cache", () => {
 
       // Should not throw - simply await to verify it resolves
       await invalidateUserToolsCache("user-123");
+      expect(mockKeys).toHaveBeenCalled();
     });
   });
 

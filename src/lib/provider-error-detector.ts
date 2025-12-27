@@ -3,7 +3,7 @@
  * Detects error patterns embedded in streaming content from various AI providers
  */
 
-export type DetectedError = {
+export interface DetectedError {
   type: string;
   provider: string;
   message: string;
@@ -12,7 +12,7 @@ export type DetectedError = {
   isQuotaExceeded?: boolean;
   isInsufficientBalance?: boolean;
   isAuthError?: boolean;
-};
+}
 
 /**
  * Detects provider-specific error patterns in streaming text content

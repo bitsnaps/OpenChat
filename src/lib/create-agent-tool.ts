@@ -32,7 +32,7 @@ export type CreateAgentInput = z.input<typeof createAgentInputSchema>;
 
 type JSONValue = string | number | boolean | null | { [key: string]: JSONValue } | JSONValue[];
 
-type CreateAgentToolOptions = {
+interface CreateAgentToolOptions {
   userId?: string;
   availableToolkits: string[];
   model: string;
@@ -41,9 +41,9 @@ type CreateAgentToolOptions = {
   providerOptions?: Record<string, Record<string, JSONValue>>;
   connectorsStatus?: ConnectorStatusLists;
   writer: UIMessageStreamWriter;
-};
+}
 
-export type SubAgentAnalysis = {
+export interface SubAgentAnalysis {
   success: boolean;
   toolCallCount: number;
   toolNames: string[];
@@ -51,7 +51,7 @@ export type SubAgentAnalysis = {
   issues: string[];
   summary: string;
   errorMessage?: string;
-};
+}
 
 export const analyzeSubAgentExecution = ({
   toolCalls,

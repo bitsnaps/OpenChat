@@ -106,11 +106,10 @@ describe("Models Configuration", () => {
 
     it("provides O(1) lookup by id", () => {
       const firstModel = MODELS[0];
-      if (firstModel) {
-        const lookedUp = MODELS_MAP[firstModel.id];
-        expect(lookedUp).toBeDefined();
-        expect(lookedUp.id).toBe(firstModel.id);
-      }
+      expect(firstModel).toBeDefined();
+      const lookedUp = MODELS_MAP[firstModel.id];
+      expect(lookedUp).toBeDefined();
+      expect(lookedUp.id).toBe(firstModel.id);
     });
 
     it("returns undefined for non-existent id", () => {

@@ -8,18 +8,18 @@ import type { Doc, Id } from "../../convex/_generated/dataModel";
 
 export type UserProfile = Doc<"users">;
 
-export type ApiKey = {
+export interface ApiKey {
   _id: Id<"user_api_keys">;
   provider: string;
   mode?: "priority" | "fallback";
   messageCount?: number;
   createdAt?: number;
   updatedAt?: number;
-};
+}
 
 export type Connector = Doc<"connectors">;
 
-type UserContextType = {
+interface UserContextType {
   user: UserProfile | null;
   isLoading: boolean;
   signInGoogle: () => Promise<void>;
@@ -56,7 +56,7 @@ type UserContextType = {
   // Connectors
   connectors: Connector[];
   isConnectorsLoading: boolean;
-};
+}
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
@@ -135,7 +135,7 @@ export function UserProvider({ children }: { children: React.ReactNode; initialU
   const apiKeys = useMemo(() => (apiKeysQuery ?? []) as ApiKey[], [apiKeysQuery]);
 
   // Process connectors data
-  const connectors = useMemo(() => (connectorsQuery ?? []) as Connector[], [connectorsQuery]);
+  const connectors = useMemo(() => (connectorsQuery ?? []), [connectorsQuery]);
 
   const hasApiKey = useMemo(() => {
     const keyMap = new Map<string, boolean>();
@@ -169,7 +169,7 @@ export function UserProvider({ children }: { children: React.ReactNode; initialU
       signOut,
       updateUser,
       // User capabilities and settings
-      hasPremium: (hasPremium ?? false) as boolean,
+      hasPremium: (hasPremium ?? false),
       products: products as { premium?: { id: string } } | undefined,
       rateLimitStatus: rateLimitStatus as
         | {

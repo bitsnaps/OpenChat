@@ -3,11 +3,11 @@ import type { ThemeStyleProps } from "../types/theme";
 // Font type definitions following ultracite guidelines
 export type FontCategory = "sans" | "mono";
 
-export type FontOption = {
+export interface FontOption {
   readonly label: string;
   readonly value: string;
   readonly isSystem: boolean;
-};
+}
 
 // System font values from existing presets - these are the defaults
 const SYSTEM_SANS_FONT =

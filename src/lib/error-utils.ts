@@ -40,7 +40,7 @@ function isDetectedError(error: unknown): error is DetectedError {
   );
 }
 
-export type ClassifiedError = {
+export interface ClassifiedError {
   displayType: ErrorDisplayType;
   code: string;
   message: string;
@@ -48,7 +48,7 @@ export type ClassifiedError = {
   httpStatus: number;
   responseType: string;
   originalError?: unknown;
-};
+}
 
 /**
  * HTTP status code mapping for different error types

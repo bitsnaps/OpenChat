@@ -77,9 +77,10 @@ describe("useEditorStore", () => {
       const { setThemeState, themeState } = useEditorStore.getState();
 
       // Change only currentMode
+      const newMode: "light" | "dark" = themeState.currentMode === "light" ? "dark" : "light";
       const newState = {
         ...themeState,
-        currentMode: (themeState.currentMode === "light" ? "dark" : "light") as "dark" | "light",
+        currentMode: newMode,
       };
 
       setThemeState(newState);

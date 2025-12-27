@@ -8,7 +8,7 @@ import {
 } from "../composio-tool-adapter";
 
 // Type for Composio tool (matching the adapter's expected type)
-type ComposioToolMock = {
+interface ComposioToolMock {
   description: string;
   parameters: {
     jsonSchema: JSONSchema7;
@@ -18,7 +18,7 @@ type ComposioToolMock = {
     error: string | null;
     successful: boolean;
   }>;
-};
+}
 
 // Mock composio tool for testing
 const createMockComposioTool = (overrides: Partial<ComposioToolMock> = {}): ComposioToolMock => ({
@@ -66,7 +66,7 @@ describe("composio-tool-adapter", () => {
     it("returns false when missing description", () => {
       const tool = createMockComposioTool();
       // biome-ignore lint/performance/noDelete: testing missing property
-      delete (tool as Record<string, unknown>).description;
+      delete (tool as unknown as Record<string, unknown>).description;
 
       expect(isComposioTool(tool)).toBe(false);
     });
@@ -82,7 +82,7 @@ describe("composio-tool-adapter", () => {
     it("returns false when missing parameters", () => {
       const tool = createMockComposioTool();
       // biome-ignore lint/performance/noDelete: testing missing property
-      delete (tool as Record<string, unknown>).parameters;
+      delete (tool as unknown as Record<string, unknown>).parameters;
 
       expect(isComposioTool(tool)).toBe(false);
     });
@@ -116,7 +116,7 @@ describe("composio-tool-adapter", () => {
     it("returns false when missing execute", () => {
       const tool = createMockComposioTool();
       // biome-ignore lint/performance/noDelete: testing missing property
-      delete (tool as Record<string, unknown>).execute;
+      delete (tool as unknown as Record<string, unknown>).execute;
 
       expect(isComposioTool(tool)).toBe(false);
     });

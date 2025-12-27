@@ -16,12 +16,12 @@ import {
   QwenLight,
 } from "@ridemountainpig/svgl-react";
 
-export type Provider = {
+export interface Provider {
   id: string;
   name: string;
   icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   icon_light?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-};
+}
 
 export const PROVIDERS = [
   {

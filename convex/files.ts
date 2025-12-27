@@ -126,7 +126,7 @@ const FILE_UPLOAD_MODELS = [
 type AllowedMimeType = (typeof UPLOAD_ALLOWED_MIME)[number];
 type FileUploadModel = (typeof FILE_UPLOAD_MODELS)[number];
 
-type SavedAttachment = {
+interface SavedAttachment {
   _id: Id<"chat_attachments">;
   _creationTime: number;
   userId: Id<"users">;
@@ -136,7 +136,7 @@ type SavedAttachment = {
   fileType: string;
   fileSize: number;
   url?: string;
-};
+}
 
 /**
  * Saves the metadata of a successfully uploaded file to the database.

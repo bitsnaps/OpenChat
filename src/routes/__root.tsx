@@ -1,5 +1,30 @@
 // Inline script to prevent theme flash - runs before React hydration
 // This reads from the Zustand persisted store and applies the dark class and CSS variables immediately
+
+import type { QueryClient } from "@tanstack/react-query";
+
+import { TanStackDevtools } from "@tanstack/react-devtools";
+import { createRootRouteWithContext, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
+import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
+import { AuthGuard } from "@/components/auth/auth-guard";
+import LayoutApp from "@/components/layout/layout-app";
+import { StructuredData } from "@/components/structured-data";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { APP_BASE_URL, APP_DESCRIPTION, APP_NAME, META_TITLE } from "@/lib/config";
+import { SidebarProvider } from "@/providers/sidebar-provider";
+import { ConvexProvider } from "../integrations/convex/provider";
+import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
+import appCss from "../styles.css?url";
+
+// Import fonts
+import "@fontsource/geist-sans/400.css";
+import "@fontsource/geist-sans/500.css";
+import "@fontsource/geist-sans/600.css";
+import "@fontsource/geist-sans/700.css";
+import "@fontsource/geist-mono/400.css";
+
 const themeInitScript = `
 (function() {
   try {
@@ -55,34 +80,9 @@ const themeInitScript = `
 })();
 `;
 
-import { TanStackDevtools } from "@tanstack/react-devtools";
-import { createRootRouteWithContext, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
-import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/react";
-import { AuthGuard } from "@/components/auth/auth-guard";
-import LayoutApp from "@/components/layout/layout-app";
-import { StructuredData } from "@/components/structured-data";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { SidebarProvider } from "@/providers/sidebar-provider";
-import { ConvexProvider } from "../integrations/convex/provider";
-import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
-
-import appCss from "../styles.css?url";
-
-// Import fonts
-import "@fontsource/geist-sans/400.css";
-import "@fontsource/geist-sans/500.css";
-import "@fontsource/geist-sans/600.css";
-import "@fontsource/geist-sans/700.css";
-import "@fontsource/geist-mono/400.css";
-
-import type { QueryClient } from "@tanstack/react-query";
-import { APP_BASE_URL, APP_DESCRIPTION, APP_NAME, META_TITLE } from "@/lib/config";
-
-type MyRouterContext = {
+interface MyRouterContext {
   queryClient: QueryClient;
-};
+}
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   head: () => ({

@@ -1,4 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
+import {
+  analyzeSubAgentExecution,
+  createAgentInputSchema,
+  toolListSchema,
+} from "../create-agent-tool";
 
 // Mock the composio-server module to avoid environment variable requirements
 vi.mock("@/lib/composio-server", () => ({
@@ -10,12 +15,6 @@ vi.mock("@/lib/prompt-tool-config", () => ({
   getToolSpecificPrompts: vi.fn().mockReturnValue(""),
 }));
 
-import {
-  analyzeSubAgentExecution,
-  createAgentInputSchema,
-  toolListSchema,
-} from "../create-agent-tool";
-
 describe("create-agent-tool", () => {
   describe("createAgentInputSchema", () => {
     describe("tool field validation", () => {
@@ -26,9 +25,7 @@ describe("create-agent-tool", () => {
         });
 
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.data.tool).toBe("GMAIL");
-        }
+        expect(result.success && result.data.tool).toBe("GMAIL");
       });
 
       it("accepts an array of tool names", () => {
@@ -38,9 +35,7 @@ describe("create-agent-tool", () => {
         });
 
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.data.tool).toEqual(["GMAIL", "NOTION"]);
-        }
+        expect(result.success && result.data.tool).toEqual(["GMAIL", "NOTION"]);
       });
 
       it("rejects empty string tool name", () => {
@@ -111,9 +106,7 @@ describe("create-agent-tool", () => {
         });
 
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.data.context).toBe("Previous operation returned user list");
-        }
+        expect(result.success && result.data.context).toBe("Previous operation returned user list");
       });
 
       it("accepts missing context", () => {
@@ -123,9 +116,7 @@ describe("create-agent-tool", () => {
         });
 
         expect(result.success).toBe(true);
-        if (result.success) {
-          expect(result.data.context).toBeUndefined();
-        }
+        expect(result.success && result.data.context).toBeUndefined();
       });
 
       it("rejects context over 5000 characters", () => {

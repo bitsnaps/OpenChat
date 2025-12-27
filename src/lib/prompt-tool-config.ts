@@ -1,9 +1,9 @@
 import type { ConnectorType } from "@/lib/types";
 
-export type ToolPrompt = {
+export interface ToolPrompt {
   readonly content: string;
   readonly connectors: readonly ConnectorType[];
-};
+}
 
 /**
  * Tool-specific prompt configurations that are dynamically injected into sub-agents

@@ -4,17 +4,17 @@ import type { ConnectorType } from "./types";
 // Re-export the authoritative SUPPORTED_CONNECTORS from tools.ts
 export const SUPPORTED_CONNECTORS = TOOLS_SUPPORTED_CONNECTORS;
 
-export type ConnectorStatusLists = {
+export interface ConnectorStatusLists {
   enabled: string[];
   disabled: string[];
   notConnected: string[];
-};
+}
 
-export type Connector = {
+export interface Connector {
   type: ConnectorType;
   isConnected: boolean;
   enabled?: boolean;
-};
+}
 
 /**
  * Calculate connector status lists from user's connector data

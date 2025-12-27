@@ -10,12 +10,12 @@ import { isDeepEqual } from "../utils";
 const MAX_HISTORY_COUNT = 30;
 const HISTORY_OVERRIDE_THRESHOLD_MS = 500; // 0.5 seconds
 
-type ThemeHistoryEntry = {
+interface ThemeHistoryEntry {
   state: ThemeEditorState;
   timestamp: number;
-};
+}
 
-type EditorStore = {
+interface EditorStore {
   themeState: ThemeEditorState;
   themeCheckpoint: ThemeEditorState | null;
   history: ThemeHistoryEntry[];
@@ -32,7 +32,7 @@ type EditorStore = {
   redo: () => void;
   canUndo: () => boolean;
   canRedo: () => boolean;
-};
+}
 
 // Helper function to safely detect system preference on client-side only
 const getSystemPreference = (): "light" | "dark" => {

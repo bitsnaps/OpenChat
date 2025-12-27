@@ -10,10 +10,10 @@ import type { Doc } from "@/convex/_generated/dataModel";
 // Types
 // =============================================================================
 
-export type AuthContext = {
+export interface AuthContext {
   token: string;
   client: ConvexHttpClient;
-};
+}
 
 export type AuthContextWithUser = AuthContext & {
   user: Doc<"users">;

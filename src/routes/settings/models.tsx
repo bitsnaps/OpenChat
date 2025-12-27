@@ -51,10 +51,10 @@ export const Route = createFileRoute("/settings/models")({
   component: ModelsSettingsPage,
 });
 
-type FeatureInfo = {
+interface FeatureInfo {
   label: string;
   icon: React.ComponentType<{ className?: string }>;
-};
+}
 
 const FEATURE_INFO: Record<string, FeatureInfo> = {
   "file-upload": {

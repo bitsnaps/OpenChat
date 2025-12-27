@@ -110,7 +110,7 @@ export function CustomizationSettingsPage() {
         return;
       }
 
-      const anchor = (e.target as HTMLElement).closest("a") as HTMLAnchorElement | null;
+      const anchor = (e.target as HTMLElement).closest("a");
       if (!anchor) {
         return;
       }

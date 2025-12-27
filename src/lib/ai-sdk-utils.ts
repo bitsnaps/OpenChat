@@ -15,12 +15,12 @@ type MessageParts = Array<TextUIPart | ReasoningUIPart | ToolUIPart | SourceUrlU
 const CONVEX_STORAGE_ID_REGEX = /^[a-z0-9]{32}$/;
 
 // AI SDK Attachment type
-export type Attachment = {
+export interface Attachment {
   name?: string;
   contentType?: string;
   url: string;
   storageId?: string;
-};
+}
 
 /**
  * Extract attachment objects from FileParts
@@ -111,7 +111,7 @@ export function createPartsFromAIResponse(
   if (toolInvocations && toolInvocations.length > 0) {
     for (const invocation of toolInvocations) {
       parts.push({
-        type: `tool-${invocation.toolName}` as `tool-${string}`,
+        type: `tool-${invocation.toolName}`,
         toolCallId: invocation.toolCallId,
         state: invocation.state,
         input: invocation.args,

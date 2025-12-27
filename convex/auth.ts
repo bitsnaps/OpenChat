@@ -85,7 +85,7 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
           ? {
               ...baseFields,
               name: profile.name as string | undefined,
-              email: profile.email as string | undefined,
+              email: profile.email,
               image: (profile.picture || profile.image) as string | undefined,
               // OAuth providers have already verified the email
               emailVerificationTime: Date.now(),

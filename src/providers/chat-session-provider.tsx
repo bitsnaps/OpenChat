@@ -9,11 +9,11 @@ import {
   useState,
 } from "react";
 
-type ChatSessionContextType = {
+interface ChatSessionContextType {
   chatId: string | null;
   isDeleting: boolean;
   setIsDeleting: Dispatch<SetStateAction<boolean>>;
-};
+}
 
 const ChatSessionContext = createContext<ChatSessionContextType>({
   chatId: null,

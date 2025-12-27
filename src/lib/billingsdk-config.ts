@@ -1,4 +1,4 @@
-export type Plan = {
+export interface Plan {
   id: string;
   title: string;
   description: string;
@@ -14,16 +14,16 @@ export type Plan = {
     icon: string;
     iconColor?: string;
   }[];
-};
+}
 
-export type CurrentPlan = {
+export interface CurrentPlan {
   plan: Plan;
   type: "monthly" | "yearly" | "custom";
   price?: string;
   nextBillingDate: string;
   paymentMethod: string;
   status: "active" | "inactive" | "past_due" | "cancelled";
-};
+}
 
 export const plans: Plan[] = [
   {

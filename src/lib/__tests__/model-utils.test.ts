@@ -20,9 +20,8 @@ describe("model-utils", () => {
       const modelWithoutReasoning = MODELS.find(
         (m) => !m.features?.some((f) => f.id === "reasoning"),
       );
-      if (modelWithoutReasoning) {
-        expect(supportsReasoningEffort(modelWithoutReasoning.id)).toBe(false);
-      }
+      expect(modelWithoutReasoning).toBeDefined();
+      expect(supportsReasoningEffort(modelWithoutReasoning!.id)).toBe(false);
     });
 
     it("returns true for models with reasoning + supportsEffort", () => {
@@ -30,9 +29,8 @@ describe("model-utils", () => {
       const modelWithReasoning = MODELS.find((m) =>
         m.features?.some((f) => f.id === "reasoning" && f.enabled && f.supportsEffort),
       );
-      if (modelWithReasoning) {
-        expect(supportsReasoningEffort(modelWithReasoning.id)).toBe(true);
-      }
+      expect(modelWithReasoning).toBeDefined();
+      expect(supportsReasoningEffort(modelWithReasoning!.id)).toBe(true);
     });
 
     it("returns false for reasoning models without supportsEffort", () => {
@@ -40,9 +38,8 @@ describe("model-utils", () => {
       const modelWithBasicReasoning = MODELS.find((m) =>
         m.features?.some((f) => f.id === "reasoning" && f.enabled && !f.supportsEffort),
       );
-      if (modelWithBasicReasoning) {
-        expect(supportsReasoningEffort(modelWithBasicReasoning.id)).toBe(false);
-      }
+      expect(modelWithBasicReasoning).toBeDefined();
+      expect(supportsReasoningEffort(modelWithBasicReasoning!.id)).toBe(false);
     });
   });
 
@@ -55,9 +52,8 @@ describe("model-utils", () => {
     it("returns preferred model when it exists", () => {
       const validator = createModelValidator();
       const validModel = MODELS[0]?.id;
-      if (validModel) {
-        expect(validator(validModel)).toBe(validModel);
-      }
+      expect(validModel).toBeDefined();
+      expect(validator(validModel)).toBe(validModel);
     });
 
     it("returns default model for non-existent model", () => {
@@ -68,17 +64,15 @@ describe("model-utils", () => {
     it("returns default model when preferred is disabled", () => {
       const validator = createModelValidator();
       const validModel = MODELS[0]?.id;
-      if (validModel) {
-        expect(validator(validModel, [validModel])).toBe(MODEL_DEFAULT);
-      }
+      expect(validModel).toBeDefined();
+      expect(validator(validModel, [validModel])).toBe(MODEL_DEFAULT);
     });
 
     it("returns preferred model when not in disabled list", () => {
       const validator = createModelValidator();
       const validModel = MODELS[0]?.id;
-      if (validModel) {
-        expect(validator(validModel, ["some-other-model"])).toBe(validModel);
-      }
+      expect(validModel).toBeDefined();
+      expect(validator(validModel, ["some-other-model"])).toBe(validModel);
     });
   });
 
@@ -89,21 +83,19 @@ describe("model-utils", () => {
 
     it("returns model for existing id", () => {
       const model = MODELS[0];
-      if (model) {
-        const result = getModelById(model.id);
-        expect(result).toBeDefined();
-        expect(result?.id).toBe(model.id);
-      }
+      expect(model).toBeDefined();
+      const result = getModelById(model.id);
+      expect(result).toBeDefined();
+      expect(result?.id).toBe(model.id);
     });
 
     it("returns model with all expected properties", () => {
       const model = MODELS[0];
-      if (model) {
-        const result = getModelById(model.id);
-        expect(result?.id).toBeDefined();
-        expect(result?.name).toBeDefined();
-        expect(result?.provider).toBeDefined();
-      }
+      expect(model).toBeDefined();
+      const result = getModelById(model.id);
+      expect(result?.id).toBeDefined();
+      expect(result?.name).toBeDefined();
+      expect(result?.provider).toBeDefined();
     });
   });
 
@@ -114,16 +106,14 @@ describe("model-utils", () => {
 
     it("returns true for premium models", () => {
       const premiumModel = MODELS.find((m) => m.premium === true);
-      if (premiumModel) {
-        expect(isModelPremium(premiumModel.id)).toBe(true);
-      }
+      expect(premiumModel).toBeDefined();
+      expect(isModelPremium(premiumModel!.id)).toBe(true);
     });
 
     it("returns false for non-premium models", () => {
       const nonPremiumModel = MODELS.find((m) => !m.premium);
-      if (nonPremiumModel) {
-        expect(isModelPremium(nonPremiumModel.id)).toBe(false);
-      }
+      expect(nonPremiumModel).toBeDefined();
+      expect(isModelPremium(nonPremiumModel!.id)).toBe(false);
     });
   });
 
@@ -134,16 +124,14 @@ describe("model-utils", () => {
 
     it("returns true for models requiring user API key", () => {
       const userKeyModel = MODELS.find((m) => m.apiKeyUsage?.userKeyOnly === true);
-      if (userKeyModel) {
-        expect(requiresUserApiKey(userKeyModel.id)).toBe(true);
-      }
+      expect(userKeyModel).toBeDefined();
+      expect(requiresUserApiKey(userKeyModel!.id)).toBe(true);
     });
 
     it("returns false for models not requiring user API key", () => {
       const noUserKeyModel = MODELS.find((m) => !m.apiKeyUsage?.userKeyOnly);
-      if (noUserKeyModel) {
-        expect(requiresUserApiKey(noUserKeyModel.id)).toBe(false);
-      }
+      expect(noUserKeyModel).toBeDefined();
+      expect(requiresUserApiKey(noUserKeyModel!.id)).toBe(false);
     });
   });
 
@@ -154,29 +142,25 @@ describe("model-utils", () => {
 
     it("returns provider for existing model", () => {
       const model = MODELS[0];
-      if (model) {
-        const provider = getModelProvider(model.id);
-        expect(provider).toBeDefined();
-        expect(typeof provider).toBe("string");
-      }
+      expect(model).toBeDefined();
+      const provider = getModelProvider(model.id);
+      expect(provider).toBeDefined();
+      expect(typeof provider).toBe("string");
     });
 
     it("returns correct provider for different models", () => {
       // Test a few known providers
       const openaiModel = MODELS.find((m) => m.provider === "openai");
-      if (openaiModel) {
-        expect(getModelProvider(openaiModel.id)).toBe("openai");
-      }
+      expect(openaiModel).toBeDefined();
+      expect(getModelProvider(openaiModel!.id)).toBe("openai");
 
       const anthropicModel = MODELS.find((m) => m.provider === "anthropic");
-      if (anthropicModel) {
-        expect(getModelProvider(anthropicModel.id)).toBe("anthropic");
-      }
+      expect(anthropicModel).toBeDefined();
+      expect(getModelProvider(anthropicModel!.id)).toBe("anthropic");
 
       const googleModel = MODELS.find((m) => m.provider === "gemini");
-      if (googleModel) {
-        expect(getModelProvider(googleModel.id)).toBe("gemini");
-      }
+      expect(googleModel).toBeDefined();
+      expect(getModelProvider(googleModel!.id)).toBe("gemini");
     });
   });
 });

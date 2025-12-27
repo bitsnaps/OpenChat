@@ -5,7 +5,7 @@
  * preventing fork operations when content integrity would be compromised.
  */
 
-export type RedactedContentDetails = {
+export interface RedactedContentDetails {
   /** Whether any redacted content was found */
   hasRedactedContent: boolean;
   /** Number of redacted files found */
@@ -16,7 +16,7 @@ export type RedactedContentDetails = {
   redactedParts: number;
   /** Human-readable description of what's redacted */
   description: string;
-};
+}
 
 /**
  * Detects redacted content in a message's parts array

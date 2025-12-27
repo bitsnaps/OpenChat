@@ -14,15 +14,15 @@ export const Route = createFileRoute("/settings/connectors")({
   component: ConnectorsSettingsPage,
 });
 
-type SimpleConnectionState = {
+interface SimpleConnectionState {
   status: "idle" | "connecting";
-};
+}
 
-type ConnectorCategory = {
+interface ConnectorCategory {
   name: string;
   description: string;
   types: ConnectorType[];
-};
+}
 
 const CONNECTOR_CATEGORIES: ConnectorCategory[] = [
   {

@@ -194,7 +194,7 @@ const mapReasoningEffortToProviderConfig = (
   }
 };
 
-type ChatRequest = {
+interface ChatRequest {
   messages: UIMessage[];
   chatId: Id<"chats">;
   model: string;
@@ -204,7 +204,7 @@ type ChatRequest = {
   enableSearch?: boolean;
   reasoningEffort?: ReasoningEffort;
   userInfo?: { timezone?: string };
-};
+}
 
 /**
  * Helper function to check if a model should have thinking enabled
