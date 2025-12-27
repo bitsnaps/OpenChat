@@ -16,8 +16,8 @@
         "@ai-sdk/openai-compatible": "^1.0.29",
         "@ai-sdk/react": "^2.0.118",
         "@auth/core": "0.37.0",
-        "@composio/core": "0.3.1",
-        "@composio/vercel": "0.3.1",
+        "@composio/core": "^0.3.3",
+        "@composio/vercel": "^0.3.3",
         "@convex-dev/auth": "^0.0.90",
         "@convex-dev/polar": "^0.7.3",
         "@convex-dev/r2": "^0.8.1",
@@ -64,12 +64,12 @@
         "@tanstack/react-devtools": "0.7.11",
         "@tanstack/react-query": "^5.90.12",
         "@tanstack/react-query-devtools": "^5.91.1",
-        "@tanstack/react-router": "^1.143.11",
-        "@tanstack/react-router-devtools": "^1.143.11",
-        "@tanstack/react-router-ssr-query": "^1.143.11",
-        "@tanstack/react-start": "^1.143.11",
+        "@tanstack/react-router": "^1.144.0",
+        "@tanstack/react-router-devtools": "^1.144.0",
+        "@tanstack/react-router-ssr-query": "^1.144.0",
+        "@tanstack/react-start": "^1.144.0",
         "@tanstack/react-virtual": "^3.13.13",
-        "@tanstack/router-plugin": "^1.143.11",
+        "@tanstack/router-plugin": "^1.144.0",
         "@upstash/redis": "^1.36.0",
         "@vercel/analytics": "^1.6.1",
         "@vercel/speed-insights": "^1.3.1",
@@ -119,7 +119,7 @@
         "@types/node": "^25.0.3",
         "@types/react": "19.2.7",
         "@types/react-dom": "19.2.3",
-        "@typescript/native-preview": "^7.0.0-dev.20251226.1",
+        "@typescript/native-preview": "^7.0.0-dev.20251227.1",
         "@vitejs/plugin-react": "^5.1.2",
         "@vitest/ui": "^4.0.16",
         "jsdom": "^27.4.0",
@@ -503,13 +503,13 @@
 
     "@clack/prompts": ["@clack/prompts@0.11.0", "", { "dependencies": { "@clack/core": "0.5.0", "picocolors": "^1.0.0", "sisteransi": "^1.0.5" } }, "sha512-pMN5FcrEw9hUkZA4f+zLlzivQSeQf5dRGJjSUbvVYDLvpKCdQx5OaknvKzgbtXOizhP+SJJJjqEbOe55uKKfAw=="],
 
-    "@composio/client": ["@composio/client@0.1.0-alpha.50", "", {}, "sha512-+7LE16XL2D0Z90y0PdBGLDyi9qi8P4TyqTqj2Kwa930rhDaZOkFMmAx9BbjXmx0KWjqpSxwxszcW7FgNpX5jqw=="],
+    "@composio/client": ["@composio/client@0.1.0-alpha.52", "", {}, "sha512-IFPa77R/v4JUX0QeRHRTEkJCBZ+OqMQBh1rIn4Nv5PIP1eP3sZqxlTYJUKPS4qLNnwBJRD+Vn7/jUs5J7pdv5g=="],
 
-    "@composio/core": ["@composio/core@0.3.1", "", { "dependencies": { "@composio/client": "0.1.0-alpha.50", "@composio/json-schema-to-zod": "0.1.19", "@types/json-schema": "^7.0.15", "chalk": "^4.1.2", "openai": "^5.16.0", "pusher-js": "^8.4.0", "semver": "^7.7.2", "uuid": "^13.0.0", "zod-to-json-schema": "^3.25.0" }, "peerDependencies": { "zod": "^3.25 || ^4" } }, "sha512-h3SPhpaOSBdKGgWLRDMaEdrMNkn1sw6i+0BIddtE6C4F05UfFagne+lqKLmXWMfCDHfbmfGThsPCPfBJY6Jcaw=="],
+    "@composio/core": ["@composio/core@0.3.3", "", { "dependencies": { "@composio/client": "0.1.0-alpha.52", "@composio/json-schema-to-zod": "0.1.19", "@types/json-schema": "^7.0.15", "chalk": "^4.1.2", "openai": "^5.16.0", "pusher-js": "^8.4.0", "semver": "^7.7.2", "uuid": "^13.0.0", "zod-to-json-schema": "^3.25.0" }, "peerDependencies": { "zod": "^3.25 || ^4" } }, "sha512-IFgGOf0qyDDgUp1Tf7b4i4PzhdJGOprDZwVC4urN73hFxjtxAcdPXY86RDYEh0RKgRoYduv+lJRR6l8+qGvO6Q=="],
 
     "@composio/json-schema-to-zod": ["@composio/json-schema-to-zod@0.1.19", "", { "peerDependencies": { "zod": ">=3.25.76 <4 || >=4.1 <5" } }, "sha512-OynnORVWjsqDv13EvFa4Bb+B1SzBqpkWGi6qXm4vpB3EG65o3T9FbhDCqWB3ZufnMmH1T/NYS526O0lnn2LoCQ=="],
 
-    "@composio/vercel": ["@composio/vercel@0.3.1", "", { "peerDependencies": { "@composio/core": "0.3.1", "ai": "5.0.52" } }, "sha512-eg+YyuRdtuKY5ssl9rn5uFVVyPymsDeKJORosdpQm1yhxtdOmOHl0QeO1uQwtnPLixX/CH2e2cn310rlPrbztQ=="],
+    "@composio/vercel": ["@composio/vercel@0.3.3", "", { "peerDependencies": { "@composio/core": "0.3.3", "ai": "5.0.52" } }, "sha512-y/7ILAqBV2HKTHCYxczt+YQfxLjuagrpLsZy3fYZQHvRs3sAYEYovxpOYhBDuj4wlXt8k4WoLBrspKLVbkObXQ=="],
 
     "@convex-dev/action-retrier": ["@convex-dev/action-retrier@0.3.0", "", { "peerDependencies": { "convex": "^1.24.8" } }, "sha512-opBNsgOPSuVY3qSARNub98XqPzSpSS7Jga0oGeWFhO+DcWBMt2gD3ssUeEA1Gi7wTNiZBX+T6OBfBnqMfv6Tuw=="],
 
