@@ -1,5 +1,30 @@
 // Inline script to prevent theme flash - runs before React hydration
 // This reads from the Zustand persisted store and applies the dark class and CSS variables immediately
+
+import type { QueryClient } from "@tanstack/react-query";
+
+import { TanStackDevtools } from "@tanstack/react-devtools";
+import { createRootRouteWithContext, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
+import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
+import { AuthGuard } from "@/components/auth/auth-guard";
+import LayoutApp from "@/components/layout/layout-app";
+import { StructuredData } from "@/components/structured-data";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { APP_BASE_URL, APP_DESCRIPTION, APP_NAME, META_TITLE } from "@/lib/config";
+import { SidebarProvider } from "@/providers/sidebar-provider";
+import { ConvexProvider } from "../integrations/convex/provider";
+import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
+import appCss from "../styles.css?url";
+
+// Import fonts
+import "@fontsource/geist-sans/400.css";
+import "@fontsource/geist-sans/500.css";
+import "@fontsource/geist-sans/600.css";
+import "@fontsource/geist-sans/700.css";
+import "@fontsource/geist-mono/400.css";
+
 const themeInitScript = `
 (function() {
   try {
@@ -55,200 +80,162 @@ const themeInitScript = `
 })();
 `;
 
-import { TanStackDevtools } from "@tanstack/react-devtools";
-import {
-	createRootRouteWithContext,
-	HeadContent,
-	Outlet,
-	Scripts,
-} from "@tanstack/react-router";
-import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/react";
-import { AuthGuard } from "@/components/auth/auth-guard";
-import LayoutApp from "@/components/layout/layout-app";
-import { StructuredData } from "@/components/structured-data";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { SidebarProvider } from "@/providers/sidebar-provider";
-import { ConvexProvider } from "../integrations/convex/provider";
-import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
-
-import appCss from "../styles.css?url";
-
-// Import fonts
-import "@fontsource/geist-sans/400.css";
-import "@fontsource/geist-sans/500.css";
-import "@fontsource/geist-sans/600.css";
-import "@fontsource/geist-sans/700.css";
-import "@fontsource/geist-mono/400.css";
-
-import type { QueryClient } from "@tanstack/react-query";
-import {
-	APP_BASE_URL,
-	APP_DESCRIPTION,
-	APP_NAME,
-	META_TITLE,
-} from "@/lib/config";
-
-type MyRouterContext = {
-	queryClient: QueryClient;
-};
+interface MyRouterContext {
+  queryClient: QueryClient;
+}
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
-	head: () => ({
-		meta: [
-			{
-				charSet: "utf-8",
-			},
-			{
-				name: "viewport",
-				content: "width=device-width, initial-scale=1",
-			},
-			{
-				title: META_TITLE,
-			},
-			{
-				name: "description",
-				content: APP_DESCRIPTION,
-			},
-			{
-				property: "og:title",
-				content: META_TITLE,
-			},
-			{
-				property: "og:description",
-				content: APP_DESCRIPTION,
-			},
-			{
-				property: "og:url",
-				content: APP_BASE_URL,
-			},
-			{
-				property: "og:site_name",
-				content: APP_NAME,
-			},
-			{
-				property: "og:type",
-				content: "website",
-			},
-			{
-				property: "og:image",
-				content: "https://assets.oschat.ai/oc-opengraph-image.png",
-			},
-			{
-				name: "twitter:card",
-				content: "summary_large_image",
-			},
-			{
-				name: "twitter:title",
-				content: META_TITLE,
-			},
-			{
-				name: "twitter:description",
-				content: APP_DESCRIPTION,
-			},
-			{
-				name: "twitter:image",
-				content: "https://assets.oschat.ai/oc-opengraph-image.png",
-			},
-			{
-				name: "mobile-web-app-capable",
-				content: "yes",
-			},
-			{
-				name: "apple-mobile-web-app-capable",
-				content: "yes",
-			},
-			{
-				name: "apple-mobile-web-app-status-bar-style",
-				content: "black-translucent",
-			},
-			{
-				name: "apple-mobile-web-app-title",
-				content: "OS Chat",
-			},
-		],
-		links: [
-			{
-				rel: "stylesheet",
-				href: appCss,
-			},
-			{
-				rel: "icon",
-				href: "/favicon.ico",
-			},
-			{
-				rel: "apple-touch-icon",
-				href: "/apple-icon.png",
-			},
-			{
-				rel: "manifest",
-				href: "/manifest.json",
-			},
-		],
-	}),
+  head: () => ({
+    meta: [
+      {
+        charSet: "utf-8",
+      },
+      {
+        name: "viewport",
+        content: "width=device-width, initial-scale=1",
+      },
+      {
+        title: META_TITLE,
+      },
+      {
+        name: "description",
+        content: APP_DESCRIPTION,
+      },
+      {
+        property: "og:title",
+        content: META_TITLE,
+      },
+      {
+        property: "og:description",
+        content: APP_DESCRIPTION,
+      },
+      {
+        property: "og:url",
+        content: APP_BASE_URL,
+      },
+      {
+        property: "og:site_name",
+        content: APP_NAME,
+      },
+      {
+        property: "og:type",
+        content: "website",
+      },
+      {
+        property: "og:image",
+        content: "https://assets.oschat.ai/oc-opengraph-image.png",
+      },
+      {
+        name: "twitter:card",
+        content: "summary_large_image",
+      },
+      {
+        name: "twitter:title",
+        content: META_TITLE,
+      },
+      {
+        name: "twitter:description",
+        content: APP_DESCRIPTION,
+      },
+      {
+        name: "twitter:image",
+        content: "https://assets.oschat.ai/oc-opengraph-image.png",
+      },
+      {
+        name: "mobile-web-app-capable",
+        content: "yes",
+      },
+      {
+        name: "apple-mobile-web-app-capable",
+        content: "yes",
+      },
+      {
+        name: "apple-mobile-web-app-status-bar-style",
+        content: "black-translucent",
+      },
+      {
+        name: "apple-mobile-web-app-title",
+        content: "OS Chat",
+      },
+    ],
+    links: [
+      {
+        rel: "stylesheet",
+        href: appCss,
+      },
+      {
+        rel: "icon",
+        href: "/favicon.ico",
+      },
+      {
+        rel: "apple-touch-icon",
+        href: "/apple-icon.png",
+      },
+      {
+        rel: "manifest",
+        href: "/manifest.json",
+      },
+    ],
+  }),
 
-	shellComponent: RootDocument,
-	component: RootComponent,
+  shellComponent: RootDocument,
+  component: RootComponent,
 });
 
 function RootComponent() {
-	return <Outlet />;
+  return <Outlet />;
 }
 
 function RootDocument({ children }: { children: React.ReactNode }) {
-	const isDev = import.meta.env.DEV;
+  const isDev = import.meta.env.DEV;
 
-	return (
-		<html lang="en" suppressHydrationWarning>
-			<head>
-				{/* Theme initialization script - prevents flash of wrong theme */}
-				<script
-					// biome-ignore lint/security/noDangerouslySetInnerHtml: Required for blocking theme script before hydration
-					dangerouslySetInnerHTML={{ __html: themeInitScript }}
-				/>
-				<HeadContent />
-				{/* Umami Analytics - only in production when configured */}
-				{!isDev &&
-					import.meta.env.VITE_UMAMI_SCRIPT_URL &&
-					import.meta.env.VITE_UMAMI_WEBSITE_ID && (
-						<script
-							data-website-id={import.meta.env.VITE_UMAMI_WEBSITE_ID}
-							defer
-							src={import.meta.env.VITE_UMAMI_SCRIPT_URL}
-						/>
-					)}
-				<StructuredData type="homepage" />
-			</head>
-			<body className="font-sans antialiased">
-				<ConvexProvider>
-					<TooltipProvider>
-						<AuthGuard>
-							<SidebarProvider>
-								<LayoutApp>{children}</LayoutApp>
-							</SidebarProvider>
-							{/* Vercel Analytics */}
-							<Analytics />
-							<SpeedInsights />
-						</AuthGuard>
-					</TooltipProvider>
-					{isDev === true && (
-						<TanStackDevtools
-							config={{
-								position: "bottom-right",
-							}}
-							plugins={[
-								{
-									name: "Tanstack Router",
-									render: <TanStackRouterDevtoolsPanel />,
-								},
-								TanStackQueryDevtools,
-							]}
-						/>
-					)}
-				</ConvexProvider>
-				<Scripts />
-			</body>
-		</html>
-	);
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Theme initialization script - prevents flash of wrong theme */}
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        <HeadContent />
+        {/* Umami Analytics - only in production when configured */}
+        {!isDev &&
+          import.meta.env.VITE_UMAMI_SCRIPT_URL &&
+          import.meta.env.VITE_UMAMI_WEBSITE_ID && (
+            <script
+              data-website-id={import.meta.env.VITE_UMAMI_WEBSITE_ID}
+              defer
+              src={import.meta.env.VITE_UMAMI_SCRIPT_URL}
+            />
+          )}
+        <StructuredData type="homepage" />
+      </head>
+      <body className="font-sans antialiased">
+        <ConvexProvider>
+          <TooltipProvider>
+            <AuthGuard>
+              <SidebarProvider>
+                <LayoutApp>{children}</LayoutApp>
+              </SidebarProvider>
+              {/* Vercel Analytics */}
+              <Analytics />
+              <SpeedInsights />
+            </AuthGuard>
+          </TooltipProvider>
+          {isDev === true && (
+            <TanStackDevtools
+              config={{
+                position: "bottom-right",
+              }}
+              plugins={[
+                {
+                  name: "Tanstack Router",
+                  render: <TanStackRouterDevtoolsPanel />,
+                },
+                TanStackQueryDevtools,
+              ]}
+            />
+          )}
+        </ConvexProvider>
+        <Scripts />
+      </body>
+    </html>
+  );
 }

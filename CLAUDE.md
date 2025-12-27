@@ -39,7 +39,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Icons**: Phosphor Icons, Lucide React
 - **UI Components**: Shadcn/UI, Radix UI primitives
 - **Testing**: Vitest
-- **Linting**: Ultracite (Biome-based)
+- **Linting**: oxlint (with type-aware linting via tsgolint)
+- **Formatting**: oxfmt
 - **Type Checking**: tsgo (TypeScript native compiler)
 - **Analytics**: PostHog, Vercel Analytics
 - **Caching**: Upstash Redis
@@ -55,8 +56,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Use Bun for all package management and scripts (`bun install`).
 - Follow Convex guidelines in `agent_rules/convex_rules.md`.
 - Use shadcn/ui components as documented. Do not modify library code directly. Prefer composition over modification. Follow guidelines in `agent_rules/shadcn.md` when creating or editing UI components.
-- Use Ultracite (Biome) for all linting and formatting. Run `bun run lint` before committing. Do not use other linters or formatters (like ESLint or Prettier).
-- Ensure accessibility: use semantic HTML, provide alt text for images, use ARIA attributes appropriately, and follow accessibility rules in `agent_rules/ultracite.md`.
+- Use oxlint for linting and oxfmt for formatting. Run `bun run lint` and `bun run format` before committing. Do not use other linters or formatters (like ESLint or Prettier).
+- Ensure accessibility: use semantic HTML, provide alt text for images, and follow accessibility guidelines in `agent_rules/design_guidelines.md`.
 - Use `Icon` suffix for Phosphor React icons (e.g., `CaretIcon` not `Caret`).
 - Access environment variables directly via `import.meta.env` for client-side and `process.env` for server-side code.
 - Before using `useEffect`, always read https://react.dev/learn/you-might-not-need-an-effect to ensure it's actually needed. Most effects can be replaced with event handlers, useMemo, or derived state.
@@ -110,17 +111,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Development Commands
 
-| Command             | Description                             |
-| ------------------- | --------------------------------------- |
-| `bun install`       | Install dependencies                    |
-| `bun dev`           | Start development server on port 3000   |
-| `bun build`         | Build for production                    |
-| `bun preview`       | Preview production build                |
-| `bun run test`      | Run tests with Vitest                   |
-| `bun run lint`      | Run Ultracite linter                    |
-| `bun run format`    | Format code with Ultracite              |
-| `bun run typecheck` | Run TypeScript type checking with tsgo  |
-| `bunx convex dev`   | Run Convex development server           |
+| Command                | Description                                     |
+| ---------------------- | ----------------------------------------------- |
+| `bun install`          | Install dependencies                            |
+| `bun dev`              | Start development server on port 3000           |
+| `bun build`            | Build for production                            |
+| `bun preview`          | Preview production build                        |
+| `bun run test`         | Run tests with Vitest                           |
+| `bun run lint`         | Run oxlint with type-aware linting and auto-fix |
+| `bun run format`       | Format code with oxfmt                          |
+| `bun run format:check` | Check formatting without writing changes        |
+| `bun run typecheck`    | Run TypeScript type checking with tsgo          |
+| `bunx convex dev`      | Run Convex development server                   |
 
 ## Quality Assurance
 
@@ -149,7 +151,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - `agent_rules/commit.md` - Read before making any commits
 - `agent_rules/convex_rules.md` - Read before working with Convex (database, auth, mutations, queries)
-- `agent_rules/ultracite.md` - Read before writing code to avoid lint errors
+- `agent_rules/oxc.md` - Read before writing code to avoid lint errors
 - `agent_rules/shadcn.md` - Read before creating or editing UI components
 - `agent_rules/design_guidelines.md` - Read before building any UI
 
@@ -158,4 +160,4 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Do what has been asked; nothing more, nothing less.
 - NEVER create files unless they're absolutely necessary for achieving your goal.
 - ALWAYS prefer editing an existing file to creating a new one.
-- NEVER proactively create documentation files (*.md) or README files. Only create documentation files if explicitly requested by the User.
+- NEVER proactively create documentation files (\*.md) or README files. Only create documentation files if explicitly requested by the User.

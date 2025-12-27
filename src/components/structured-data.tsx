@@ -142,7 +142,6 @@ export function StructuredData({
 
 	return (
 		<script
-			// biome-ignore lint/security/noDangerouslySetInnerHtml: Required for JSON-LD structured data per Next.js documentation
 			dangerouslySetInnerHTML={{
 				__html: JSON.stringify(combinedSchema, null, 0).replace(
 					/</g,

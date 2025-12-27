@@ -4,5 +4,5 @@ import Chat from "@/components/chat/chat";
 export const Route = createFileRoute("/")({ component: Home });
 
 function Home() {
-	return <Chat />;
+  return <Chat />;
 }

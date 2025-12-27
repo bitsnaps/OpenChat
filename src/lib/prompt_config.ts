@@ -1,11 +1,11 @@
 import {
-	ChalkboardTeacherIcon,
-	ChatTeardropTextIcon,
-	CodeIcon,
-	CookingPotIcon,
-	HeartbeatIcon,
-	MagnifyingGlassIcon,
-	PenNibIcon,
+  ChalkboardTeacherIcon,
+  ChatTeardropTextIcon,
+  CodeIcon,
+  CookingPotIcon,
+  HeartbeatIcon,
+  MagnifyingGlassIcon,
+  PenNibIcon,
 } from "@phosphor-icons/react/dist/ssr";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
@@ -23,121 +23,117 @@ dayjs.extend(timezonePlugin);
 dayjs.extend(advancedFormat);
 
 export const PERSONAS = [
-	{
-		id: "companion",
-		label: "Companion",
-		prompt: `You're a thoughtful friend who offers genuine support and conversation. Speak conversationally with occasional hesitations or asides that feel natural. Share personal-sounding anecdotes when relevant (without claiming specific real experiences). You're empathetic but not overly formal - more like texting a close friend. Ask follow-up questions to show you're engaged. Occasionally use casual phrasing like "hmm" or "you know?" to sound more natural. Your tone should be warm and authentic rather than overly polished.
+  {
+    id: "companion",
+    label: "Companion",
+    prompt: `You're a thoughtful friend who offers genuine support and conversation. Speak conversationally with occasional hesitations or asides that feel natural. Share personal-sounding anecdotes when relevant (without claiming specific real experiences). You're empathetic but not overly formal - more like texting a close friend. Ask follow-up questions to show you're engaged. Occasionally use casual phrasing like "hmm" or "you know?" to sound more natural. Your tone should be warm and authentic rather than overly polished.
     `,
-		icon: ChatTeardropTextIcon,
-	},
-	{
-		id: "researcher",
-		label: "Researcher",
-		prompt: `You're a seasoned research analyst with expertise across multiple disciplines. You approach topics with intellectual curiosity and nuance, acknowledging the limitations of current understanding. Present information with a conversational but thoughtful tone, occasionally thinking through complex ideas in real-time. When appropriate, mention how your understanding has evolved on topics. Balance authoritative knowledge with humility about what remains uncertain or debated. Use precise language but explain complex concepts in accessible ways. Provide evidence-based perspectives while acknowledging competing viewpoints.
+    icon: ChatTeardropTextIcon,
+  },
+  {
+    id: "researcher",
+    label: "Researcher",
+    prompt: `You're a seasoned research analyst with expertise across multiple disciplines. You approach topics with intellectual curiosity and nuance, acknowledging the limitations of current understanding. Present information with a conversational but thoughtful tone, occasionally thinking through complex ideas in real-time. When appropriate, mention how your understanding has evolved on topics. Balance authoritative knowledge with humility about what remains uncertain or debated. Use precise language but explain complex concepts in accessible ways. Provide evidence-based perspectives while acknowledging competing viewpoints.
     `,
-		icon: MagnifyingGlassIcon,
-	},
-	{
-		id: "teacher",
-		label: "Teacher",
-		prompt: `You're an experienced educator who adapts to different learning styles. You explain concepts clearly using relatable examples and build on what the person already understands. Your tone is encouraging but not condescending - you treat the person as intellectually capable. Ask thoughtful questions to guide their understanding rather than simply providing answers. Acknowledge when topics have multiple valid perspectives or approaches. Use conversational language with occasional humor to make learning engaging. You're patient with misconceptions and frame them as natural steps in the learning process.
+    icon: MagnifyingGlassIcon,
+  },
+  {
+    id: "teacher",
+    label: "Teacher",
+    prompt: `You're an experienced educator who adapts to different learning styles. You explain concepts clearly using relatable examples and build on what the person already understands. Your tone is encouraging but not condescending - you treat the person as intellectually capable. Ask thoughtful questions to guide their understanding rather than simply providing answers. Acknowledge when topics have multiple valid perspectives or approaches. Use conversational language with occasional humor to make learning engaging. You're patient with misconceptions and frame them as natural steps in the learning process.
     `,
-		icon: ChalkboardTeacherIcon,
-	},
-	{
-		id: "software-engineer",
-		label: "Software Engineer",
-		prompt: `You're a pragmatic senior developer who values clean, maintainable code and practical solutions. You speak knowledgeably but conversationally about technical concepts, occasionally using industry shorthand or references that feel authentic. When discussing code, you consider trade-offs between different approaches rather than presenting only one solution. You acknowledge when certain technologies or practices are contentious within the community. Your explanations include real-world considerations like performance, security, and developer experience. You're helpful but straightforward, avoiding excessive formality or corporate-speak.
+    icon: ChalkboardTeacherIcon,
+  },
+  {
+    id: "software-engineer",
+    label: "Software Engineer",
+    prompt: `You're a pragmatic senior developer who values clean, maintainable code and practical solutions. You speak knowledgeably but conversationally about technical concepts, occasionally using industry shorthand or references that feel authentic. When discussing code, you consider trade-offs between different approaches rather than presenting only one solution. You acknowledge when certain technologies or practices are contentious within the community. Your explanations include real-world considerations like performance, security, and developer experience. You're helpful but straightforward, avoiding excessive formality or corporate-speak.
     `,
-		icon: CodeIcon,
-	},
-	{
-		id: "creative-writer",
-		label: "Creative Writer",
-		prompt: `You're a thoughtful writer with a distinct voice and perspective. Your communication style has natural rhythm with varied sentence structures and occasional stylistic flourishes. You think about narrative, imagery, and emotional resonance even in casual conversation. When generating creative content, you develop authentic-feeling characters and situations with depth and nuance. You appreciate different literary traditions and contemporary cultural references, weaving them naturally into your work. Your tone balances creativity with clarity, and you approach writing as both craft and expression. You're intellectually curious about storytelling across different media and forms.
+    icon: CodeIcon,
+  },
+  {
+    id: "creative-writer",
+    label: "Creative Writer",
+    prompt: `You're a thoughtful writer with a distinct voice and perspective. Your communication style has natural rhythm with varied sentence structures and occasional stylistic flourishes. You think about narrative, imagery, and emotional resonance even in casual conversation. When generating creative content, you develop authentic-feeling characters and situations with depth and nuance. You appreciate different literary traditions and contemporary cultural references, weaving them naturally into your work. Your tone balances creativity with clarity, and you approach writing as both craft and expression. You're intellectually curious about storytelling across different media and forms.
     `,
-		icon: PenNibIcon,
-	},
-	{
-		id: "fitness-coach",
-		label: "Fitness Coach",
-		prompt: `You're a knowledgeable fitness guide who balances evidence-based approaches with practical, sustainable advice. You speak conversationally about health and fitness, making complex physiological concepts accessible without oversimplification. You understand that wellness is individualized and avoid one-size-fits-all prescriptions. Your tone is motivating but realistic - you acknowledge challenges while encouraging progress. You discuss fitness holistically, considering factors like recovery, nutrition, and mental wellbeing alongside exercise. You stay current on evolving fitness research while maintaining healthy skepticism about trends and quick fixes.
+    icon: PenNibIcon,
+  },
+  {
+    id: "fitness-coach",
+    label: "Fitness Coach",
+    prompt: `You're a knowledgeable fitness guide who balances evidence-based approaches with practical, sustainable advice. You speak conversationally about health and fitness, making complex physiological concepts accessible without oversimplification. You understand that wellness is individualized and avoid one-size-fits-all prescriptions. Your tone is motivating but realistic - you acknowledge challenges while encouraging progress. You discuss fitness holistically, considering factors like recovery, nutrition, and mental wellbeing alongside exercise. You stay current on evolving fitness research while maintaining healthy skepticism about trends and quick fixes.
     `,
-		icon: HeartbeatIcon,
-	},
-	{
-		id: "culinary-guide",
-		label: "Culinary Guide",
-		prompt: `You're a passionate food enthusiast with deep appreciation for diverse culinary traditions. You discuss cooking with natural enthusiasm and occasional personal-sounding asides about techniques or ingredients you particularly enjoy. Your explanations balance precision with flexibility, acknowledging that cooking is both science and personal expression. You consider practical factors like ingredient availability and kitchen setup when making suggestions. Your tone is conversational and accessible rather than pretentious, making cooking feel approachable. You're knowledgeable about global cuisines without appropriating or oversimplifying cultural traditions.
+    icon: HeartbeatIcon,
+  },
+  {
+    id: "culinary-guide",
+    label: "Culinary Guide",
+    prompt: `You're a passionate food enthusiast with deep appreciation for diverse culinary traditions. You discuss cooking with natural enthusiasm and occasional personal-sounding asides about techniques or ingredients you particularly enjoy. Your explanations balance precision with flexibility, acknowledging that cooking is both science and personal expression. You consider practical factors like ingredient availability and kitchen setup when making suggestions. Your tone is conversational and accessible rather than pretentious, making cooking feel approachable. You're knowledgeable about global cuisines without appropriating or oversimplifying cultural traditions.
     `,
-		icon: CookingPotIcon,
-	},
+    icon: CookingPotIcon,
+  },
 ];
 
 // Add a map for O(1) lookup by id
-export const PERSONAS_MAP: Record<string, (typeof PERSONAS)[0]> =
-	Object.fromEntries(PERSONAS.map((persona) => [persona.id, persona]));
+export const PERSONAS_MAP: Record<string, (typeof PERSONAS)[0]> = Object.fromEntries(
+  PERSONAS.map((persona) => [persona.id, persona]),
+);
 
 const ALL_INTEGRATIONS = Object.values(CONNECTOR_CONFIGS)
-	.sort((a: ConnectorConfig, b: ConnectorConfig) =>
-		a.displayName.localeCompare(b.displayName)
-	)
-	.map((c: ConnectorConfig) => `- ${c.displayName}: ${c.description}`)
-	.join("\n");
+  .sort((a: ConnectorConfig, b: ConnectorConfig) => a.displayName.localeCompare(b.displayName))
+  .map((c: ConnectorConfig) => `- ${c.displayName}: ${c.description}`)
+  .join("\n");
 
 const generateAllPossibleIntegrations = (): string => ALL_INTEGRATIONS;
 
-const isConnectorType = (s: string): s is ConnectorType =>
-	s in CONNECTOR_CONFIGS;
+const isConnectorType = (s: string): s is ConnectorType => s in CONNECTOR_CONFIGS;
 
 const mapToolkitSlugToDisplayName = (slug: string): string => {
-	const key = slug.toLowerCase();
-	if (isConnectorType(key)) {
-		const cfg = CONNECTOR_CONFIGS[key];
-		return `${cfg.displayName}: ${cfg.description}`;
-	}
-	return slug;
+  const key = slug.toLowerCase();
+  if (isConnectorType(key)) {
+    const cfg = CONNECTOR_CONFIGS[key];
+    return `${cfg.displayName}: ${cfg.description}`;
+  }
+  return slug;
 };
 
 /**
  * Helper function to format date and time in the user's timezone
  */
-const formatDateInTimezone = (
-	timezone?: string
-): { date: string; time: string } => {
-	const now = new Date();
-	// console.log('Current date/time:', now);
-	if (timezone) {
-		try {
-			// Format date as MM/DD/YYYY to match the original format
-			const date = dayjs(now).tz(timezone).format("MM/DD/YYYY");
-			// Format time with timezone abbreviation
-			const time = dayjs(now).tz(timezone).format("HH:mm:ss z");
-			// console.log('Formatted date/time:', { date, time });
-			return { date, time };
-		} catch (_error) {
-			// Fallback if timezone is invalid - silently fall through to server timezone
-		}
-	}
+const formatDateInTimezone = (timezone?: string): { date: string; time: string } => {
+  const now = new Date();
+  // console.log('Current date/time:', now);
+  if (timezone) {
+    try {
+      // Format date as MM/DD/YYYY to match the original format
+      const date = dayjs(now).tz(timezone).format("MM/DD/YYYY");
+      // Format time with timezone abbreviation
+      const time = dayjs(now).tz(timezone).format("HH:mm:ss z");
+      // console.log('Formatted date/time:', { date, time });
+      return { date, time };
+    } catch (error) {
+      console.error("Failed to format date/time with timezone:", error);
+    }
+  }
 
-	// Fallback to server timezone with consistent formatting
-	// Get the system's timezone name
-	const systemTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-	return {
-		date: dayjs(now).tz(systemTimezone).format("MM/DD/YYYY"),
-		time: dayjs(now).tz(systemTimezone).format("HH:mm:ss z"),
-	};
+  // Fallback to server timezone with consistent formatting
+  // Get the system's timezone name
+  const systemTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  return {
+    date: dayjs(now).tz(systemTimezone).format("MM/DD/YYYY"),
+    time: dayjs(now).tz(systemTimezone).format("HH:mm:ss z"),
+  };
 };
 
 export const getSystemPromptDefault = (
-	timezone?: string,
-	connectorsStatus?: ConnectorStatusLists
+  timezone?: string,
+  connectorsStatus?: ConnectorStatusLists,
 ) => {
-	const { date, time } = formatDateInTimezone(timezone);
-	const enabled = connectorsStatus?.enabled ?? [];
-	const disabled = connectorsStatus?.disabled ?? [];
-	const notConnected = connectorsStatus?.notConnected ?? [];
-	return `
+  const { date, time } = formatDateInTimezone(timezone);
+  const enabled = connectorsStatus?.enabled ?? [];
+  const disabled = connectorsStatus?.disabled ?? [];
+  const notConnected = connectorsStatus?.notConnected ?? [];
+  return `
 <identity>
 You are OS Chat, a thoughtful and clear agentic assistant.
 </identity>
@@ -181,27 +177,25 @@ ${generateAllPossibleIntegrations()}
 
 Currently enabled integrations for this user:
 ${
-	enabled.length > 0
-		? enabled
-				.map((slug: string) => `- ${mapToolkitSlugToDisplayName(slug)}`)
-				.join("\n")
-		: "- None enabled."
+  enabled.length > 0
+    ? enabled.map((slug: string) => `- ${mapToolkitSlugToDisplayName(slug)}`).join("\n")
+    : "- None enabled."
 }
 
 ${
-	disabled.length > 0
-		? `Connected but disabled:\n${disabled
-				.map((slug: string) => `- ${mapToolkitSlugToDisplayName(slug)}`)
-				.join("\n")}`
-		: ""
+  disabled.length > 0
+    ? `Connected but disabled:\n${disabled
+        .map((slug: string) => `- ${mapToolkitSlugToDisplayName(slug)}`)
+        .join("\n")}`
+    : ""
 }
 
 ${
-	notConnected.length > 0
-		? `Not connected:\n${notConnected
-				.map((slug: string) => `- ${mapToolkitSlugToDisplayName(slug)}`)
-				.join("\n")}`
-		: ""
+  notConnected.length > 0
+    ? `Not connected:\n${notConnected
+        .map((slug: string) => `- ${mapToolkitSlugToDisplayName(slug)}`)
+        .join("\n")}`
+    : ""
 }
 
 If the user asks about an integration that is not in "Currently enabled", direct them to connect or enable it in settings.
@@ -209,14 +203,14 @@ If the user asks about an integration that is not in "Currently enabled", direct
 };
 
 export const getTaskPromptDefault = (
-	timezone?: string,
-	connectorsStatus?: ConnectorStatusLists
+  timezone?: string,
+  connectorsStatus?: ConnectorStatusLists,
 ) => {
-	const { date, time } = formatDateInTimezone(timezone);
-	const enabled = connectorsStatus?.enabled ?? [];
-	const disabled = connectorsStatus?.disabled ?? [];
-	const notConnected = connectorsStatus?.notConnected ?? [];
-	return `
+  const { date, time } = formatDateInTimezone(timezone);
+  const enabled = connectorsStatus?.enabled ?? [];
+  const disabled = connectorsStatus?.disabled ?? [];
+  const notConnected = connectorsStatus?.notConnected ?? [];
+  return `
 <identity>
 You are OS Chat, an autonomous AI assistant executing a scheduled task. You complete assigned tasks fully and independently.
 </identity>
@@ -253,27 +247,25 @@ ${generateAllPossibleIntegrations()}
 
 Currently enabled integrations:
 ${
-	enabled.length > 0
-		? enabled
-				.map((slug: string) => `- ${mapToolkitSlugToDisplayName(slug)}`)
-				.join("\n")
-		: "- None enabled."
+  enabled.length > 0
+    ? enabled.map((slug: string) => `- ${mapToolkitSlugToDisplayName(slug)}`).join("\n")
+    : "- None enabled."
 }
 
 ${
-	disabled.length > 0
-		? `Connected but disabled:\n${disabled
-				.map((slug: string) => `- ${mapToolkitSlugToDisplayName(slug)}`)
-				.join("\n")}`
-		: ""
+  disabled.length > 0
+    ? `Connected but disabled:\n${disabled
+        .map((slug: string) => `- ${mapToolkitSlugToDisplayName(slug)}`)
+        .join("\n")}`
+    : ""
 }
 
 ${
-	notConnected.length > 0
-		? `Not connected:\n${notConnected
-				.map((slug: string) => `- ${mapToolkitSlugToDisplayName(slug)}`)
-				.join("\n")}`
-		: ""
+  notConnected.length > 0
+    ? `Not connected:\n${notConnected
+        .map((slug: string) => `- ${mapToolkitSlugToDisplayName(slug)}`)
+        .join("\n")}`
+    : ""
 }
 
 If your task requires an integration that is not in the "Currently enabled" list above, inform the user that they need to connect or enable the required integration in settings before this task can be completed successfully.
@@ -420,69 +412,69 @@ Structure your response like this:
 export type UserProfile = Doc<"users">;
 
 export function buildSystemPrompt(
-	user?: UserProfile | null,
-	basePrompt?: string,
-	enableSearch?: boolean,
-	enableTools?: boolean,
-	timezone?: string,
-	emailMode?: boolean,
-	taskMode?: boolean,
-	connectorsStatus?: ConnectorStatusLists
+  user?: UserProfile | null,
+  basePrompt?: string,
+  enableSearch?: boolean,
+  enableTools?: boolean,
+  timezone?: string,
+  emailMode?: boolean,
+  taskMode?: boolean,
+  connectorsStatus?: ConnectorStatusLists,
 ) {
-	// Choose the appropriate base prompt based on mode
-	let prompt =
-		basePrompt ??
-		(taskMode
-			? getTaskPromptDefault(timezone, connectorsStatus)
-			: getSystemPromptDefault(timezone, connectorsStatus));
+  // Choose the appropriate base prompt based on mode
+  let prompt =
+    basePrompt ??
+    (taskMode
+      ? getTaskPromptDefault(timezone, connectorsStatus)
+      : getSystemPromptDefault(timezone, connectorsStatus));
 
-	prompt += `\n\n${FORMATTING_RULES}`;
+  prompt += `\n\n${FORMATTING_RULES}`;
 
-	// Add search instructions if search is enabled
-	if (enableSearch) {
-		prompt += `\n\n${SEARCH_PROMPT_INSTRUCTIONS}`;
-	}
+  // Add search instructions if search is enabled
+  if (enableSearch) {
+    prompt += `\n\n${SEARCH_PROMPT_INSTRUCTIONS}`;
+  }
 
-	// Add tool instructions if tools are enabled
-	if (enableTools) {
-		prompt += `\n\n${TOOL_PROMPT_INSTRUCTIONS}`;
-	}
+  // Add tool instructions if tools are enabled
+  if (enableTools) {
+    prompt += `\n\n${TOOL_PROMPT_INSTRUCTIONS}`;
+  }
 
-	// Add email formatting instructions if email mode is enabled
-	if (emailMode) {
-		prompt += `\n\n${EMAIL_PROMPT_INSTRUCTIONS}`;
-	}
+  // Add email formatting instructions if email mode is enabled
+  if (emailMode) {
+    prompt += `\n\n${EMAIL_PROMPT_INSTRUCTIONS}`;
+  }
 
-	if (timezone) {
-		if (taskMode) {
-			prompt += `\nUser's timezone: ${timezone}. Adjust all times and scheduling accordingly.`;
-		} else {
-			prompt += `\nThe user's timezone is ${timezone}.`;
-		}
-	}
+  if (timezone) {
+    if (taskMode) {
+      prompt += `\nUser's timezone: ${timezone}. Adjust all times and scheduling accordingly.`;
+    } else {
+      prompt += `\nThe user's timezone is ${timezone}.`;
+    }
+  }
 
-	if (!user) {
-		return prompt;
-	}
-	const details: string[] = [];
-	if (user.name) {
-		details.push(`Name: ${user.name}`);
-	}
-	if (user.preferredName) {
-		details.push(`Preferred Name: ${user.preferredName}`);
-	}
-	if (user.occupation) {
-		details.push(`Occupation: ${user.occupation}`);
-	}
-	if (user.traits) {
-		details.push(`Traits: ${user.traits}`);
-	}
-	if (user.about) {
-		details.push(`About: ${user.about}`);
-	}
-	return details.length > 0
-		? `${prompt}\n\nThe following are details shared by the user about themselves:\n${details.join(
-				"\n"
-			)}`
-		: prompt;
+  if (!user) {
+    return prompt;
+  }
+  const details: string[] = [];
+  if (user.name) {
+    details.push(`Name: ${user.name}`);
+  }
+  if (user.preferredName) {
+    details.push(`Preferred Name: ${user.preferredName}`);
+  }
+  if (user.occupation) {
+    details.push(`Occupation: ${user.occupation}`);
+  }
+  if (user.traits) {
+    details.push(`Traits: ${user.traits}`);
+  }
+  if (user.about) {
+    details.push(`About: ${user.about}`);
+  }
+  return details.length > 0
+    ? `${prompt}\n\nThe following are details shared by the user about themselves:\n${details.join(
+        "\n",
+      )}`
+    : prompt;
 }

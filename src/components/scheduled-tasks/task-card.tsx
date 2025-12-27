@@ -234,7 +234,6 @@ function TaskCardComponent({ task, isMobile = false }: TaskCardProps) {
 
 	// Mobile layout component
 	const mobileLayout = isMobile ? (
-		// biome-ignore lint/a11y/useSemanticElements: <soh>
 		<div
 			aria-expanded={isExpanded}
 			aria-label={`${task.title} task card${isExpanded ? ", expanded" : ", collapsed"}`}

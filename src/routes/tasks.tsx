@@ -4,27 +4,27 @@ import { ScheduledTasksPage } from "@/components/scheduled-tasks/scheduled-tasks
 import { useUser } from "@/providers/user-provider";
 
 export const Route = createFileRoute("/tasks")({
-	component: TasksPage,
+  component: TasksPage,
 });
 
 function TasksPage() {
-	const { user, isLoading } = useUser();
-	const router = useRouter();
+  const { user, isLoading } = useUser();
+  const router = useRouter();
 
-	useEffect(() => {
-		// Don't redirect while user data is still loading
-		if (isLoading) {
-			return;
-		}
+  useEffect(() => {
+    // Don't redirect while user data is still loading
+    if (isLoading) {
+      return;
+    }
 
-		if (!user || user.isAnonymous) {
-			router.navigate({ to: "/auth" });
-		}
-	}, [user, isLoading, router]);
+    if (!user || user.isAnonymous) {
+      void router.navigate({ to: "/auth" });
+    }
+  }, [user, isLoading, router]);
 
-	if (!user || user?.isAnonymous) {
-		return null;
-	}
+  if (!user || user?.isAnonymous) {
+    return null;
+  }
 
-	return <ScheduledTasksPage />;
+  return <ScheduledTasksPage />;
 }
