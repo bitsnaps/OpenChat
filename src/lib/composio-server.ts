@@ -94,8 +94,8 @@ export const initiateConnection = async (
 			// Only delete if connection is not active to avoid breaking working connections
 			await composio.connectedAccounts.delete(existingConnection.id);
 		}
-	} catch (_error) {
-		// Ignore cleanup errors and proceed with new connection
+	} catch (error) {
+		console.error("Failed to cleanup existing Composio connection:", error);
 	}
 
 	const connectionRequest = await composio.connectedAccounts.initiate(
@@ -182,9 +182,8 @@ export const getComposioTools = async (
 				limit: 15, // Limit to 15 tools per toolkit
 			});
 			return tools;
-		} catch (_error) {
-			// console.error(`Failed to fetch tools for toolkit ${toolkit}:`, error);
-			// Return empty object on error to not break other requests
+		} catch (error) {
+			console.error(`Failed to fetch tools for toolkit ${toolkit}:`, error);
 			return {};
 		}
 	});

@@ -60,8 +60,8 @@ export function sanitizeMessageParts(
 			}
 
 			return p;
-		} catch (_err) {
-			// Fail closed: return safe placeholder instead of potentially sensitive original
+		} catch (error) {
+			console.error("Content sanitization failed:", error);
 			return { type: "redacted", error: "Content sanitization failed" };
 		}
 	});

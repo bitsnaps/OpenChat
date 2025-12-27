@@ -51,7 +51,8 @@ export function AccountSettingsPage() {
 			});
 
 			window.location.href = url;
-		} catch (_error) {
+		} catch (error) {
+			console.error("Failed to start upgrade process:", error);
 			toast({
 				title: "Unable to start upgrade process",
 				description:
@@ -65,7 +66,8 @@ export function AccountSettingsPage() {
 		try {
 			const { url } = await generateCustomerPortalUrl({});
 			window.location.href = url;
-		} catch (_error) {
+		} catch (error) {
+			console.error("Failed to access customer portal:", error);
 			toast({
 				title: "Unable to access customer portal",
 				description:
@@ -85,8 +87,9 @@ export function AccountSettingsPage() {
 			await deleteAccount({});
 			await signOut();
 			toast({ title: "Account deleted", status: "success" });
-			router.navigate({ to: "/" });
-		} catch {
+			void router.navigate({ to: "/" });
+		} catch (error) {
+			console.error("Failed to delete account:", error);
 			toast({
 				title: "Failed to delete account",
 				status: "error",

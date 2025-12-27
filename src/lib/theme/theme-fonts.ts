@@ -100,9 +100,10 @@ export function getFontOptions(category: FontCategory): readonly FontOption[] {
 			return SANS_FONTS;
 		case "mono":
 			return MONO_FONTS;
-		default:
-			// Using exhaustive switch with default case as per ultracite rules
-			throw new Error(`Unknown font category: ${category}`);
+		default: {
+			const exhaustiveCheck: never = category;
+			throw new Error(`Unknown font category: ${String(exhaustiveCheck)}`);
+		}
 	}
 }
 

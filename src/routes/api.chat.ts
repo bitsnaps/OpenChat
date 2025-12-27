@@ -87,7 +87,8 @@ async function saveErrorMessage(
 		);
 
 		return messageId;
-	} catch (_err) {
+	} catch (error) {
+		console.error("Failed to save error message:", error);
 		return null;
 	}
 }
@@ -876,10 +877,10 @@ export const Route = createFileRoute("/api/chat")({
 													reasoningEffort
 												);
 												errorMessageSaved = true; // Mark that error message was saved
-											} catch (_saveError) {
-												// swallow
-											}
-											return; // Exit early - error saved, no throwing
+												} catch (saveError) {
+												console.error("Failed to save error message in onError:", saveError);
+												}
+												return; // Exit early - error saved, no throwing
 										}
 
 										// Fallback to original error handling
@@ -896,11 +897,11 @@ export const Route = createFileRoute("/api/chat")({
 													reasoningEffort
 												);
 												errorMessageSaved = true; // Mark that error message was saved
-											} catch (_saveError) {
-												// swallow
-											}
-										}
-										// No throwing - let the stream handle the error state gracefully
+												} catch (saveError) {
+												console.error("Failed to save fallback error message:", saveError);
+												}
+												}
+												// No throwing - let the stream handle the error state gracefully
 									},
 									onFinish({ totalUsage }) {
 										finalUsage = {
@@ -914,10 +915,10 @@ export const Route = createFileRoute("/api/chat")({
 								});
 
 								// Enhanced stream processing with error detection
-								(async () => {
+								void (async () => {
 									let accumulatedText = "";
 
-									for await (const part of streamResult.fullStream) {
+									streamLoop: for await (const part of streamResult.fullStream) {
 										switch (part.type) {
 											case "error": {
 												// Error parts from AI SDK - these are already handled by onError callback
@@ -948,15 +949,12 @@ export const Route = createFileRoute("/api/chat")({
 															reasoningEffort
 														);
 														errorMessageSaved = true; // Mark that error message was saved
-													} catch (_saveError) {
-														// swallow
-													}
+														} catch (saveError) {
+														console.error("Failed to save stream error message:", saveError);
+														}
 
-													// Clear accumulated text to avoid re-detecting the same error
-													accumulatedText = "";
-
-													// Stop processing this stream since we found an error
-													break;
+														// Stop processing this stream since we found an error
+													break streamLoop;
 												}
 
 												// Limit accumulated text size to prevent memory issues

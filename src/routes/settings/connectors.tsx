@@ -136,7 +136,8 @@ export function ConnectorsSettingsPage() {
 				);
 
 				window.location.href = redirectUrl;
-			} catch (_error) {
+			} catch (error) {
+				console.error(`Failed to connect to ${getConnectorConfig(type).displayName}:`, error);
 				toast.error(
 					`Failed to connect to ${getConnectorConfig(type).displayName}`
 				);
@@ -174,7 +175,8 @@ export function ConnectorsSettingsPage() {
 				toast.success(
 					`${getConnectorConfig(type).displayName} disconnected successfully`
 				);
-			} catch {
+			} catch (error) {
+				console.error(`Failed to disconnect ${getConnectorConfig(type).displayName}:`, error);
 				toast.error(
 					`Failed to disconnect ${getConnectorConfig(type).displayName}`
 				);

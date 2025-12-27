@@ -37,7 +37,7 @@ function AuthenticatedCallback() {
 				clearTimeout(timeoutRef.current);
 			}
 			timeoutRef.current = setTimeout(() => {
-				router.navigate({ to: path });
+				void router.navigate({ to: path });
 			}, delay);
 		},
 		[router]
@@ -144,7 +144,7 @@ function AuthenticatedCallback() {
 	}, [authToken, search, user, saveConnection, redirectAfterDelay]);
 
 	useEffect(() => {
-		handleCallback();
+		void handleCallback();
 	}, [handleCallback]);
 
 	return (
@@ -205,7 +205,7 @@ function UnauthenticatedRedirect() {
 	useEffect(() => {
 		// Redirect to home if not authenticated
 		const timeoutId = setTimeout(() => {
-			router.navigate({ to: "/" });
+			void router.navigate({ to: "/" });
 		}, 2000);
 
 		// Cleanup timeout on unmount

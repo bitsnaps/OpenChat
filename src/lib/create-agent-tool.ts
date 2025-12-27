@@ -175,8 +175,8 @@ export const createAgentTool = ({
 					type: "text",
 					value: `Sub-agent completed task successfully. Used tools: ${analysis.toolNames.join(", ") || "none"} (${analysis.toolCallCount} calls). Result: ${analysis.summary.slice(0, 150)}${analysis.summary.length > 150 ? "..." : ""}`,
 				};
-			} catch (_error) {
-				// Fallback for any parsing errors - should not happen with new implementation
+			} catch (error) {
+				console.error("Failed to parse sub-agent result:", error);
 				return {
 					type: "text",
 					value: `Sub-agent execution completed but analysis failed. Raw result: ${result.slice(0, 200)}${result.length > 200 ? "..." : ""}`,

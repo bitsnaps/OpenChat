@@ -115,8 +115,8 @@ const formatDateInTimezone = (
 			const time = dayjs(now).tz(timezone).format("HH:mm:ss z");
 			// console.log('Formatted date/time:', { date, time });
 			return { date, time };
-		} catch (_error) {
-			// Fallback if timezone is invalid - silently fall through to server timezone
+		} catch (error) {
+			console.error("Failed to format date/time with timezone:", error);
 		}
 	}
 

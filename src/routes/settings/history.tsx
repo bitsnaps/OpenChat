@@ -340,7 +340,8 @@ export function HistorySettingsPage() {
 
 			toast({ title: "Import completed", status: "success" });
 			setSelectedIds(new Set());
-		} catch (_error) {
+		} catch (error) {
+			console.error("Failed to import chat history:", error);
 			toast({ title: "Import failed", status: "error" });
 		} finally {
 			setShowImportDialog(false);

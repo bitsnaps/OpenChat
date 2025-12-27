@@ -18,7 +18,7 @@ function TasksPage() {
 		}
 
 		if (!user || user.isAnonymous) {
-			router.navigate({ to: "/auth" });
+			void router.navigate({ to: "/auth" });
 		}
 	}, [user, isLoading, router]);
 

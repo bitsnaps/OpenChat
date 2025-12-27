@@ -53,8 +53,10 @@ export function getProvider(provider?: SearchProvider): SearchAdapter {
 			break;
 		}
 
-		default:
-			throw new Error(`Unknown search provider: ${selectedProvider}`);
+		default: {
+			const exhaustiveCheck: never = selectedProvider;
+			throw new Error(`Unknown search provider: ${String(exhaustiveCheck)}`);
+		}
 	}
 
 	// Cache the instance

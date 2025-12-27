@@ -30,8 +30,10 @@ export const getAuthConfigId = (connectorType: ConnectorType): string => {
 			return process.env.VITE_GITHUB_AUTH_CONFIG_ID || "github_oauth";
 		case "twitter":
 			return process.env.VITE_TWITTER_AUTH_CONFIG_ID || "twitter_oauth";
-		default:
-			throw new Error(`Unknown connector type: ${connectorType}`);
+		default: {
+			const exhaustiveCheck: never = connectorType;
+			throw new Error(`Unknown connector type: ${String(exhaustiveCheck)}`);
+		}
 	}
 };
 

@@ -162,7 +162,8 @@ export function ModelsSettingsPage() {
 
 		try {
 			await setModelEnabled({ modelId: id, enabled: shouldEnable });
-		} catch (_error) {
+		} catch (error) {
+			console.error(`Failed to ${shouldEnable ? "enable" : "disable"} model:`, error);
 			setDisabled(disabled);
 			toast.error(
 				`Failed to ${shouldEnable ? "enable" : "disable"} model. Please try again.`
@@ -186,7 +187,8 @@ export function ModelsSettingsPage() {
 				bulkSetModelsDisabled({ modelIds: modelsToDisable }),
 				bulkSetFavoriteModels(RECOMMENDED_MODELS),
 			]);
-		} catch (_error) {
+		} catch (error) {
+			console.error("Failed to apply recommended models:", error);
 			setDisabled(originalDisabled);
 			toast.error("Failed to apply recommended models. Please try again.");
 		}
@@ -202,7 +204,8 @@ export function ModelsSettingsPage() {
 		try {
 			await bulkSetModelsDisabled({ modelIds: allModelIds });
 			setShowConfirm(false);
-		} catch (_error) {
+		} catch (error) {
+			console.error("Failed to unselect all models:", error);
 			setDisabled(originalDisabled);
 			setShowConfirm(false);
 			toast.error("Failed to unselect all models. Please try again.");

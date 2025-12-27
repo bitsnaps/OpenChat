@@ -21,13 +21,13 @@ function SettingsLayout() {
 
 		// Redirect unauthenticated users to login page
 		if (!user) {
-			router.navigate({ to: "/auth" });
+			void router.navigate({ to: "/auth" });
 			return;
 		}
 
 		// Redirect anonymous users to login page to upgrade their account
 		if (user?.isAnonymous) {
-			router.navigate({ to: "/auth" });
+			void router.navigate({ to: "/auth" });
 			return;
 		}
 	}, [user, isLoading, router]);

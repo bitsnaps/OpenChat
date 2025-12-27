@@ -52,9 +52,8 @@ const initializeRateLimits = async (
 		);
 
 		await Promise.all(rateLimitPromises);
-	} catch (_error) {
-		// Non-fatal: rate-limit initialisation failure should never block the
-		// user flow. The rate-limiter will lazily create windows on first use.
+	} catch (error) {
+		console.error("Failed to initialize rate limits:", error);
 	}
 };
 

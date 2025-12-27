@@ -165,9 +165,8 @@ export const executeTask = internalAction({
 					disabled: disabledSlugs,
 					notConnected: notConnectedSlugs,
 				};
-			} catch (_error) {
-				// console.error('Failed to load Composio tools:', error);
-				// Continue without Composio tools
+			} catch (error) {
+				console.error("Failed to load Composio tools:", error);
 			}
 
 			// Build system prompt

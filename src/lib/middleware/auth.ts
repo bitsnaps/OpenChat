@@ -64,12 +64,27 @@ function createAuthenticatedClient(token: string): ConvexHttpClient {
  * Helper to create JSON response
  */
 export function json<T>(data: T, init?: ResponseInit): Response {
+	const headers: Record<string, string> = {
+		"Content-Type": "application/json",
+	};
+	
+	if (init?.headers) {
+		if (init.headers instanceof Headers) {
+			init.headers.forEach((value, key) => {
+				headers[key] = value;
+			});
+		} else if (Array.isArray(init.headers)) {
+			for (const [key, value] of init.headers) {
+				headers[key] = value;
+			}
+		} else {
+			Object.assign(headers, init.headers);
+		}
+	}
+	
 	return new Response(JSON.stringify(data), {
 		...init,
-		headers: {
-			"Content-Type": "application/json",
-			...init?.headers,
-		},
+		headers,
 	});
 }
 

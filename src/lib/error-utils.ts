@@ -47,7 +47,7 @@ export type ClassifiedError = {
 	userFriendlyMessage: string;
 	httpStatus: number;
 	responseType: string;
-	originalError?: Error | unknown;
+	originalError?: unknown;
 };
 
 /**

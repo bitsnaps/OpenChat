@@ -137,8 +137,8 @@ async function cleanupSingleAttachment(
 			await r2.deleteObject(ctx, attByKey.key);
 			await ctx.db.delete(attByKey._id);
 		}
-	} catch (_error) {
-		// Silently continue with other cleanup if one attachment fails
+	} catch (error) {
+		console.error("Failed to clean up attachment:", error);
 	}
 }
 
@@ -186,8 +186,8 @@ async function cleanupOrphanedAttachments(
 			try {
 				await r2.deleteObject(ctx, attachment.key);
 				await ctx.db.delete(attachment._id);
-			} catch (_error) {
-				// Silently continue with other cleanup
+			} catch (error) {
+				console.error("Failed to clean up orphaned attachment:", error);
 			}
 		}
 	);

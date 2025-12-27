@@ -173,7 +173,7 @@ export function CustomizationSettingsPage() {
 	) => {
 		if (e.key === "Enter" && hasUnsavedChanges) {
 			e.preventDefault();
-			handleSave();
+			void handleSave();
 		}
 	};
 
@@ -459,7 +459,7 @@ export function CustomizationSettingsPage() {
 								if (pendingUrl) {
 									setHasUnsavedChanges(false);
 									setShowUnsavedChangesDialog(false);
-									router.navigate({ to: pendingUrl });
+									void router.navigate({ to: pendingUrl });
 								}
 							}}
 						>

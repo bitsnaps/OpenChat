@@ -42,15 +42,14 @@ function PostHogAuthWrapper({ children }: { children: React.ReactNode }) {
 				} else {
 					// console.warn('PostHog: User ID is missing, skipping identification');
 				}
-			} catch (_error) {
-				// console.error('PostHog: Failed to identify user', error);
-				// Optionally, you could report this error to your error tracking service
+			} catch (error) {
+				console.error("PostHog: Failed to identify user:", error);
 			}
 		} else {
 			try {
 				posthog.reset();
-			} catch (_error) {
-				// console.error('PostHog: Failed to reset user session', error);
+			} catch (error) {
+				console.error("PostHog: Failed to reset user session:", error);
 			}
 		}
 	}, [userInfo.user]);

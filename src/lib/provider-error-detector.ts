@@ -603,7 +603,7 @@ export function detectProviderErrorFromObject(
 	} else if (typeof error === "object" && "message" in error) {
 		errorText = String((error as { message: unknown }).message);
 	} else {
-		errorText = String(error);
+		errorText = "";
 	}
 
 	return detectProviderErrorInText(errorText, provider);

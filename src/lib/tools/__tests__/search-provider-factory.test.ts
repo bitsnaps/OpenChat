@@ -58,7 +58,6 @@ describe("search-provider-factory", () => {
 			const provider = module.getProvider("brave");
 
 			expect(provider).toBeDefined();
-			expect(provider.search).toBeDefined();
 			expect(typeof provider.search).toBe("function");
 		});
 
@@ -69,7 +68,6 @@ describe("search-provider-factory", () => {
 			const provider = module.getProvider("tavily");
 
 			expect(provider).toBeDefined();
-			expect(provider.search).toBeDefined();
 			expect(typeof provider.search).toBe("function");
 		});
 
@@ -80,7 +78,6 @@ describe("search-provider-factory", () => {
 			const provider = module.getProvider("exa");
 
 			expect(provider).toBeDefined();
-			expect(provider.search).toBeDefined();
 			expect(typeof provider.search).toBe("function");
 		});
 
