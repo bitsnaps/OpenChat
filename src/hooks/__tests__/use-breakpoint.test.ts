@@ -3,167 +3,161 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useBreakpoint } from "../use-breakpoint";
 
 describe("useBreakpoint", () => {
-	let mediaQueryListeners: Map<string, (() => void)[]>;
+  let mediaQueryListeners: Map<string, (() => void)[]>;
 
-	beforeEach(() => {
-		mediaQueryListeners = new Map();
+  beforeEach(() => {
+    mediaQueryListeners = new Map();
 
-		// Mock matchMedia
-		Object.defineProperty(window, "matchMedia", {
-			writable: true,
-			value: vi.fn().mockImplementation((query: string) => {
-				const listeners: (() => void)[] = [];
-				mediaQueryListeners.set(query, listeners);
+    // Mock matchMedia
+    Object.defineProperty(window, "matchMedia", {
+      writable: true,
+      value: vi.fn().mockImplementation((query: string) => {
+        const listeners: (() => void)[] = [];
+        mediaQueryListeners.set(query, listeners);
 
-				return {
-					matches: false,
-					media: query,
-					onchange: null,
-					addListener: vi.fn(),
-					removeListener: vi.fn(),
-					addEventListener: vi.fn(
-						(_event: string, callback: () => void) => {
-							listeners.push(callback);
-						}
-					),
-					removeEventListener: vi.fn(),
-					dispatchEvent: vi.fn(),
-				};
-			}),
-		});
-	});
+        return {
+          matches: false,
+          media: query,
+          onchange: null,
+          addListener: vi.fn(),
+          removeListener: vi.fn(),
+          addEventListener: vi.fn((_event: string, callback: () => void) => {
+            listeners.push(callback);
+          }),
+          removeEventListener: vi.fn(),
+          dispatchEvent: vi.fn(),
+        };
+      }),
+    });
+  });
 
-	it("returns false when window width is greater than breakpoint", () => {
-		Object.defineProperty(window, "innerWidth", {
-			writable: true,
-			configurable: true,
-			value: 1024,
-		});
+  it("returns false when window width is greater than breakpoint", () => {
+    Object.defineProperty(window, "innerWidth", {
+      writable: true,
+      configurable: true,
+      value: 1024,
+    });
 
-		const { result } = renderHook(() => useBreakpoint(768));
+    const { result } = renderHook(() => useBreakpoint(768));
 
-		expect(result.current).toBe(false);
-	});
+    expect(result.current).toBe(false);
+  });
 
-	it("returns true when window width is less than breakpoint", () => {
-		Object.defineProperty(window, "innerWidth", {
-			writable: true,
-			configurable: true,
-			value: 500,
-		});
+  it("returns true when window width is less than breakpoint", () => {
+    Object.defineProperty(window, "innerWidth", {
+      writable: true,
+      configurable: true,
+      value: 500,
+    });
 
-		const { result } = renderHook(() => useBreakpoint(768));
+    const { result } = renderHook(() => useBreakpoint(768));
 
-		expect(result.current).toBe(true);
-	});
+    expect(result.current).toBe(true);
+  });
 
-	it("returns false when window width equals breakpoint", () => {
-		Object.defineProperty(window, "innerWidth", {
-			writable: true,
-			configurable: true,
-			value: 768,
-		});
+  it("returns false when window width equals breakpoint", () => {
+    Object.defineProperty(window, "innerWidth", {
+      writable: true,
+      configurable: true,
+      value: 768,
+    });
 
-		const { result } = renderHook(() => useBreakpoint(768));
+    const { result } = renderHook(() => useBreakpoint(768));
 
-		expect(result.current).toBe(false);
-	});
+    expect(result.current).toBe(false);
+  });
 
-	it("updates when breakpoint prop changes", () => {
-		Object.defineProperty(window, "innerWidth", {
-			writable: true,
-			configurable: true,
-			value: 600,
-		});
+  it("updates when breakpoint prop changes", () => {
+    Object.defineProperty(window, "innerWidth", {
+      writable: true,
+      configurable: true,
+      value: 600,
+    });
 
-		const { result, rerender } = renderHook(
-			({ breakpoint }) => useBreakpoint(breakpoint),
-			{ initialProps: { breakpoint: 500 } }
-		);
+    const { result, rerender } = renderHook(({ breakpoint }) => useBreakpoint(breakpoint), {
+      initialProps: { breakpoint: 500 },
+    });
 
-		// 600 > 500, so should be false
-		expect(result.current).toBe(false);
+    // 600 > 500, so should be false
+    expect(result.current).toBe(false);
 
-		// Change breakpoint to 700
-		rerender({ breakpoint: 700 });
+    // Change breakpoint to 700
+    rerender({ breakpoint: 700 });
 
-		// 600 < 700, so should be true
-		expect(result.current).toBe(true);
-	});
+    // 600 < 700, so should be true
+    expect(result.current).toBe(true);
+  });
 
-	it("responds to window resize events", () => {
-		Object.defineProperty(window, "innerWidth", {
-			writable: true,
-			configurable: true,
-			value: 1024,
-		});
+  it("responds to window resize events", () => {
+    Object.defineProperty(window, "innerWidth", {
+      writable: true,
+      configurable: true,
+      value: 1024,
+    });
 
-		const { result } = renderHook(() => useBreakpoint(768));
+    const { result } = renderHook(() => useBreakpoint(768));
 
-		expect(result.current).toBe(false);
+    expect(result.current).toBe(false);
 
-		// Simulate resize
-		act(() => {
-			Object.defineProperty(window, "innerWidth", {
-				writable: true,
-				configurable: true,
-				value: 500,
-			});
+    // Simulate resize
+    act(() => {
+      Object.defineProperty(window, "innerWidth", {
+        writable: true,
+        configurable: true,
+        value: 500,
+      });
 
-			// Trigger the media query change listener
-			const listeners = mediaQueryListeners.get("(max-width: 767px)");
-			if (listeners) {
-				for (const listener of listeners) {
-					listener();
-				}
-			}
-		});
+      // Trigger the media query change listener
+      const listeners = mediaQueryListeners.get("(max-width: 767px)");
+      if (listeners) {
+        for (const listener of listeners) {
+          listener();
+        }
+      }
+    });
 
-		expect(result.current).toBe(true);
-	});
+    expect(result.current).toBe(true);
+  });
 
-	it("handles different breakpoint values", () => {
-		Object.defineProperty(window, "innerWidth", {
-			writable: true,
-			configurable: true,
-			value: 400,
-		});
+  it("handles different breakpoint values", () => {
+    Object.defineProperty(window, "innerWidth", {
+      writable: true,
+      configurable: true,
+      value: 400,
+    });
 
-		// Test with mobile breakpoint
-		const { result: mobileResult } = renderHook(() => useBreakpoint(480));
-		expect(mobileResult.current).toBe(true);
+    // Test with mobile breakpoint
+    const { result: mobileResult } = renderHook(() => useBreakpoint(480));
+    expect(mobileResult.current).toBe(true);
 
-		// Test with tablet breakpoint
-		const { result: tabletResult } = renderHook(() => useBreakpoint(768));
-		expect(tabletResult.current).toBe(true);
+    // Test with tablet breakpoint
+    const { result: tabletResult } = renderHook(() => useBreakpoint(768));
+    expect(tabletResult.current).toBe(true);
 
-		// Test with desktop breakpoint
-		const { result: desktopResult } = renderHook(() => useBreakpoint(1024));
-		expect(desktopResult.current).toBe(true);
-	});
+    // Test with desktop breakpoint
+    const { result: desktopResult } = renderHook(() => useBreakpoint(1024));
+    expect(desktopResult.current).toBe(true);
+  });
 
-	it("cleans up event listener on unmount", () => {
-		const removeEventListenerMock = vi.fn();
+  it("cleans up event listener on unmount", () => {
+    const removeEventListenerMock = vi.fn();
 
-		Object.defineProperty(window, "matchMedia", {
-			writable: true,
-			value: vi.fn().mockImplementation((query: string) => ({
-				matches: false,
-				media: query,
-				onchange: null,
-				addEventListener: vi.fn(),
-				removeEventListener: removeEventListenerMock,
-				dispatchEvent: vi.fn(),
-			})),
-		});
+    Object.defineProperty(window, "matchMedia", {
+      writable: true,
+      value: vi.fn().mockImplementation((query: string) => ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addEventListener: vi.fn(),
+        removeEventListener: removeEventListenerMock,
+        dispatchEvent: vi.fn(),
+      })),
+    });
 
-		const { unmount } = renderHook(() => useBreakpoint(768));
+    const { unmount } = renderHook(() => useBreakpoint(768));
 
-		unmount();
+    unmount();
 
-		expect(removeEventListenerMock).toHaveBeenCalledWith(
-			"change",
-			expect.any(Function)
-		);
-	});
+    expect(removeEventListenerMock).toHaveBeenCalledWith("change", expect.any(Function));
+  });
 });

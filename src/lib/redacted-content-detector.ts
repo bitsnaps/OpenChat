@@ -71,9 +71,7 @@ export function detectRedactedInParts(
  * @param messages Array of messages to check for redacted content
  * @returns Comprehensive details about redacted content found
  */
-export function detectRedactedContent(
-  messages: any[],
-): RedactedContentDetails {
+export function detectRedactedContent(messages: any[]): RedactedContentDetails {
   let totalRedactedFiles = 0;
   let totalRedactedTools = 0;
   let totalRedactedParts = 0;
@@ -144,8 +142,6 @@ export function detectRedactedContent(
  * @param messages Array of messages to check
  * @returns True if forking should be disabled due to redacted content
  */
-export function shouldDisableFork(
-  messages: any[],
-): boolean {
+export function shouldDisableFork(messages: any[]): boolean {
   return detectRedactedContent(messages).hasRedactedContent;
 }

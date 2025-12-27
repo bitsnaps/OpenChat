@@ -135,7 +135,7 @@ export function UserProvider({ children }: { children: React.ReactNode; initialU
   const apiKeys = useMemo(() => (apiKeysQuery ?? []) as ApiKey[], [apiKeysQuery]);
 
   // Process connectors data
-  const connectors = useMemo(() => (connectorsQuery ?? []), [connectorsQuery]);
+  const connectors = useMemo(() => connectorsQuery ?? [], [connectorsQuery]);
 
   const hasApiKey = useMemo(() => {
     const keyMap = new Map<string, boolean>();
@@ -169,7 +169,7 @@ export function UserProvider({ children }: { children: React.ReactNode; initialU
       signOut,
       updateUser,
       // User capabilities and settings
-      hasPremium: (hasPremium ?? false),
+      hasPremium: hasPremium ?? false,
       products: products as { premium?: { id: string } } | undefined,
       rateLimitStatus: rateLimitStatus as
         | {

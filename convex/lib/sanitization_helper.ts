@@ -22,10 +22,7 @@ export interface SanitizationOptions {
  * @param options Sanitization configuration options
  * @returns Array of sanitized message parts
  */
-export function sanitizeMessageParts(
-  parts: any[],
-  options: SanitizationOptions,
-): any[] {
+export function sanitizeMessageParts(parts: any[], options: SanitizationOptions): any[] {
   return (parts ?? []).map((p: any) => {
     try {
       if (!p || typeof p !== "object") {

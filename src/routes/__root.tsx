@@ -193,9 +193,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     <html lang="en" suppressHydrationWarning>
       <head>
         {/* Theme initialization script - prevents flash of wrong theme */}
-        <script
-          dangerouslySetInnerHTML={{ __html: themeInitScript }}
-        />
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <HeadContent />
         {/* Umami Analytics - only in production when configured */}
         {!isDev &&

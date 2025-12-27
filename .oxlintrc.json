@@ -1,17 +1,9 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": [
-    "react",
-    "typescript",
-    "unicorn",
-    "import",
-    "vitest",
-    "oxc"
-  ],
+  "plugins": ["react", "typescript", "unicorn", "import", "vitest", "oxc"],
   "ignorePatterns": [
     "**/dev-dist/**",
     "**/src/components/**",
-    "**/src/hooks/**",
     "**/.openchat_old/**",
     "**/src/routeTree.gen.ts",
     "**/src/styles.css",
@@ -21,7 +13,7 @@
     "**/convex/_generated/**"
   ],
   "categories": {
-    "correctness": "error",
+    "correctness": "error"
   },
   "rules": {
     "typescript/consistent-type-definitions": "error",
