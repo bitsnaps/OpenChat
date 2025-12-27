@@ -115,10 +115,9 @@ describe("search-provider-factory", () => {
 			);
 		});
 
-		it("uses fallback order exa -> tavily -> brave", async () => {
+		it("accepts query parameter", async () => {
 			const module = await import("../search-provider-factory");
 
-			// Verify the function accepts the expected parameters
 			expect(module.searchWithFallback.length).toBeGreaterThanOrEqual(1);
 		});
 	});

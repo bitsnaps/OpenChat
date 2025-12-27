@@ -247,25 +247,25 @@ describe("getNextAvailableTime", () => {
 	});
 
 	it("returns next 5-minute interval", () => {
-		vi.setSystemTime(new Date("2024-12-25T09:00:00Z"));
+		vi.setSystemTime(new Date("2024-12-25T09:00:00"));
 		const result = getNextAvailableTime();
 		expect(result).toBe("09:05");
 	});
 
 	it("rounds up to next 5-minute interval", () => {
-		vi.setSystemTime(new Date("2024-12-25T09:02:00Z"));
+		vi.setSystemTime(new Date("2024-12-25T09:02:00"));
 		const result = getNextAvailableTime();
 		expect(result).toBe("09:05");
 	});
 
 	it("handles hour rollover", () => {
-		vi.setSystemTime(new Date("2024-12-25T09:58:00Z"));
+		vi.setSystemTime(new Date("2024-12-25T09:58:00"));
 		const result = getNextAvailableTime();
 		expect(result).toBe("10:00");
 	});
 
 	it("handles day rollover", () => {
-		vi.setSystemTime(new Date("2024-12-25T23:59:00Z"));
+		vi.setSystemTime(new Date("2024-12-25T23:59:00"));
 		const result = getNextAvailableTime();
 		expect(result).toBe("00:00");
 	});
@@ -281,17 +281,15 @@ describe("getNextAvailableDate", () => {
 	});
 
 	it("returns today when there is time left", () => {
-		const now = new Date("2024-12-25T12:00:00Z");
-		vi.setSystemTime(now);
+		vi.setSystemTime(new Date("2024-12-25T12:00:00"));
 		const result = getNextAvailableDate();
-		expect(result.getUTCDate()).toBe(25);
+		expect(result.getDate()).toBe(25);
 	});
 
 	it("returns tomorrow when no time left", () => {
-		const now = new Date("2024-12-25T23:59:00Z");
-		vi.setSystemTime(now);
+		vi.setSystemTime(new Date("2024-12-25T23:59:00"));
 		const result = getNextAvailableDate();
-		expect(result.getUTCDate()).toBe(26);
+		expect(result.getDate()).toBe(26);
 	});
 });
 
