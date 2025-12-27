@@ -181,7 +181,6 @@ async function insertMessageToChat(
     role: "user" | "assistant" | "system";
     content: string;
     parentMessageId?: Id<"messages">;
-    // biome-ignore lint/suspicious/noExplicitAny: <parts can be any>
     parts?: any;
     metadata?: {
       modelId?: string;
@@ -423,7 +422,6 @@ export const patchMessageContent = mutation({
       const prevUrls: string[] = [];
       const nextUrls: string[] = [];
 
-      // biome-ignore lint/suspicious/noExplicitAny: parts can be any; we validate properties at runtime
       for (const part of (message.parts as any[]) ?? []) {
         const type = (part as { type?: string }).type;
         const url = (part as { url?: string }).url;
@@ -431,7 +429,6 @@ export const patchMessageContent = mutation({
           prevUrls.push(url.split("?")[0]);
         }
       }
-      // biome-ignore lint/suspicious/noExplicitAny: parts can be any; we validate properties at runtime
       for (const part of (newParts as any[]) ?? []) {
         const type = (part as { type?: string }).type;
         const url = (part as { url?: string }).url;

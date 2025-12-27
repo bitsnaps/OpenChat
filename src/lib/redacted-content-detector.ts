@@ -25,7 +25,6 @@ export interface RedactedContentDetails {
  * @returns Object with details about redacted content
  */
 export function detectRedactedInParts(
-  // biome-ignore lint/suspicious/noExplicitAny: message parts can be any shape
   parts: any[],
 ): Pick<RedactedContentDetails, "redactedFiles" | "redactedTools" | "redactedParts"> {
   let redactedFiles = 0;
@@ -73,7 +72,6 @@ export function detectRedactedInParts(
  * @returns Comprehensive details about redacted content found
  */
 export function detectRedactedContent(
-  // biome-ignore lint/suspicious/noExplicitAny: messages can have various structures
   messages: any[],
 ): RedactedContentDetails {
   let totalRedactedFiles = 0;
@@ -147,7 +145,6 @@ export function detectRedactedContent(
  * @returns True if forking should be disabled due to redacted content
  */
 export function shouldDisableFork(
-  // biome-ignore lint/suspicious/noExplicitAny: messages can have various structures
   messages: any[],
 ): boolean {
   return detectRedactedContent(messages).hasRedactedContent;

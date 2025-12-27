@@ -206,10 +206,7 @@ function MarkdownComponent({
 				<MemoizedMarkdownBlock
 					components={components}
 					content={block}
-					key={`${blockId}-block-${
-						// biome-ignore lint/suspicious/noArrayIndexKey: <check prompt kit docs>
-						index
-					}`}
+					key={`${blockId}-block-${index}`}
 				/>
 			))}
 		</div>

@@ -57,7 +57,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Follow Convex guidelines in `agent_rules/convex_rules.md`.
 - Use shadcn/ui components as documented. Do not modify library code directly. Prefer composition over modification. Follow guidelines in `agent_rules/shadcn.md` when creating or editing UI components.
 - Use oxlint for linting and oxfmt for formatting. Run `bun run lint` and `bun run format` before committing. Do not use other linters or formatters (like ESLint or Prettier).
-- Ensure accessibility: use semantic HTML, provide alt text for images, use ARIA attributes appropriately, and follow accessibility rules in `agent_rules/oxc.md`.
+- Ensure accessibility: use semantic HTML, provide alt text for images, and follow accessibility guidelines in `agent_rules/design_guidelines.md`.
 - Use `Icon` suffix for Phosphor React icons (e.g., `CaretIcon` not `Caret`).
 - Access environment variables directly via `import.meta.env` for client-side and `process.env` for server-side code.
 - Before using `useEffect`, always read https://react.dev/learn/you-might-not-need-an-effect to ensure it's actually needed. Most effects can be replaced with event handlers, useMemo, or derived state.

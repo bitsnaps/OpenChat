@@ -208,8 +208,8 @@ For production deployment:
 | `bun build`         | Build for production                   |
 | `bun preview`       | Preview production build               |
 | `bun test`          | Run tests with Vitest                  |
-| `bun run lint`      | Run Ultracite linter                   |
-| `bun run format`    | Format code with Ultracite             |
+| `bun run lint`      | Run oxlint with auto-fix               |
+| `bun run format`    | Format code with oxfmt                 |
 | `bun run typecheck` | Run TypeScript type checking with tsgo |
 | `bunx convex dev`   | Run Convex development server          |
 

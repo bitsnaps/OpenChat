@@ -23,12 +23,9 @@ export interface SanitizationOptions {
  * @returns Array of sanitized message parts
  */
 export function sanitizeMessageParts(
-  // biome-ignore lint/suspicious/noExplicitAny: parts can be any; we validate properties at runtime
   parts: any[],
   options: SanitizationOptions,
-  // biome-ignore lint/suspicious/noExplicitAny: parts can be any; we validate properties at runtime
 ): any[] {
-  // biome-ignore lint/suspicious/noExplicitAny: parts can be any; we validate properties at runtime
   return (parts ?? []).map((p: any) => {
     try {
       if (!p || typeof p !== "object") {

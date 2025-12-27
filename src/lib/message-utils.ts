@@ -66,7 +66,7 @@ export function validateQueryParam(query: string): string | null {
  * Creates a temporary message ID
  */
 export function createTempMessageId(): string {
-  return `temp-${Date.now()}`;
+  return `temp-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 }
 
 /**

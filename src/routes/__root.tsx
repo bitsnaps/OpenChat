@@ -194,7 +194,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <head>
         {/* Theme initialization script - prevents flash of wrong theme */}
         <script
-          // biome-ignore lint/security/noDangerouslySetInnerHtml: Required for blocking theme script before hydration
           dangerouslySetInnerHTML={{ __html: themeInitScript }}
         />
         <HeadContent />

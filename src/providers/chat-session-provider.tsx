@@ -40,7 +40,6 @@ export function ChatSessionProvider({ children }: { children: React.ReactNode })
   // When the chat page changes, reset the deleting state
   // This handles cases where a user navigates away before a delete operation finishes
   // or if the state gets stuck.
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <see above comment>
   useEffect(() => {
     setIsDeleting(false);
   }, [chatId]);

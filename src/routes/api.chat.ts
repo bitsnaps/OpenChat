@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/complexity/noExcessiveCognitiveComplexity: <main route> */
 import type { AnthropicProviderOptions } from "@ai-sdk/anthropic";
 import type { GoogleGenerativeAIProviderOptions } from "@ai-sdk/google";
 import type { OpenAIResponsesProviderOptions } from "@ai-sdk/openai";

@@ -65,7 +65,6 @@ describe("composio-tool-adapter", () => {
 
     it("returns false when missing description", () => {
       const tool = createMockComposioTool();
-      // biome-ignore lint/performance/noDelete: testing missing property
       delete (tool as unknown as Record<string, unknown>).description;
 
       expect(isComposioTool(tool)).toBe(false);
@@ -81,7 +80,6 @@ describe("composio-tool-adapter", () => {
 
     it("returns false when missing parameters", () => {
       const tool = createMockComposioTool();
-      // biome-ignore lint/performance/noDelete: testing missing property
       delete (tool as unknown as Record<string, unknown>).parameters;
 
       expect(isComposioTool(tool)).toBe(false);
@@ -115,7 +113,6 @@ describe("composio-tool-adapter", () => {
 
     it("returns false when missing execute", () => {
       const tool = createMockComposioTool();
-      // biome-ignore lint/performance/noDelete: testing missing property
       delete (tool as unknown as Record<string, unknown>).execute;
 
       expect(isComposioTool(tool)).toBe(false);
