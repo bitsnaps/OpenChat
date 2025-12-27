@@ -111,19 +111,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Development Commands
 
-| Command             | Description                                |
-| ------------------- | ------------------------------------------ |
-| `bun install`       | Install dependencies                       |
-| `bun dev`           | Start development server on port 3000      |
-| `bun build`         | Build for production                       |
-| `bun preview`       | Preview production build                   |
-| `bun run test`      | Run tests with Vitest                      |
-| `bun run lint`      | Run oxlint linter                          |
-| `bun run lint:fix`  | Run oxlint and auto-fix issues             |
-| `bun run lint:types`| Run type-aware linting with tsgolint       |
-| `bun run format`    | Format code with oxfmt                     |
-| `bun run typecheck` | Run TypeScript type checking with tsgo     |
-| `bunx convex dev`   | Run Convex development server              |
+| Command              | Description                                |
+| -------------------- | ------------------------------------------ |
+| `bun install`        | Install dependencies                       |
+| `bun dev`            | Start development server on port 3000      |
+| `bun build`          | Build for production                       |
+| `bun preview`        | Preview production build                   |
+| `bun run test`       | Run tests with Vitest                      |
+| `bun run lint`       | Run oxlint with type-aware linting and auto-fix |
+| `bun run format`     | Format code with oxfmt                     |
+| `bun run format:check` | Check formatting without writing changes |
+| `bun run typecheck`  | Run TypeScript type checking with tsgo     |
+| `bunx convex dev`    | Run Convex development server              |
 
 ## Quality Assurance
 

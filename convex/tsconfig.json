@@ -20,11 +20,10 @@
     "isolatedModules": true,
     "noEmit": true,
 
-    /* Path aliases - matching the main tsconfig */
-    "baseUrl": "..",
+    /* Path aliases - pointing to root src directory */
     "paths": {
-      "@/*": ["./src/*"],
-      "@/convex/*": ["./convex/*"]
+      "@/*": ["../src/*"],
+      "@/convex/*": ["./*"]
     }
   },
   "include": ["./**/*", "../src/lib/**/*"],

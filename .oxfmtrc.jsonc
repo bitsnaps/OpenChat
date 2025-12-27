@@ -1,20 +1,15 @@
 {
-	"$schema": "./node_modules/oxfmt/configuration_schema.json",
-	// Match Biome's tab indent style
-	"useTabs": true,
-	// Use double quotes like Biome config
-	"singleQuote": false,
-	// Default print width
-	"printWidth": 100,
-	"ignorePatterns": [
-		"**/dev-dist/**",
-		"**/src/components/**",
-		"**/src/hooks/**",
-		"**/.openchat_old/**",
-		"**/src/routeTree.gen.ts",
-		"**/src/styles.css",
-		"**/node_modules/**",
-		"**/dist/**",
-		"**/.vinxi/**"
-	]
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "ignorePatterns": [
+    "**/dev-dist/**",
+    "**/src/components/**",
+    "**/src/hooks/**",
+    "**/.openchat_old/**",
+    "**/src/routeTree.gen.ts",
+    "**/src/styles.css",
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/.vinxi/**",
+    "**/convex/_generated/**"
+  ]
 }

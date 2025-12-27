@@ -8,11 +8,9 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "format": "oxfmt --write .",
-    "format:check": "oxfmt --check .",
-    "lint": "oxlint .",
-    "lint:fix": "oxlint --fix .",
-    "lint:types": "tsgolint .",
+    "format": "oxfmt --write",
+    "format:check": "oxfmt --check",
+    "lint": "oxlint --type-aware --fix",
     "typecheck": "tsgo -p ."
   },
   "dependencies": {
