@@ -16,39 +16,40 @@ import { XAI_MODELS } from "./xai";
 import { ZAI_MODELS } from "./zai";
 
 const reasoningMiddleware = extractReasoningMiddleware({
-	tagName: "think",
-	// separator: '\n',
-	// startWithReasoning: true,
+  tagName: "think",
+  // separator: '\n',
+  // startWithReasoning: true,
 });
 
 // Combine all models from different providers
 export const MODELS_DATA = [
-	...XAI_MODELS,
-	...OPENAI_MODELS,
-	...ANTHROPIC_MODELS,
-	...GOOGLE_MODELS,
-	...META_MODELS,
-	...MISTRAL_MODELS,
-	...DEEPSEEK_MODELS,
-	...FAL_MODELS,
-	...MOONSHOT_MODELS,
-	...ZAI_MODELS,
-	...MINIMAX_MODELS,
-	...QWEN_MODELS,
-	// ...OPENROUTER_MODELS,
+  ...XAI_MODELS,
+  ...OPENAI_MODELS,
+  ...ANTHROPIC_MODELS,
+  ...GOOGLE_MODELS,
+  ...META_MODELS,
+  ...MISTRAL_MODELS,
+  ...DEEPSEEK_MODELS,
+  ...FAL_MODELS,
+  ...MOONSHOT_MODELS,
+  ...ZAI_MODELS,
+  ...MINIMAX_MODELS,
+  ...QWEN_MODELS,
+  // ...OPENROUTER_MODELS,
 ];
 
 export const MODELS_RAW = z.array(ModelSchema).parse(MODELS_DATA);
 
 export const MODELS = MODELS_RAW.map((m) => ({
-	...m,
-	api_sdk: m.features?.some((f) => f.id === "reasoning" && f.enabled)
-		? wrapLanguageModel({ model: m.api_sdk, middleware: reasoningMiddleware })
-		: m.api_sdk,
+  ...m,
+  api_sdk: m.features?.some((f) => f.id === "reasoning" && f.enabled)
+    ? wrapLanguageModel({ model: m.api_sdk, middleware: reasoningMiddleware })
+    : m.api_sdk,
 }));
 
 // Add a map for O(1) lookup by id
-export const MODELS_MAP: Record<string, (typeof MODELS)[0]> =
-	Object.fromEntries(MODELS.map((model) => [model.id, model]));
+export const MODELS_MAP: Record<string, (typeof MODELS)[0]> = Object.fromEntries(
+  MODELS.map((model) => [model.id, model]),
+);
 
 export const MODELS_OPTIONS = MODELS;

@@ -2,311 +2,305 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useEditorStore } from "../editor-store";
 
 describe("useEditorStore", () => {
-	beforeEach(() => {
-		vi.useFakeTimers();
-		// Reset the store to its initial state
-		useEditorStore.setState({
-			themeState: useEditorStore.getState().themeState,
-			themeCheckpoint: null,
-			history: [],
-			future: [],
-		});
-	});
-
-	afterEach(() => {
-		vi.useRealTimers();
-		vi.restoreAllMocks();
-	});
-
-	describe("initial state", () => {
-		it("has a default themeState", () => {
-			const state = useEditorStore.getState();
-			expect(state.themeState).toBeDefined();
-			expect(state.themeState.styles).toBeDefined();
-			expect(state.themeState.styles.light).toBeDefined();
-			expect(state.themeState.styles.dark).toBeDefined();
-		});
-
-		it("has null themeCheckpoint initially", () => {
-			const state = useEditorStore.getState();
-			expect(state.themeCheckpoint).toBeNull();
-		});
-
-		it("has empty history initially", () => {
-			const state = useEditorStore.getState();
-			expect(state.history).toEqual([]);
-		});
-
-		it("has empty future initially", () => {
-			const state = useEditorStore.getState();
-			expect(state.future).toEqual([]);
-		});
-	});
-
-	describe("setThemeState", () => {
-		it("updates themeState", () => {
-			const { setThemeState, themeState } = useEditorStore.getState();
-			const newState = {
-				...themeState,
-				preset: "new-preset",
-			};
-
-			setThemeState(newState);
-
-			expect(useEditorStore.getState().themeState.preset).toBe("new-preset");
-		});
-
-		it("adds to history when updating themeState", () => {
-			const { setThemeState, themeState } = useEditorStore.getState();
-
-			// Advance time past the history threshold
-			vi.advanceTimersByTime(600);
-
-			const newState = {
-				...themeState,
-				preset: "modified-preset",
-			};
-
-			setThemeState(newState);
-
-			const state = useEditorStore.getState();
-			expect(state.history.length).toBeGreaterThan(0);
-		});
-
-		it("does not add to history when only currentMode changes", () => {
-			const { setThemeState, themeState } = useEditorStore.getState();
-
-			// Change only currentMode
-			const newState = {
-				...themeState,
-				currentMode: (themeState.currentMode === "light" ? "dark" : "light") as
-					| "dark"
-					| "light",
-			};
-
-			setThemeState(newState);
-
-			const state = useEditorStore.getState();
-			expect(state.history.length).toBe(0);
-		});
-	});
-
-	describe("saveThemeCheckpoint and restoreThemeCheckpoint", () => {
-		it("saveThemeCheckpoint saves current state", () => {
-			const { saveThemeCheckpoint, themeState } = useEditorStore.getState();
-
-			saveThemeCheckpoint();
-
-			const state = useEditorStore.getState();
-			expect(state.themeCheckpoint).toEqual(themeState);
-		});
-
-		it("restoreThemeCheckpoint restores saved state", () => {
-			const store = useEditorStore.getState();
-			const originalState = { ...store.themeState };
-
-			// Save checkpoint
-			store.saveThemeCheckpoint();
-
-			// Advance time and modify state
-			vi.advanceTimersByTime(600);
-
-			store.setThemeState({
-				...store.themeState,
-				preset: "modified",
-			});
-
-			// Verify state changed
-			expect(useEditorStore.getState().themeState.preset).toBe("modified");
+  beforeEach(() => {
+    vi.useFakeTimers();
+    // Reset the store to its initial state
+    useEditorStore.setState({
+      themeState: useEditorStore.getState().themeState,
+      themeCheckpoint: null,
+      history: [],
+      future: [],
+    });
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+  });
+
+  describe("initial state", () => {
+    it("has a default themeState", () => {
+      const state = useEditorStore.getState();
+      expect(state.themeState).toBeDefined();
+      expect(state.themeState.styles).toBeDefined();
+      expect(state.themeState.styles.light).toBeDefined();
+      expect(state.themeState.styles.dark).toBeDefined();
+    });
+
+    it("has null themeCheckpoint initially", () => {
+      const state = useEditorStore.getState();
+      expect(state.themeCheckpoint).toBeNull();
+    });
+
+    it("has empty history initially", () => {
+      const state = useEditorStore.getState();
+      expect(state.history).toEqual([]);
+    });
+
+    it("has empty future initially", () => {
+      const state = useEditorStore.getState();
+      expect(state.future).toEqual([]);
+    });
+  });
+
+  describe("setThemeState", () => {
+    it("updates themeState", () => {
+      const { setThemeState, themeState } = useEditorStore.getState();
+      const newState = {
+        ...themeState,
+        preset: "new-preset",
+      };
+
+      setThemeState(newState);
+
+      expect(useEditorStore.getState().themeState.preset).toBe("new-preset");
+    });
+
+    it("adds to history when updating themeState", () => {
+      const { setThemeState, themeState } = useEditorStore.getState();
+
+      // Advance time past the history threshold
+      vi.advanceTimersByTime(600);
+
+      const newState = {
+        ...themeState,
+        preset: "modified-preset",
+      };
+
+      setThemeState(newState);
+
+      const state = useEditorStore.getState();
+      expect(state.history.length).toBeGreaterThan(0);
+    });
+
+    it("does not add to history when only currentMode changes", () => {
+      const { setThemeState, themeState } = useEditorStore.getState();
+
+      // Change only currentMode
+      const newState = {
+        ...themeState,
+        currentMode: (themeState.currentMode === "light" ? "dark" : "light") as "dark" | "light",
+      };
+
+      setThemeState(newState);
+
+      const state = useEditorStore.getState();
+      expect(state.history.length).toBe(0);
+    });
+  });
+
+  describe("saveThemeCheckpoint and restoreThemeCheckpoint", () => {
+    it("saveThemeCheckpoint saves current state", () => {
+      const { saveThemeCheckpoint, themeState } = useEditorStore.getState();
+
+      saveThemeCheckpoint();
+
+      const state = useEditorStore.getState();
+      expect(state.themeCheckpoint).toEqual(themeState);
+    });
+
+    it("restoreThemeCheckpoint restores saved state", () => {
+      const store = useEditorStore.getState();
+      const originalState = { ...store.themeState };
+
+      // Save checkpoint
+      store.saveThemeCheckpoint();
 
-			// Restore checkpoint
-			useEditorStore.getState().restoreThemeCheckpoint();
+      // Advance time and modify state
+      vi.advanceTimersByTime(600);
 
-			// Verify restored (except currentMode which is preserved)
-			const restoredState = useEditorStore.getState().themeState;
-			expect(restoredState.preset).toBe(originalState.preset);
-		});
+      store.setThemeState({
+        ...store.themeState,
+        preset: "modified",
+      });
 
-		it("restoreThemeCheckpoint does nothing if no checkpoint", () => {
-			const store = useEditorStore.getState();
-			const originalState = { ...store.themeState };
+      // Verify state changed
+      expect(useEditorStore.getState().themeState.preset).toBe("modified");
 
-			// No checkpoint saved, try to restore
-			store.restoreThemeCheckpoint();
+      // Restore checkpoint
+      useEditorStore.getState().restoreThemeCheckpoint();
 
-			// State should remain unchanged
-			expect(useEditorStore.getState().themeState).toEqual(originalState);
-		});
-	});
+      // Verify restored (except currentMode which is preserved)
+      const restoredState = useEditorStore.getState().themeState;
+      expect(restoredState.preset).toBe(originalState.preset);
+    });
 
-	describe("hasThemeChangedFromCheckpoint", () => {
-		it("returns false when no checkpoint exists", () => {
-			const { hasThemeChangedFromCheckpoint } = useEditorStore.getState();
-			expect(hasThemeChangedFromCheckpoint()).toBe(false);
-		});
+    it("restoreThemeCheckpoint does nothing if no checkpoint", () => {
+      const store = useEditorStore.getState();
+      const originalState = { ...store.themeState };
 
-		it("returns false when state equals checkpoint", () => {
-			const store = useEditorStore.getState();
-			store.saveThemeCheckpoint();
+      // No checkpoint saved, try to restore
+      store.restoreThemeCheckpoint();
 
-			expect(useEditorStore.getState().hasThemeChangedFromCheckpoint()).toBe(
-				false
-			);
-		});
+      // State should remain unchanged
+      expect(useEditorStore.getState().themeState).toEqual(originalState);
+    });
+  });
 
-		it("returns true when state differs from checkpoint", () => {
-			const store = useEditorStore.getState();
-			store.saveThemeCheckpoint();
+  describe("hasThemeChangedFromCheckpoint", () => {
+    it("returns false when no checkpoint exists", () => {
+      const { hasThemeChangedFromCheckpoint } = useEditorStore.getState();
+      expect(hasThemeChangedFromCheckpoint()).toBe(false);
+    });
 
-			// Advance time and modify
-			vi.advanceTimersByTime(600);
+    it("returns false when state equals checkpoint", () => {
+      const store = useEditorStore.getState();
+      store.saveThemeCheckpoint();
 
-			store.setThemeState({
-				...store.themeState,
-				preset: "different",
-			});
+      expect(useEditorStore.getState().hasThemeChangedFromCheckpoint()).toBe(false);
+    });
 
-			expect(useEditorStore.getState().hasThemeChangedFromCheckpoint()).toBe(
-				true
-			);
-		});
-	});
+    it("returns true when state differs from checkpoint", () => {
+      const store = useEditorStore.getState();
+      store.saveThemeCheckpoint();
 
-	describe("canUndo and canRedo", () => {
-		it("canUndo returns false initially", () => {
-			const { canUndo } = useEditorStore.getState();
-			expect(canUndo()).toBe(false);
-		});
+      // Advance time and modify
+      vi.advanceTimersByTime(600);
 
-		it("canRedo returns false initially", () => {
-			const { canRedo } = useEditorStore.getState();
-			expect(canRedo()).toBe(false);
-		});
+      store.setThemeState({
+        ...store.themeState,
+        preset: "different",
+      });
 
-		it("canUndo returns true after state change", () => {
-			const store = useEditorStore.getState();
+      expect(useEditorStore.getState().hasThemeChangedFromCheckpoint()).toBe(true);
+    });
+  });
 
-			vi.advanceTimersByTime(600);
+  describe("canUndo and canRedo", () => {
+    it("canUndo returns false initially", () => {
+      const { canUndo } = useEditorStore.getState();
+      expect(canUndo()).toBe(false);
+    });
 
-			store.setThemeState({
-				...store.themeState,
-				preset: "changed",
-			});
+    it("canRedo returns false initially", () => {
+      const { canRedo } = useEditorStore.getState();
+      expect(canRedo()).toBe(false);
+    });
 
-			expect(useEditorStore.getState().canUndo()).toBe(true);
-		});
-	});
+    it("canUndo returns true after state change", () => {
+      const store = useEditorStore.getState();
 
-	describe("undo and redo", () => {
-		it("undo does nothing when history is empty", () => {
-			const { undo, themeState } = useEditorStore.getState();
-			const originalPreset = themeState.preset;
+      vi.advanceTimersByTime(600);
 
-			undo();
+      store.setThemeState({
+        ...store.themeState,
+        preset: "changed",
+      });
 
-			expect(useEditorStore.getState().themeState.preset).toBe(originalPreset);
-		});
+      expect(useEditorStore.getState().canUndo()).toBe(true);
+    });
+  });
 
-		it("redo does nothing when future is empty", () => {
-			const { redo, themeState } = useEditorStore.getState();
-			const originalPreset = themeState.preset;
+  describe("undo and redo", () => {
+    it("undo does nothing when history is empty", () => {
+      const { undo, themeState } = useEditorStore.getState();
+      const originalPreset = themeState.preset;
 
-			redo();
+      undo();
 
-			expect(useEditorStore.getState().themeState.preset).toBe(originalPreset);
-		});
+      expect(useEditorStore.getState().themeState.preset).toBe(originalPreset);
+    });
 
-		it("undo reverts to previous state", () => {
-			const store = useEditorStore.getState();
-			const originalPreset = store.themeState.preset;
+    it("redo does nothing when future is empty", () => {
+      const { redo, themeState } = useEditorStore.getState();
+      const originalPreset = themeState.preset;
 
-			vi.advanceTimersByTime(600);
+      redo();
 
-			store.setThemeState({
-				...store.themeState,
-				preset: "changed",
-			});
+      expect(useEditorStore.getState().themeState.preset).toBe(originalPreset);
+    });
 
-			expect(useEditorStore.getState().themeState.preset).toBe("changed");
+    it("undo reverts to previous state", () => {
+      const store = useEditorStore.getState();
+      const originalPreset = store.themeState.preset;
 
-			useEditorStore.getState().undo();
+      vi.advanceTimersByTime(600);
 
-			expect(useEditorStore.getState().themeState.preset).toBe(originalPreset);
-		});
+      store.setThemeState({
+        ...store.themeState,
+        preset: "changed",
+      });
 
-		it("redo restores undone state", () => {
-			const store = useEditorStore.getState();
+      expect(useEditorStore.getState().themeState.preset).toBe("changed");
 
-			vi.advanceTimersByTime(600);
+      useEditorStore.getState().undo();
 
-			store.setThemeState({
-				...store.themeState,
-				preset: "changed",
-			});
+      expect(useEditorStore.getState().themeState.preset).toBe(originalPreset);
+    });
 
-			useEditorStore.getState().undo();
-			useEditorStore.getState().redo();
+    it("redo restores undone state", () => {
+      const store = useEditorStore.getState();
 
-			expect(useEditorStore.getState().themeState.preset).toBe("changed");
-		});
+      vi.advanceTimersByTime(600);
 
-		it("canRedo returns true after undo", () => {
-			const store = useEditorStore.getState();
+      store.setThemeState({
+        ...store.themeState,
+        preset: "changed",
+      });
 
-			vi.advanceTimersByTime(600);
+      useEditorStore.getState().undo();
+      useEditorStore.getState().redo();
 
-			store.setThemeState({
-				...store.themeState,
-				preset: "changed",
-			});
+      expect(useEditorStore.getState().themeState.preset).toBe("changed");
+    });
 
-			useEditorStore.getState().undo();
+    it("canRedo returns true after undo", () => {
+      const store = useEditorStore.getState();
 
-			expect(useEditorStore.getState().canRedo()).toBe(true);
-		});
-	});
+      vi.advanceTimersByTime(600);
 
-	describe("resetToCurrentPreset", () => {
-		it("resets styles to preset defaults", () => {
-			const store = useEditorStore.getState();
+      store.setThemeState({
+        ...store.themeState,
+        preset: "changed",
+      });
 
-			vi.advanceTimersByTime(600);
+      useEditorStore.getState().undo();
 
-			// Modify styles
-			store.setThemeState({
-				...store.themeState,
-				hslAdjustments: {
-					hueShift: 50,
-					saturationScale: 1.5,
-					lightnessScale: 0.8,
-				},
-			});
+      expect(useEditorStore.getState().canRedo()).toBe(true);
+    });
+  });
 
-			useEditorStore.getState().resetToCurrentPreset();
+  describe("resetToCurrentPreset", () => {
+    it("resets styles to preset defaults", () => {
+      const store = useEditorStore.getState();
 
-			const state = useEditorStore.getState();
-			expect(state.themeState.hslAdjustments).toEqual({
-				hueShift: 0,
-				saturationScale: 1,
-				lightnessScale: 1,
-			});
-		});
+      vi.advanceTimersByTime(600);
 
-		it("clears history and future", () => {
-			const store = useEditorStore.getState();
+      // Modify styles
+      store.setThemeState({
+        ...store.themeState,
+        hslAdjustments: {
+          hueShift: 50,
+          saturationScale: 1.5,
+          lightnessScale: 0.8,
+        },
+      });
 
-			vi.advanceTimersByTime(600);
+      useEditorStore.getState().resetToCurrentPreset();
 
-			store.setThemeState({
-				...store.themeState,
-				preset: "changed",
-			});
+      const state = useEditorStore.getState();
+      expect(state.themeState.hslAdjustments).toEqual({
+        hueShift: 0,
+        saturationScale: 1,
+        lightnessScale: 1,
+      });
+    });
 
-			useEditorStore.getState().resetToCurrentPreset();
+    it("clears history and future", () => {
+      const store = useEditorStore.getState();
 
-			const state = useEditorStore.getState();
-			expect(state.history).toEqual([]);
-			expect(state.future).toEqual([]);
-		});
-	});
+      vi.advanceTimersByTime(600);
+
+      store.setThemeState({
+        ...store.themeState,
+        preset: "changed",
+      });
+
+      useEditorStore.getState().resetToCurrentPreset();
+
+      const state = useEditorStore.getState();
+      expect(state.history).toEqual([]);
+      expect(state.future).toEqual([]);
+    });
+  });
 });

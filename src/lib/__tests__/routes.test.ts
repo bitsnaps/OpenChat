@@ -2,31 +2,31 @@ import { describe, expect, it } from "vitest";
 import { API_ROUTE_CHAT, API_ROUTE_CREATE_CHAT } from "../routes";
 
 describe("API Routes", () => {
-	describe("API_ROUTE_CHAT", () => {
-		it("is defined as a string", () => {
-			expect(typeof API_ROUTE_CHAT).toBe("string");
-		});
+  describe("API_ROUTE_CHAT", () => {
+    it("is defined as a string", () => {
+      expect(typeof API_ROUTE_CHAT).toBe("string");
+    });
 
-		it("starts with /api/", () => {
-			expect(API_ROUTE_CHAT.startsWith("/api/")).toBe(true);
-		});
+    it("starts with /api/", () => {
+      expect(API_ROUTE_CHAT.startsWith("/api/")).toBe(true);
+    });
 
-		it("equals the expected value", () => {
-			expect(API_ROUTE_CHAT).toBe("/api/chat");
-		});
-	});
+    it("equals the expected value", () => {
+      expect(API_ROUTE_CHAT).toBe("/api/chat");
+    });
+  });
 
-	describe("API_ROUTE_CREATE_CHAT", () => {
-		it("is defined as a string", () => {
-			expect(typeof API_ROUTE_CREATE_CHAT).toBe("string");
-		});
+  describe("API_ROUTE_CREATE_CHAT", () => {
+    it("is defined as a string", () => {
+      expect(typeof API_ROUTE_CREATE_CHAT).toBe("string");
+    });
 
-		it("starts with /api/", () => {
-			expect(API_ROUTE_CREATE_CHAT.startsWith("/api/")).toBe(true);
-		});
+    it("starts with /api/", () => {
+      expect(API_ROUTE_CREATE_CHAT.startsWith("/api/")).toBe(true);
+    });
 
-		it("equals the expected value", () => {
-			expect(API_ROUTE_CREATE_CHAT).toBe("/api/create-chat");
-		});
-	});
+    it("equals the expected value", () => {
+      expect(API_ROUTE_CREATE_CHAT).toBe("/api/create-chat");
+    });
+  });
 });

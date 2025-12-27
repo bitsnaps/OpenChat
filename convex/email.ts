@@ -10,8 +10,8 @@ const MAX_CONTENT_LENGTH = 5000;
 
 // Initialize Resend with the component
 export const resend: Resend = new Resend(components.resend, {
-	// Enable test mode in development (set to false in production via env var)
-	testMode: process.env.NODE_ENV !== "production",
+  // Enable test mode in development (set to false in production via env var)
+  testMode: process.env.NODE_ENV !== "production",
 });
 
 /**
@@ -19,55 +19,49 @@ export const resend: Resend = new Resend(components.resend, {
  * Uses marked for conversion and simple regex-based sanitization for email safety
  */
 function markdownToSafeHtml(markdown: string): string {
-	// Configure marked for safe HTML output
-	marked.setOptions({
-		breaks: true, // Convert newlines to <br>
-		gfm: true, // Enable GitHub Flavored Markdown
-	});
+  // Configure marked for safe HTML output
+  marked.setOptions({
+    breaks: true, // Convert newlines to <br>
+    gfm: true, // Enable GitHub Flavored Markdown
+  });
 
-	// Convert markdown to HTML
-	// marked.parse can return a string or Promise<string>, but without async extensions it returns string
-	let html = marked.parse(markdown) as string;
+  // Convert markdown to HTML
+  // marked.parse can return a string or Promise<string>, but without async extensions it returns string
+  let html = marked.parse(markdown) as string;
 
-	// Basic sanitization for email safety
-	// Remove any script tags and their content
-	html = html.replace(
-		/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
-		""
-	);
+  // Basic sanitization for email safety
+  // Remove any script tags and their content
+  html = html.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "");
 
-	// Remove any on* event attributes
-	html = html.replace(/\son\w+\s*=\s*["'][^"']*["']/gi, "");
-	html = html.replace(/\son\w+\s*=\s*[^\s>]*/gi, "");
+  // Remove any on* event attributes
+  html = html.replace(/\son\w+\s*=\s*["'][^"']*["']/gi, "");
+  html = html.replace(/\son\w+\s*=\s*[^\s>]*/gi, "");
 
-	// Remove javascript: protocol from links
-	html = html.replace(/href\s*=\s*["']?\s*javascript:[^"'>]*/gi, 'href="#"');
+  // Remove javascript: protocol from links
+  html = html.replace(/href\s*=\s*["']?\s*javascript:[^"'>]*/gi, 'href="#"');
 
-	// Remove data: URLs from images (except safe image formats)
-	html = html.replace(
-		/src\s*=\s*["']?\s*data:(?!image\/(png|jpg|jpeg|gif|webp|svg\+xml))[^"'>]*/gi,
-		'src=""'
-	);
+  // Remove data: URLs from images (except safe image formats)
+  html = html.replace(
+    /src\s*=\s*["']?\s*data:(?!image\/(png|jpg|jpeg|gif|webp|svg\+xml))[^"'>]*/gi,
+    'src=""',
+  );
 
-	// Remove any style tags and their content (optional, but recommended for email)
-	html = html.replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, "");
+  // Remove any style tags and their content (optional, but recommended for email)
+  html = html.replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, "");
 
-	// Remove any meta tags
-	html = html.replace(/<meta\b[^>]*>/gi, "");
+  // Remove any meta tags
+  html = html.replace(/<meta\b[^>]*>/gi, "");
 
-	// Remove any iframe tags
-	html = html.replace(
-		/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi,
-		""
-	);
+  // Remove any iframe tags
+  html = html.replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, "");
 
-	// Remove any object/embed tags
-	html = html.replace(
-		/<(object|embed)\b[^<]*(?:(?!<\/(object|embed)>)<[^<]*)*<\/(object|embed)>/gi,
-		""
-	);
+  // Remove any object/embed tags
+  html = html.replace(
+    /<(object|embed)\b[^<]*(?:(?!<\/(object|embed)>)<[^<]*)*<\/(object|embed)>/gi,
+    "",
+  );
 
-	return html;
+  return html;
 }
 
 /**
@@ -75,86 +69,86 @@ function markdownToSafeHtml(markdown: string): string {
  * This function is designed to never throw errors that would break task execution
  */
 export const sendTaskSummaryEmail = internalMutation({
-	args: {
-		userId: v.id("users"),
-		taskId: v.id("scheduled_tasks"),
-		taskTitle: v.string(),
-		taskContent: v.string(),
-		executionDate: v.string(),
-		chatId: v.id("chats"),
-	},
-	returns: v.object({
-		success: v.boolean(),
-		error: v.optional(v.string()),
-	}),
-	handler: async (ctx, args) => {
-		try {
-			// Get user details to check for email address
-			const user = await ctx.db.get(args.userId);
+  args: {
+    userId: v.id("users"),
+    taskId: v.id("scheduled_tasks"),
+    taskTitle: v.string(),
+    taskContent: v.string(),
+    executionDate: v.string(),
+    chatId: v.id("chats"),
+  },
+  returns: v.object({
+    success: v.boolean(),
+    error: v.optional(v.string()),
+  }),
+  handler: async (ctx, args) => {
+    try {
+      // Get user details to check for email address
+      const user = await ctx.db.get(args.userId);
 
-			if (!user) {
-				return { success: false, error: "User not found" };
-			}
+      if (!user) {
+        return { success: false, error: "User not found" };
+      }
 
-			if (!user.email) {
-				return { success: false, error: "User has no email address" };
-			}
+      if (!user.email) {
+        return { success: false, error: "User has no email address" };
+      }
 
-			// Validate email format (basic validation)
-			if (!EMAIL_REGEX.test(user.email)) {
-				return { success: false, error: "Invalid email format" };
-			}
+      // Validate email format (basic validation)
+      if (!EMAIL_REGEX.test(user.email)) {
+        return { success: false, error: "Invalid email format" };
+      }
 
-			// Truncate content if too long for email
-			let emailContent = args.taskContent;
-			let contentTruncated = false;
+      // Truncate content if too long for email
+      let emailContent = args.taskContent;
+      let contentTruncated = false;
 
-			if (emailContent.length > MAX_CONTENT_LENGTH) {
-				emailContent = `${emailContent.substring(0, MAX_CONTENT_LENGTH)}...`;
-				contentTruncated = true;
-			}
+      if (emailContent.length > MAX_CONTENT_LENGTH) {
+        emailContent = `${emailContent.substring(0, MAX_CONTENT_LENGTH)}...`;
+        contentTruncated = true;
+      }
 
-			// Convert markdown to HTML for the HTML email template
-			const htmlTaskContent = markdownToSafeHtml(emailContent);
+      // Convert markdown to HTML for the HTML email template
+      const htmlTaskContent = markdownToSafeHtml(emailContent);
 
-			// Create email HTML template
-			const htmlContent = createEmailTemplate({
-				taskTitle: args.taskTitle,
-				executionDate: args.executionDate,
-				taskContent: htmlTaskContent, // Use converted HTML
-				contentTruncated,
-				chatId: args.chatId,
-				userName: user.name || user.preferredName || "there",
-			});
+      // Create email HTML template
+      const htmlContent = createEmailTemplate({
+        taskTitle: args.taskTitle,
+        executionDate: args.executionDate,
+        taskContent: htmlTaskContent, // Use converted HTML
+        contentTruncated,
+        chatId: args.chatId,
+        userName: user.name || user.preferredName || "there",
+      });
 
-			// Create plain text version (keep original markdown for text-only emails)
-			const textContent = createTextTemplate({
-				taskTitle: args.taskTitle,
-				executionDate: args.executionDate,
-				taskContent: emailContent, // Keep markdown for plain text
-				contentTruncated,
-				chatId: args.chatId,
-				userName: user.name || user.preferredName || "there",
-			});
+      // Create plain text version (keep original markdown for text-only emails)
+      const textContent = createTextTemplate({
+        taskTitle: args.taskTitle,
+        executionDate: args.executionDate,
+        taskContent: emailContent, // Keep markdown for plain text
+        contentTruncated,
+        chatId: args.chatId,
+        userName: user.name || user.preferredName || "there",
+      });
 
-			// Send email using Resend
-			await resend.sendEmail(ctx, {
-				from: "OS Chat <noreply@oschat.ai>",
-				to: [user.email],
-				subject: `Task Complete: ${args.taskTitle}`,
-				html: htmlContent,
-				text: textContent,
-			});
+      // Send email using Resend
+      await resend.sendEmail(ctx, {
+        from: "OS Chat <noreply@oschat.ai>",
+        to: [user.email],
+        subject: `Task Complete: ${args.taskTitle}`,
+        html: htmlContent,
+        text: textContent,
+      });
 
-			return { success: true };
-		} catch (error) {
-			// Log error but don't throw - we never want to break task execution
-			return {
-				success: false,
-				error: error instanceof Error ? error.message : "Unknown error",
-			};
-		}
-	},
+      return { success: true };
+    } catch (error) {
+      // Log error but don't throw - we never want to break task execution
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
+    }
+  },
 });
 
 /**
@@ -162,50 +156,50 @@ export const sendTaskSummaryEmail = internalMutation({
  * Currently using the monospace terminal-style template
  */
 function createEmailTemplate({
-	taskTitle,
-	executionDate,
-	taskContent,
-	contentTruncated,
-	chatId,
-	userName,
+  taskTitle,
+  executionDate,
+  taskContent,
+  contentTruncated,
+  chatId,
+  userName,
 }: {
-	taskTitle: string;
-	executionDate: string;
-	taskContent: string;
-	contentTruncated: boolean;
-	chatId: string;
-	userName: string;
+  taskTitle: string;
+  executionDate: string;
+  taskContent: string;
+  contentTruncated: boolean;
+  chatId: string;
+  userName: string;
 }): string {
-	// Use the monospace terminal template (template #8)
-	return createMonospaceTemplate({
-		taskTitle,
-		executionDate,
-		taskContent,
-		contentTruncated,
-		chatId,
-		userName,
-	});
+  // Use the monospace terminal template (template #8)
+  return createMonospaceTemplate({
+    taskTitle,
+    executionDate,
+    taskContent,
+    contentTruncated,
+    chatId,
+    userName,
+  });
 }
 
 /**
  * Monospace terminal-style email template (Active Template)
  */
 function createMonospaceTemplate({
-	taskTitle,
-	executionDate,
-	taskContent,
-	contentTruncated,
-	chatId,
-	userName,
+  taskTitle,
+  executionDate,
+  taskContent,
+  contentTruncated,
+  chatId,
+  userName,
 }: {
-	taskTitle: string;
-	executionDate: string;
-	taskContent: string;
-	contentTruncated: boolean;
-	chatId: string;
-	userName: string;
+  taskTitle: string;
+  executionDate: string;
+  taskContent: string;
+  contentTruncated: boolean;
+  chatId: string;
+  userName: string;
 }): string {
-	return `<!DOCTYPE html>
+  return `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -791,14 +785,14 @@ function createMonospaceTemplate({
                 <div class="code-block">${taskContent}</div>
                 
                 ${
-									contentTruncated
-										? `<div class="warning-block">
+                  contentTruncated
+                    ? `<div class="warning-block">
                     <div class="warning-content">
                         <strong>INFO:</strong> Output truncated. Full results available in dashboard.
                     </div>
                 </div>`
-										: ""
-								}
+                    : ""
+                }
                 
                 <div class="section-header">// Next Actions</div>
                 <div class="prompt-line">
@@ -1236,21 +1230,21 @@ function createMonospaceTemplate({
  * Create plain text email template for task summary
  */
 function createTextTemplate({
-	taskTitle,
-	executionDate,
-	taskContent,
-	contentTruncated,
-	chatId,
-	userName,
+  taskTitle,
+  executionDate,
+  taskContent,
+  contentTruncated,
+  chatId,
+  userName,
 }: {
-	taskTitle: string;
-	executionDate: string;
-	taskContent: string;
-	contentTruncated: boolean;
-	chatId: string;
-	userName: string;
+  taskTitle: string;
+  executionDate: string;
+  taskContent: string;
+  contentTruncated: boolean;
+  chatId: string;
+  userName: string;
 }): string {
-	return `Scheduled Task Complete
+  return `Scheduled Task Complete
 
 Hi ${userName},
 
@@ -1273,12 +1267,12 @@ You can manage your notification preferences in your account settings.
  * Escape HTML to prevent XSS
  */
 function escapeHtml(text: string): string {
-	const map: { [key: string]: string } = {
-		"&": "&amp;",
-		"<": "&lt;",
-		">": "&gt;",
-		'"': "&quot;",
-		"'": "&#039;",
-	};
-	return text.replace(/[&<>"']/g, (m) => map[m]);
+  const map: { [key: string]: string } = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;",
+  };
+  return text.replace(/[&<>"']/g, (m) => map[m]);
 }

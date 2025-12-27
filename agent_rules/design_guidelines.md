@@ -64,7 +64,7 @@ Concise rules for building accessible, fast, delightful UIs Use MUST/SHOULD/NEVE
 - MUST: Deliberate alignment to grid/baseline/edges/optical centers—no accidental placement
 - SHOULD: Balance icon/text lockups (stroke/weight/size/spacing/color)
 - MUST: Verify mobile, laptop, ultra-wide (simulate ultra-wide at 50% zoom)
-- MUST: Respect safe areas (use env(safe-area-inset-*))
+- MUST: Respect safe areas (use env(safe-area-inset-\*))
 - MUST: Avoid unwanted scrollbars; fix overflows
 
 ## Content & Accessibility

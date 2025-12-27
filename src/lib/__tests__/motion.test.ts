@@ -2,43 +2,43 @@ import { describe, expect, it } from "vitest";
 import { TRANSITION_LAYOUT, TRANSITION_SUGGESTIONS } from "../motion";
 
 describe("Motion Transitions", () => {
-	describe("TRANSITION_SUGGESTIONS", () => {
-		it("has duration property", () => {
-			expect(TRANSITION_SUGGESTIONS.duration).toBeDefined();
-			expect(typeof TRANSITION_SUGGESTIONS.duration).toBe("number");
-		});
+  describe("TRANSITION_SUGGESTIONS", () => {
+    it("has duration property", () => {
+      expect(TRANSITION_SUGGESTIONS.duration).toBeDefined();
+      expect(typeof TRANSITION_SUGGESTIONS.duration).toBe("number");
+    });
 
-		it("has ease property", () => {
-			expect(TRANSITION_SUGGESTIONS.ease).toBeDefined();
-		});
+    it("has ease property", () => {
+      expect(TRANSITION_SUGGESTIONS.ease).toBeDefined();
+    });
 
-		it("duration is a positive number", () => {
-			expect(TRANSITION_SUGGESTIONS.duration).toBeGreaterThan(0);
-		});
-	});
+    it("duration is a positive number", () => {
+      expect(TRANSITION_SUGGESTIONS.duration).toBeGreaterThan(0);
+    });
+  });
 
-	describe("TRANSITION_LAYOUT", () => {
-		it("has duration property", () => {
-			expect(TRANSITION_LAYOUT.duration).toBeDefined();
-			expect(typeof TRANSITION_LAYOUT.duration).toBe("number");
-		});
+  describe("TRANSITION_LAYOUT", () => {
+    it("has duration property", () => {
+      expect(TRANSITION_LAYOUT.duration).toBeDefined();
+      expect(typeof TRANSITION_LAYOUT.duration).toBe("number");
+    });
 
-		it("has ease property", () => {
-			expect(TRANSITION_LAYOUT.ease).toBeDefined();
-		});
+    it("has ease property", () => {
+      expect(TRANSITION_LAYOUT.ease).toBeDefined();
+    });
 
-		it("duration is a positive number", () => {
-			expect(TRANSITION_LAYOUT.duration).toBeGreaterThan(0);
-		});
-	});
+    it("duration is a positive number", () => {
+      expect(TRANSITION_LAYOUT.duration).toBeGreaterThan(0);
+    });
+  });
 
-	describe("Consistency", () => {
-		it("both transitions have same duration", () => {
-			expect(TRANSITION_SUGGESTIONS.duration).toBe(TRANSITION_LAYOUT.duration);
-		});
+  describe("Consistency", () => {
+    it("both transitions have same duration", () => {
+      expect(TRANSITION_SUGGESTIONS.duration).toBe(TRANSITION_LAYOUT.duration);
+    });
 
-		it("both transitions have same ease", () => {
-			expect(TRANSITION_SUGGESTIONS.ease).toBe(TRANSITION_LAYOUT.ease);
-		});
-	});
+    it("both transitions have same ease", () => {
+      expect(TRANSITION_SUGGESTIONS.ease).toBe(TRANSITION_LAYOUT.ease);
+    });
+  });
 });

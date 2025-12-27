@@ -111,18 +111,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Development Commands
 
-| Command              | Description                                |
-| -------------------- | ------------------------------------------ |
-| `bun install`        | Install dependencies                       |
-| `bun dev`            | Start development server on port 3000      |
-| `bun build`          | Build for production                       |
-| `bun preview`        | Preview production build                   |
-| `bun run test`       | Run tests with Vitest                      |
-| `bun run lint`       | Run oxlint with type-aware linting and auto-fix |
-| `bun run format`     | Format code with oxfmt                     |
-| `bun run format:check` | Check formatting without writing changes |
-| `bun run typecheck`  | Run TypeScript type checking with tsgo     |
-| `bunx convex dev`    | Run Convex development server              |
+| Command                | Description                                     |
+| ---------------------- | ----------------------------------------------- |
+| `bun install`          | Install dependencies                            |
+| `bun dev`              | Start development server on port 3000           |
+| `bun build`            | Build for production                            |
+| `bun preview`          | Preview production build                        |
+| `bun run test`         | Run tests with Vitest                           |
+| `bun run lint`         | Run oxlint with type-aware linting and auto-fix |
+| `bun run format`       | Format code with oxfmt                          |
+| `bun run format:check` | Check formatting without writing changes        |
+| `bun run typecheck`    | Run TypeScript type checking with tsgo          |
+| `bunx convex dev`      | Run Convex development server                   |
 
 ## Quality Assurance
 
@@ -160,4 +160,4 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Do what has been asked; nothing more, nothing less.
 - NEVER create files unless they're absolutely necessary for achieving your goal.
 - ALWAYS prefer editing an existing file to creating a new one.
-- NEVER proactively create documentation files (*.md) or README files. Only create documentation files if explicitly requested by the User.
+- NEVER proactively create documentation files (\*.md) or README files. Only create documentation files if explicitly requested by the User.

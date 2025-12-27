@@ -71,7 +71,6 @@ OS Chat uses Convex Auth for authentication with Google OAuth.
    ```
 
 2. **Set up Google OAuth:**
-
    - Follow the [Google OAuth Setup Guide](https://labs.convex.dev/auth/config/oauth/google)
    - Set your Google OAuth credentials in Convex:
 
@@ -95,7 +94,6 @@ OS Chat uses Convex Auth for authentication with Google OAuth.
 OS Chat uses Cloudflare R2 for file attachments and image storage.
 
 1. **Create a Public Cloudflare R2 Bucket:**
-
    - Sign up for a [Cloudflare account](https://dash.cloudflare.com/sign-up)
    - Navigate to R2 Object Storage in your dashboard
    - Create a new bucket (e.g., `oschat-files`)
@@ -106,7 +104,6 @@ OS Chat uses Cloudflare R2 for file attachments and image storage.
    - Configure CORS to allow GET and PUT requests from your domain
 
 2. **Generate R2 API Credentials:**
-
    - Go to R2 > Manage R2 API tokens
    - Create a new API token with Object Read & Write permissions
    - Save the Access Key ID and Secret Access Key
@@ -205,16 +202,16 @@ For production deployment:
 
 ## Development Commands
 
-| Command              | Description                              |
-| -------------------- | ---------------------------------------- |
-| `bun dev`            | Start development server on port 3000   |
-| `bun build`          | Build for production                     |
-| `bun preview`        | Preview production build                 |
-| `bun test`           | Run tests with Vitest                    |
-| `bun run lint`       | Run Ultracite linter                     |
-| `bun run format`     | Format code with Ultracite               |
-| `bun run typecheck`  | Run TypeScript type checking with tsgo   |
-| `bunx convex dev`    | Run Convex development server            |
+| Command             | Description                            |
+| ------------------- | -------------------------------------- |
+| `bun dev`           | Start development server on port 3000  |
+| `bun build`         | Build for production                   |
+| `bun preview`       | Preview production build               |
+| `bun test`          | Run tests with Vitest                  |
+| `bun run lint`      | Run Ultracite linter                   |
+| `bun run format`    | Format code with Ultracite             |
+| `bun run typecheck` | Run TypeScript type checking with tsgo |
+| `bunx convex dev`   | Run Convex development server          |
 
 ## Troubleshooting
 

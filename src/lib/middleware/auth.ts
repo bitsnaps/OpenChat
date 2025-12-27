@@ -11,12 +11,12 @@ import type { Doc } from "@/convex/_generated/dataModel";
 // =============================================================================
 
 export type AuthContext = {
-	token: string;
-	client: ConvexHttpClient;
+  token: string;
+  client: ConvexHttpClient;
 };
 
 export type AuthContextWithUser = AuthContext & {
-	user: Doc<"users">;
+  user: Doc<"users">;
 };
 
 // =============================================================================
@@ -27,33 +27,33 @@ export type AuthContextWithUser = AuthContext & {
  * Get the Convex deployment URL from environment
  */
 function getConvexUrl(): string {
-	const url = process.env.CONVEX_URL;
-	if (!url) {
-		throw new Error(
-			"Environment variable CONVEX_URL is missing. Please set it in your environment to the URL of your Convex deployment."
-		);
-	}
-	return url;
+  const url = process.env.CONVEX_URL;
+  if (!url) {
+    throw new Error(
+      "Environment variable CONVEX_URL is missing. Please set it in your environment to the URL of your Convex deployment.",
+    );
+  }
+  return url;
 }
 
 /**
  * Extract the auth token from the Authorization header
  */
 function extractAuthToken(request: Request): string | null {
-	const authHeader = request.headers.get("Authorization");
-	if (!authHeader?.startsWith("Bearer ")) {
-		return null;
-	}
-	return authHeader.slice(7);
+  const authHeader = request.headers.get("Authorization");
+  if (!authHeader?.startsWith("Bearer ")) {
+    return null;
+  }
+  return authHeader.slice(7);
 }
 
 /**
  * Create an authenticated Convex client with the given token
  */
 function createAuthenticatedClient(token: string): ConvexHttpClient {
-	const client = new ConvexHttpClient(getConvexUrl());
-	client.setAuth(token);
-	return client;
+  const client = new ConvexHttpClient(getConvexUrl());
+  client.setAuth(token);
+  return client;
 }
 
 // =============================================================================
@@ -64,49 +64,49 @@ function createAuthenticatedClient(token: string): ConvexHttpClient {
  * Helper to create JSON response
  */
 export function json<T>(data: T, init?: ResponseInit): Response {
-	const headers: Record<string, string> = {
-		"Content-Type": "application/json",
-	};
-	
-	if (init?.headers) {
-		if (init.headers instanceof Headers) {
-			init.headers.forEach((value, key) => {
-				headers[key] = value;
-			});
-		} else if (Array.isArray(init.headers)) {
-			for (const [key, value] of init.headers) {
-				headers[key] = value;
-			}
-		} else {
-			Object.assign(headers, init.headers);
-		}
-	}
-	
-	return new Response(JSON.stringify(data), {
-		...init,
-		headers,
-	});
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+
+  if (init?.headers) {
+    if (init.headers instanceof Headers) {
+      init.headers.forEach((value, key) => {
+        headers[key] = value;
+      });
+    } else if (Array.isArray(init.headers)) {
+      for (const [key, value] of init.headers) {
+        headers[key] = value;
+      }
+    } else {
+      Object.assign(headers, init.headers);
+    }
+  }
+
+  return new Response(JSON.stringify(data), {
+    ...init,
+    headers,
+  });
 }
 
 /**
  * Create unauthorized response
  */
 export function unauthorized(message = "Unauthorized"): Response {
-	return json({ error: message }, { status: 401 });
+  return json({ error: message }, { status: 401 });
 }
 
 /**
  * Create not found response
  */
 export function notFound(message = "Not found"): Response {
-	return json({ error: message }, { status: 404 });
+  return json({ error: message }, { status: 404 });
 }
 
 /**
  * Create bad request response
  */
 export function badRequest(message = "Bad request"): Response {
-	return json({ error: message }, { status: 400 });
+  return json({ error: message }, { status: 400 });
 }
 
 // =============================================================================
@@ -118,18 +118,18 @@ export function badRequest(message = "Bad request"): Response {
  * Provides: { token, client } in context
  */
 export const authMiddleware = createMiddleware().server(({ next, request }) => {
-	const token = extractAuthToken(request);
+  const token = extractAuthToken(request);
 
-	if (!token) {
-		return unauthorized();
-	}
+  if (!token) {
+    return unauthorized();
+  }
 
-	const client = createAuthenticatedClient(token);
+  const client = createAuthenticatedClient(token);
 
-	return next({
-		context: {
-			token,
-			client,
-		},
-	});
+  return next({
+    context: {
+      token,
+      client,
+    },
+  });
 });
