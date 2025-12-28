@@ -10,7 +10,8 @@ import {
   SketchLogoIcon,
   WrenchIcon,
 } from "@phosphor-icons/react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { z } from "zod";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { ProviderIcon } from "@/components/common/provider-icon";
@@ -47,7 +48,13 @@ import {
 } from "@/lib/config";
 import { cn } from "@/lib/utils";
 
+const modelsSearchSchema = z.object({
+  tier: z.enum(["free", "premium"]).optional(),
+  features: z.array(z.string()).optional(),
+});
+
 export const Route = createFileRoute("/settings/models")({
+  validateSearch: modelsSearchSchema,
   component: ModelsSettingsPage,
 });
 
@@ -99,12 +106,16 @@ const getFeatureColorClasses = (featureId: string) => {
 export function ModelsSettingsPage() {
   const { disabledModelsSet, setModelEnabled, bulkSetModelsDisabled } = useModelSettings();
   const { bulkSetFavoriteModels } = useModelPreferences();
+  const navigate = useNavigate({ from: Route.fullPath });
+  const { tier, features } = Route.useSearch();
+
+  const filters = useMemo(() => new Set(features ?? []), [features]);
+  const freeOnly = tier === "free";
+  const premiumOnly = tier === "premium";
 
   const getDisplayName = (modelName: string, subName?: string) =>
     subName ? `${modelName} (${subName})` : modelName;
   const [disabled, setDisabled] = useState<Set<string>>(disabledModelsSet);
-  const [filters, setFilters] = useState<Set<string>>(new Set());
-  const [freeOnly, setFreeOnly] = useState(false);
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const [copied, setCopied] = useState<string | null>(null);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -133,11 +144,14 @@ export function ModelsSettingsPage() {
         if (freeOnly && m.premium) {
           return false;
         }
+        if (premiumOnly && !m.premium) {
+          return false;
+        }
         return Array.from(filters).every((f) =>
           m.features.some((feat) => feat.id === f && feat.enabled),
         );
       }),
-    [filters, freeOnly],
+    [filters, freeOnly, premiumOnly],
   );
 
   const enabledCount = MODELS_OPTIONS.length - disabled.size;
@@ -206,19 +220,24 @@ export function ModelsSettingsPage() {
   };
 
   const toggleFilter = (id: string) => {
-    setFilters((prev) => {
-      const n = new Set(prev);
-      if (n.has(id)) {
-        n.delete(id);
-      } else {
-        n.add(id);
-      }
-      return n;
+    const newFeatures = filters.has(id)
+      ? Array.from(filters).filter((f) => f !== id)
+      : [...Array.from(filters), id];
+    void navigate({
+      search: { tier, features: newFeatures.length > 0 ? newFeatures : undefined },
     });
   };
 
   const toggleFree = () => {
-    setFreeOnly((prev) => !prev);
+    void navigate({
+      search: { tier: freeOnly ? undefined : "free", features: features?.length ? features : undefined },
+    });
+  };
+
+  const togglePremium = () => {
+    void navigate({
+      search: { tier: premiumOnly ? undefined : "premium", features: features?.length ? features : undefined },
+    });
   };
 
   const handleCopy = async (id: string) => {
@@ -265,8 +284,8 @@ export function ModelsSettingsPage() {
             <DropdownMenuTrigger asChild>
               <Button className="gap-2" size="sm" variant="outline">
                 <FunnelIcon className="size-4" />
-                {filters.size > 0 || freeOnly
-                  ? `Filters (${filters.size + (freeOnly ? 1 : 0)})`
+                {filters.size > 0 || freeOnly || premiumOnly
+                  ? `Filters (${filters.size + (freeOnly ? 1 : 0) + (premiumOnly ? 1 : 0)})`
                   : "Filter"}
               </Button>
             </DropdownMenuTrigger>
@@ -324,14 +343,28 @@ export function ModelsSettingsPage() {
                   {freeOnly ? <CheckIcon className="size-4" /> : null}
                 </span>
               </DropdownMenuItem>
+              <DropdownMenuItem
+                aria-checked={premiumOnly}
+                className="flex items-center justify-between"
+                data-state={premiumOnly ? "checked" : "unchecked"}
+                onSelect={(e) => {
+                  e.preventDefault();
+                  togglePremium();
+                }}
+                role="menuitemcheckbox"
+              >
+                <span>Only show premium plan models</span>
+                <span className="flex size-3.5 items-center justify-center">
+                  {premiumOnly ? <CheckIcon className="size-4" /> : null}
+                </span>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          {(filters.size > 0 || freeOnly) && (
+          {(filters.size > 0 || freeOnly || premiumOnly) && (
             <Button
               className="h-8"
               onClick={() => {
-                setFilters(new Set());
-                setFreeOnly(false);
+                void navigate({ search: {} });
               }}
               size="sm"
               variant="ghost"
@@ -387,8 +420,7 @@ export function ModelsSettingsPage() {
             </div>
             <Button
               onClick={() => {
-                setFilters(new Set());
-                setFreeOnly(false);
+                void navigate({ search: {} });
               }}
               size="sm"
               variant="outline"
