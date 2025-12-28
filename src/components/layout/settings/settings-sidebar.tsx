@@ -1,4 +1,4 @@
-import { Eye, EyeSlash, Keyboard, User } from "@phosphor-icons/react";
+import { Eye, EyeSlash, User } from "@phosphor-icons/react";
 import React, { useCallback } from "react";
 import { MessageUsageCard } from "@/components/layout/settings/message-usage-card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -123,12 +123,7 @@ function SettingsSidebarComponent() {
 
 			{/* Keyboard Shortcuts */}
 			<div className="rounded-xl border bg-card p-4">
-				<div className="mb-3 flex items-center gap-2">
-					<div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-						<Keyboard className="size-4 text-primary" />
-					</div>
-					<h3 className="font-medium text-sm">Keyboard Shortcuts</h3>
-				</div>
+				<h3 className="mb-4 font-medium text-sm tracking-tight">Shortcuts</h3>
 				<div className="space-y-2.5">
 					<div className="flex items-center justify-between">
 						<span className="text-muted-foreground text-xs">Search</span>

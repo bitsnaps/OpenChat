@@ -1,4 +1,5 @@
-import { ChartBar, Info } from "@phosphor-icons/react";
+import { Info } from "@phosphor-icons/react";
+import { Link } from "@tanstack/react-router";
 import dayjs from "dayjs";
 import calendar from "dayjs/plugin/calendar";
 import isToday from "dayjs/plugin/isToday";
@@ -77,17 +78,13 @@ function MessageUsageCardComponent() {
 
 	return (
 		<div className="rounded-xl border bg-card p-4">
-			<div className="mb-3 flex items-center justify-between">
-				<div className="flex items-center gap-2">
-					<div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-						<ChartBar className="size-4 text-primary" />
-					</div>
-					<h3 className="font-medium text-sm">Message Usage</h3>
-				</div>
+			<div className="mb-4 flex items-center justify-between">
+				<h3 className="font-medium text-sm tracking-tight">Usage</h3>
 				<Tooltip>
 					<TooltipTrigger asChild>
-						<span className="cursor-default text-right text-muted-foreground text-xs">
-							Resets {nextResetDateStr}
+						<span className="flex cursor-default items-center gap-1 rounded-md bg-muted/50 px-2 py-0.5 text-[10px] text-muted-foreground">
+							<span className="font-medium">Resets</span>
+							<span className="font-mono tabular-nums">{nextResetDateStr}</span>
 						</span>
 					</TooltipTrigger>
 					<TooltipContent>
@@ -130,7 +127,15 @@ function MessageUsageCardComponent() {
 									</TooltipTrigger>
 									<TooltipContent>
 										<p>
-											Premium credits are used for Claude 4 Sonnet and Grok 3.
+											Premium credits are used for models marked with a gem icon in the model
+											selector.{" "}
+											<Link
+												className="underline underline-offset-2"
+												search={{ tier: "premium" }}
+												to="/settings/models"
+											>
+												See all premium models
+											</Link>
 										</p>
 									</TooltipContent>
 								</Tooltip>
@@ -149,6 +154,12 @@ function MessageUsageCardComponent() {
 					</div>
 				)}
 			</div>
+
+			<p className="mt-4 pt-3 text-muted-foreground text-xs italic leading-relaxed">
+				<Info className="mr-1 inline size-3 align-text-top" />
+				Each tool call (e.g. search grounding) used in a reply consumes an additional
+				standard credit. Models may not always utilize enabled tools.
+			</p>
 		</div>
 	);
 }

@@ -1,5 +1,5 @@
 import { Check, CircleNotch, Headset, Rocket, Sparkle, Trash } from "@phosphor-icons/react";
-import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useAction, useMutation } from "convex/react";
 import { useCallback, useState } from "react";
 import { MessageUsageCard } from "@/components/layout/settings/message-usage-card";
@@ -121,7 +121,7 @@ export function AccountSettingsPage() {
   const features = [
     "Access to all AI models",
     "1500 standard credits/month",
-    "100 premium credits/month",
+    "100 premium credits/month*",
     "Priority support",
   ];
 
@@ -156,7 +156,7 @@ export function AccountSettingsPage() {
                 </div>
                 <div>
                   <p className="font-medium text-sm">1600 Credits</p>
-                  <p className="text-muted-foreground text-xs">1500 + 100 premium</p>
+                  <p className="text-muted-foreground text-xs">1500 + 100 premium*</p>
                 </div>
               </div>
               <div className="flex items-center gap-3 rounded-xl border bg-card p-4">
@@ -208,8 +208,16 @@ export function AccountSettingsPage() {
         )}
 
         <p className="text-muted-foreground text-xs">
-          *Premium credits are used for GPT Image Gen, Claude Sonnet, Gemini 2.5 Pro, GPT-5, o3, and
-          Grok 3/4.
+          *Premium credits are used for models marked with a gem icon in the model selector. This
+          includes, among others, Claude Sonnet, GPT-5 (Reasoning), Grok 3/4, Image Generation
+          models, and Gemini 2.5 Pro.{" "}
+          <Link
+            className="text-muted-foreground underline underline-offset-4 hover:text-foreground"
+            search={{ tier: "premium" }}
+            to="/settings/models"
+          >
+            See all premium models
+          </Link>
         </p>
 
         <div className="md:hidden">
